@@ -110,21 +110,38 @@ export default function Home() {
 
 
         {/* projects  */}
-        <section className='min-h-screen mb-4'>
+        <section className='min-h-full mb-4'>
           <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Things I've build ⚙️</h1>
           <div className='flex flex-col'>
             {/* prj 1 */}
-            <div className='relative transition duration-700 rounded p-2 cursor-pointer hover:bg-[#2e333f]'>
-              <h1 className='text-ternary text-2xl font-bold mb-3'>Resume builder </h1>
-              <p className='text-primary'>A simple tool for building resume <br />
-                <span className='capitalize text-secondary'>tech stack used:</span> React.js, Express, Tailwind CSS, Prisma, MongoDB
-              </p>
-              <img src='resume' />
-            </div>
+            <a target="_blank" rel="noopener noreferrer" href='https://resume-builder-frontend-ten.vercel.app/'
+              className='relative mb-32 transition duration-700'>
+              <div className='relative bg-[#1c2234] w-fit rounded p-2 cursor-pointer shadow hover:shadow-2xl'>
+                <h1 className='text-ternary text-2xl font-bold mb-3'>Resume builder </h1>
+                <p className='text-primary'>A simple tool for building resume <br />
+                  <span className='capitalize text-secondary'>tech stack used:</span> React.js, Express, Tailwind CSS, Prisma, MongoDB
+                </p>
+                <img className='absolute w-96 xs:hidden xl:block -right-72 -top-2 opacity-50 -z-10' src='/images/resumebuilder.png' />
+              </div>
+            </a>
           </div>
         </section>
 
-      </div>
+
+        {/* contact  */}
+
+        <section className='flex flex-col gap-4 justify-center min-h-screen items-center'>
+          <h1 className='text-md text-secondary  capitalize'>
+            what's next?
+          </h1>
+          <h1 className='font-bold capitalize text-ternary text-3xl'>get in touch</h1>
+          <a className='p-3 text-secondary border-secondary border-2 transition duration-400
+          hover:opacity-50'
+            // hover:bg-ternary hover:border-primary hover:text-primary'
+            href={`mailto: prasenjitpawar22@gmail.com}`}> Say Hello</a>
+        </section>
+
+      </div >
     </>
   )
 }
