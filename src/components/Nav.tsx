@@ -99,7 +99,7 @@ const Nav = (props: Props) => {
                     {list.map((l, key) =>
                         <li key={key}
                             onClick={() => handleNavClick(l.type)}
-                            className='px-2 text-secondary capitalize cursor-pointer'>{l.text}</li>
+                            className='px-2 text-secondary capitalize hover:cursor-pointer'>{l.text}</li>
                     )}
                 </ul>
             </motion.div>

@@ -2,7 +2,7 @@ import { Montserrat } from 'next/font/google'
 import Nav from '@/components/Nav'
 import React, { useRef, useState } from 'react'
 import Image from 'next/image'
-import { AiFillGithub, AiFillLinkedin, AiFillTwitterCircle, AiFillTwitterSquare } from 'react-icons/ai'
+import { AiFillGithub, AiFillLinkedin, AiFillTwitterCircle } from 'react-icons/ai'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -129,7 +129,7 @@ export default function Home() {
             <div className='flex flex-col'>
               {/* prj 1 */}
               <a target="_blank" rel="noopener noreferrer" href='https://resume-builder-frontend-ten.vercel.app/'
-                className='relative mb-32 transition duration-700'>
+                className='relative xl:mb-32 transition duration-700'>
                 <div className='relative bg-[#1c2234] w-fit rounded p-2 cursor-pointer shadow hover:shadow-2xl'>
                   <h1 className='text-ternary text-2xl font-bold mb-3'>Resume builder </h1>
                   <p className='text-primary'>A simple tool for building resume <br />
@@ -147,8 +147,8 @@ export default function Home() {
 
         {/* contact  */}
         <section ref={contactRef} className='mb-4'>
-          <div className='py-12 flex flex-col min-h-screen justify-between items-center'>
-            <div className='flex flex-col flex-grow gap-5 justify-center items-center'>
+          <div className='py-12 flex flex-col justify-between items-center'>
+            <div className='flex flex-col flex-grow gap-5 justify-center items-center mb-4'>
               <div className='flex flex-col justify-center items-center'>
                 <h1 className='text-md text-secondary  capitalize'>
                   what&apos;s next?
@@ -181,9 +181,10 @@ export default function Home() {
                   </a>
                 </li>
               </ul>
-              <a target="_blank" rel="noopener noreferrer" href="https://github.com/prasenjitpawar22/profile-web" className='text-ternary text-sm '>
+              <a target="_blank" rel="noopener noreferrer" href="https://github.com/prasenjitpawar22/profile-web"
+                className='text-ternary text-sm text-center'>
                 Design copyed from{' '}
-                <a className='text-secondary transition duration-300 hover:underline '
+                <a className='text-secondary transition duration-300 hover:underline'
                   target="_blank" rel="noopener noreferrer" href="https://github.com/bchiang7">@Brittany Chiang</a>
                 {' &'} Build By Prasenjit Pawar
               </a>
