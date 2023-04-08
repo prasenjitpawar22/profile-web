@@ -52,7 +52,7 @@ const Nav = (props: Props) => {
     })
 
     const handleNavClick = (type: Type) => {
-        //setSideBarState(false)
+        setSideBarState(false)
         if (type === Type.about) { aboutRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.experience && experienceRef) { experienceRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.work && workRef) { workRef.current?.scrollIntoView({ behavior: "smooth" }) }
@@ -99,7 +99,7 @@ const Nav = (props: Props) => {
                     {list.map((l, key) =>
                         <li key={key}
                             onClick={() => handleNavClick(l.type)}
-                            className='px-2 text-secondary capitalize hover:cursor-pointer'>{l.text}</li>
+                            className='px-2 text-secondary capitalize hover:cursor-pointer'><button> {l.text}</button></li>
                     )}
                 </ul>
             </motion.div>
