@@ -52,12 +52,12 @@ const Nav = (props: Props) => {
     })
 
     const handleNavClick = (type: Type) => {
+        setSideBarState(false)
         if (type === Type.about) { aboutRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.experience && experienceRef) { experienceRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.work && workRef) { workRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.contact && contactRef) { contactRef.current?.scrollIntoView({ behavior: "smooth" }) }
 
-        setSideBarState(false)
     }
 
     return (
