@@ -1,7 +1,6 @@
-import Image from 'next/image'
 import { Montserrat } from 'next/font/google'
 import Nav from '@/components/Nav'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -21,11 +20,6 @@ export default function Home() {
         `I used React and CSS Frameworks to add new features and improve user experience, resulting in better performance, higher engagement, and increased satisfaction from web users.`]
     },
   })
-
-  // useEffect(() => {
-  //   console.log(workData.bano.role);
-
-  // })
 
   return (
     <>
