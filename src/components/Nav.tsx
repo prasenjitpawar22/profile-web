@@ -40,7 +40,7 @@ const Nav = (props: Props) => {
 
     const sidebarVariants = {
         visible: { opacity: 1, x: 0 },
-        hidden: { opacity: 0, x: window.innerWidth + 20 }
+        hidden: { opacity: 1, x: 600 + 20 }
     }
 
     useMotionValueEvent(scrollY, "change", (latest) => {
@@ -52,10 +52,12 @@ const Nav = (props: Props) => {
     })
 
     const handleNavClick = (type: Type) => {
-        if (type === Type.about) aboutRef.current?.scrollIntoView({ behavior: "smooth" })
-        if (type === Type.experience && experienceRef) experienceRef.current?.scrollIntoView({ behavior: "smooth" })
-        if (type === Type.work && workRef) workRef.current?.scrollIntoView({ behavior: "smooth" })
-        if (type === Type.contact && contactRef) contactRef.current?.scrollIntoView({ behavior: "smooth" })
+        if (type === Type.about) { aboutRef.current?.scrollIntoView({ behavior: "smooth" }) }
+        if (type === Type.experience && experienceRef) { experienceRef.current?.scrollIntoView({ behavior: "smooth" }) }
+        if (type === Type.work && workRef) { workRef.current?.scrollIntoView({ behavior: "smooth" }) }
+        if (type === Type.contact && contactRef) { contactRef.current?.scrollIntoView({ behavior: "smooth" }) }
+
+        setSideBarState(false)
     }
 
     return (
@@ -64,9 +66,9 @@ const Nav = (props: Props) => {
                 variants={variants}
                 transition={{ ease: [0.1, 0.25, 0.3, 1], duration: 0.6 }}
                 animate={hidden ? 'hidden' : 'visible'}
-                className={`fixed flex justify-between ${montserrat.className} items-center w-full py-2 px-4 h-fit backdrop-blur-sm`}>
+                className={`fixed flex justify-between ${montserrat.className} items-center w-full py-2 px-4 h-fit backdrop-blur-sm z-50`}>
                 <h1 className='text-4xl bold text-secondary'>
-                    P
+
                 </h1>
                 <ul className='flex gap-2 xs:hidden md:flex items-center justify-end px-4'>
                     {list.map((l, key) =>

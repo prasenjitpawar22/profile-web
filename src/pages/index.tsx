@@ -46,7 +46,7 @@ export default function Home() {
         </section>
 
         {/* about me  */}
-        <section ref={aboutRef} className='min-h-screen mb-4'>
+        <section ref={aboutRef} className='mb-4'>
           <div className='py-14'>
             <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>about me 😃</h1>
             <div className='flex xs:flex-col md:flex-col xl:flex-row w-full gap-12 justify-between'>
@@ -67,9 +67,8 @@ export default function Home() {
         </section>
 
         {/*  experience  */}
-        <section ref={experienceRef} className='min-h-screen w-full'>
+        <section ref={experienceRef} className='w-full'>
           <div className='flex flex-col items-center py-14'>
-
             <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Where I&apos;ve worked 💼</h1>
             <div className='flex xs:flex-col md:flex-row gap-12'>
               <ul className='flex  xs:flex-row md:flex-col'>
@@ -124,7 +123,7 @@ export default function Home() {
 
 
         {/* projects  */}
-        <section ref={workRef} className='min-h-full mb-4'>
+        <section ref={workRef} className='mb-4'>
           <div className='py-14'>
             <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Things I&apos;ve build ⚙️</h1>
             <div className='flex flex-col'>
@@ -147,8 +146,7 @@ export default function Home() {
 
 
         {/* contact  */}
-
-        <section ref={contactRef} className=''>
+        <section ref={contactRef} className='mb-4'>
           <div className='py-12 flex flex-col min-h-screen justify-between items-center'>
             <div className='flex flex-col flex-grow gap-5 justify-center items-center'>
               <div className='flex flex-col justify-center items-center'>
@@ -192,7 +190,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
       </div >
     </>
   )
