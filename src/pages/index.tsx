@@ -1,6 +1,7 @@
 import { Montserrat } from 'next/font/google'
 import Nav from '@/components/Nav'
 import React, { useState } from 'react'
+import Image from 'next/image'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -40,7 +41,7 @@ export default function Home() {
             <div className='w-full tracking-wide'>
               <p className='text-md'>Hi there 👋, I am Prasenjit Pawar, a software engineer passionate about building innovative and high-quality web applications 🚀. With expertise in frontend and backend development, I also bring a unique skill set to every project.
                 I have extensive experience working with various technologies, including React, Tailwind CSS, Node.js, and .NET Core. <br /><br />
-                I began my career as an <span className='text-secondary'>intern at a startup</span>, where I developed a deep understanding of the industry and honed my technical skills. I am a <span className='text-secondary'>software engineer at Capgemini</span>, where I continue to deliver exceptional results and contribute to the team's success.
+                I began my career as an <span className='text-secondary'>intern at a startup</span>, where I developed a deep understanding of the industry and honed my technical skills. I am a <span className='text-secondary'>software engineer at Capgemini</span>, where I continue to deliver exceptional results and contribute to the team&apos;s success.
                 <br /><br /> I will be a perfect choice if you are looking for a skilled and dedicated software engineer who can deliver exceptional results. Contact me today to discuss your project requirements and learn how I can help you achieve your goals.</p>
             </div>
             <div className='w-full md:hidden xl:block'>
@@ -51,7 +52,7 @@ export default function Home() {
 
         {/* work experience  */}
         <section className='min-h-screen flex flex-col items-center w-full'>
-          <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Where I've worked 💼</h1>
+          <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Where I&apos;ve worked 💼</h1>
           <div className='flex xs:flex-col md:flex-row gap-12'>
             <ul className='flex  xs:flex-row md:flex-col'>
               <li
@@ -105,7 +106,7 @@ export default function Home() {
 
         {/* projects  */}
         <section className='min-h-full mb-4'>
-          <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Things I've build ⚙️</h1>
+          <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Things I&apos;ve build ⚙️</h1>
           <div className='flex flex-col'>
             {/* prj 1 */}
             <a target="_blank" rel="noopener noreferrer" href='https://resume-builder-frontend-ten.vercel.app/'
@@ -115,7 +116,7 @@ export default function Home() {
                 <p className='text-primary'>A simple tool for building resume <br />
                   <span className='capitalize text-secondary'>tech stack used:</span> React.js, Express, Tailwind CSS, Prisma, MongoDB
                 </p>
-                <img className='absolute w-96 xs:hidden xl:block -right-72 -top-2 opacity-50 -z-10' src='/images/resumebuilder.png' />
+                <Image alt='resumebuilder' className='absolute w-96 xs:hidden xl:block -right-72 -top-2 opacity-50 -z-10' src='/images/resumebuilder.png' />
               </div>
             </a>
           </div>
@@ -126,7 +127,7 @@ export default function Home() {
 
         <section className='flex flex-col gap-4 justify-center min-h-screen items-center'>
           <h1 className='text-md text-secondary  capitalize'>
-            what's next?
+            wha&tapos;s next?
           </h1>
           <h1 className='font-bold capitalize text-ternary text-3xl'>get in touch</h1>
           <a className='p-3 text-secondary border-secondary border-2 transition duration-400
