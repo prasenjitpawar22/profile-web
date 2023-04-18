@@ -10,7 +10,8 @@ enum Type {
     about,
     contact,
     experience,
-    work
+    work,
+    blog
 }
 interface Props {
     aboutRef: React.MutableRefObject<HTMLDivElement | null>
@@ -31,6 +32,7 @@ const Nav = (props: Props) => {
     const list = [{ text: 'about', type: Type.about },
     { text: 'experience', type: Type.experience },
     { text: 'work', type: Type.work },
+    { text: 'blog', type: Type.blog },
     { text: 'contact', type: Type.contact }]
 
     const variants = {
@@ -51,12 +53,14 @@ const Nav = (props: Props) => {
         }
     })
 
-    const handleNavClick = (type: Type) => {
+    const handleNavClick = (type: Type | string) => {
         setSideBarState(false)
         if (type === Type.about) { aboutRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.experience && experienceRef) { experienceRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.work && workRef) { workRef.current?.scrollIntoView({ behavior: "smooth" }) }
         if (type === Type.contact && contactRef) { contactRef.current?.scrollIntoView({ behavior: "smooth" }) }
+
+        if (type === Type.blog) window.open('https://techiee.hashnode.dev/', '_blank');
 
     }
 
