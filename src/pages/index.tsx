@@ -3,6 +3,7 @@ import Nav from '@/components/Nav'
 import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import { AiFillGithub, AiFillLinkedin, AiFillTwitterCircle } from 'react-icons/ai'
+import { Parallax } from 'react-scroll-parallax'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -39,13 +40,14 @@ export default function Home() {
       <div className={`xs:px-12 md:px-36 w-full h-full ${montserrat.className}`}>
         <section className='min-h-screen flex justify-start items-center w-full'>
           <div className='flex flex-col xs:gap-3 sm:gap-4 md:gap-6 justify-start items-start w-full leading-loose tracking-widest'>
-            <h1 className='sm:pl-1 text-lg text-secondary'>Hi, my name is </h1>
+            <h1 className='flex sm:pl-1 text-lg text-secondary'>
+              Hi, my name is
+            </h1>
             <h1 className='xs:text-4xl sm:text-5xl md:text-7xl font-bold text-ternary'>Prasenjit Pawar.</h1>
             <h1 className='xs:text-4xl sm:text-5xl md:text-7xl font-bold'>I build things on internet.</h1>
           </div>
         </section>
 
-        {/* about me  */}
         <section ref={aboutRef} className='mb-4'>
           <div className='py-14'>
             <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>about me 😃</h1>
@@ -58,7 +60,6 @@ export default function Home() {
                   <br /><br /> I will be a perfect choice if you are looking for a skilled and dedicated software engineer who can deliver exceptional results. Contact me today to discuss your project requirements and learn how I can help you achieve your goals.</p>
               </div>
               <div className='w-full xs:hidden xl:block'>
-                {/* progile  */}
                 <Image src={"/images/me.jpg"} alt="me" width={200} height={200}
                   className={'opacity-50 shadow-2xl border-2 border-secondary p-2'} />
               </div>
@@ -66,7 +67,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/*  experience  */}
         <section ref={experienceRef} className='w-full'>
           <div className='flex flex-col items-center py-14'>
             <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Where I&apos;ve worked 💼</h1>
@@ -122,12 +122,10 @@ export default function Home() {
         </section>
 
 
-        {/* projects  */}
         <section ref={workRef} className='mb-4'>
           <div className='py-14'>
             <h1 className='text-2xl mb-11 font-bold underline text-secondary underline-offset-4 capitalize'>Things I&apos;ve build ⚙️</h1>
             <div className='flex flex-col'>
-              {/* prj 1 */}
               <a target="_blank" rel="noopener noreferrer" href='https://resume-builder-frontend-ten.vercel.app/'
                 className='relative xl:mb-32 transition duration-700'>
                 <div className='relative bg-[#1c2234] w-fit rounded p-2 cursor-pointer shadow hover:shadow-2xl'>
@@ -145,7 +143,6 @@ export default function Home() {
         </section>
 
 
-        {/* contact  */}
         <section ref={contactRef} className='mb-4'>
           <div className='py-12 flex flex-col justify-between items-center'>
             <div className='flex flex-col flex-grow gap-5 justify-center items-center mb-4'>
@@ -181,16 +178,20 @@ export default function Home() {
                   </a>
                 </li>
               </ul>
-              <a target="_blank" rel="noopener noreferrer" href="https://github.com/prasenjitpawar22/profile-web"
+              <span
                 className='text-ternary text-sm text-center'>
                 Design copyed from{' '}
                 <a className='text-secondary transition duration-300 hover:underline'
                   target="_blank" rel="noopener noreferrer" href="https://github.com/bchiang7">@Brittany Chiang</a>
-                {' &'} Build By Prasenjit Pawar
-              </a>
+                {' &'} Build By
+                <a target="_blank" rel="noopener noreferrer" href="https://github.com/prasenjitpawar22/profile-web">
+                  @Prasenjit Pawar
+                </a>
+              </span>
             </div>
           </div>
         </section>
+
       </div >
     </>
   )
