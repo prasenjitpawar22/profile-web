@@ -464,7 +464,7 @@ export default function Home() {
         </p>
       </div>
       <div className="bottom-0">
-        <p className="text-slate-700">This website doesn't use cookies</p>
+        <p className="text-slate-700">This website doesn&apos;t use cookies</p>
       </div>
     </div>
   );
