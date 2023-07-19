@@ -455,15 +455,7 @@ export default function Home() {
               <span className="font-thin">reume build tool</span>
             </Link>
           </li>
-          <li>
-            <Link
-              className="hover:underline"
-              target={"_blank"}
-              href={"https://link3-pi.vercel.app/"}
-            >
-              Link3 - <span className="font-thin">link-a-bio tool</span>
-            </Link>
-          </li>
+         
           <li>
             <Link
               target={"_blank"}
