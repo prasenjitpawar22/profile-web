@@ -1,22 +1,11 @@
-import { Montserrat } from "next/font/google";
-import Nav from "@/components/Nav";
-import React, { useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
-import {
-  AiFillGithub,
-  AiFillLinkedin,
-  AiFillTwitterCircle,
-} from "react-icons/ai";
-import { Parallax } from "react-scroll-parallax";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import x from "../../public/twitter-x.svg";
 import insta from "../../public/instagram.svg";
 import linkedIn from "../../public/linkedin.svg";
 import git from "../../public/github.svg";
 import hashnode from "../../public/hashnode.svg";
-
-const montserrat = Montserrat({ subsets: ["latin"] });
 
 export default function Home() {
   return (
@@ -49,25 +38,6 @@ export default function Home() {
       <div className="mb-12 flex flex-col">
         <p className="mb-3 font-bold text-slate-400">Links</p>
         <ul className="w-fit items-center text-slate-100">
-          <li>
-            <Link
-              className="flex items-end gap-1 hover:underline"
-              href={"https://twitter.com/PrasenjitPawar"}
-              target="_blank"
-            >
-              {'X'} <Image alt="X" height={20} width={20} src={x} />
-            </Link>
-          </li>
-          <li className="flex gap-1">
-            <Link
-              className="flex items-end gap-1 hover:underline"
-              href={"https://www.instagram.com/prasensphotos"}
-              target="_blank"
-            >
-              Instagram{" "}
-              <Image alt="instagram" height={20} width={20} src={insta} />{" "}
-            </Link>
-          </li>
           <li className="flex gap-1">
             <Link
               className="flex items-end gap-1 hover:underline"
@@ -92,6 +62,25 @@ export default function Home() {
                 width={20}
                 src={git}
               />{" "}
+            </Link>
+          </li>
+          <li className="flex items-center">
+            <Link
+              className="flex items-end gap-1 hover:underline"
+              href={"https://twitter.com/PrasenjitPawar"}
+              target="_blank"
+            >
+              {"X"} <Image alt="X" height={30} width={30} src={x} />
+            </Link>
+          </li>
+          <li className="flex gap-1">
+            <Link
+              className="flex items-end gap-1 hover:underline"
+              href={"https://www.instagram.com/prasensphotos"}
+              target="_blank"
+            >
+              Instagram{" "}
+              <Image alt="instagram" height={20} width={20} src={insta} />{" "}
             </Link>
           </li>
           <li className="flex gap-1">
@@ -134,15 +123,14 @@ export default function Home() {
               <span className="font-thin">reume build tool</span>
             </Link>
           </li>
-         
+
           <li>
             <Link
               target={"_blank"}
               className="hover:underline"
               href={"https://bonk-a-alien.vercel.app/"}
             >
-              Bonk-a-Alien -{" "}
-              <span className="font-thin">A simple game</span>
+              Bonk-a-Alien - <span className="font-thin">A simple game</span>
             </Link>
           </li>
         </ul>
