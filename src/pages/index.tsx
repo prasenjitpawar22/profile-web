@@ -54,7 +54,7 @@ export default function Home() {
               className="flex items-end gap-1 hover:underline"
               href={"https://twitter.com/PrasenjitPawar"}
               target="_blank"
-              alt="formerly known as Twitter"
+              alt={"formerly known as Twitter"}
             >
               {'X'} <Image alt="X" height={20} width={20} src={x} />
             </Link>
