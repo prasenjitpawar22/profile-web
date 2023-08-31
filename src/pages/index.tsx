@@ -133,6 +133,15 @@ export default function Home() {
               Bonk-a-Alien - <span className="font-thin">A simple game</span>
             </Link>
           </li>
+          <li>
+            <Link
+              target={"_blank"}
+              className="hover:underline"
+              href={"https://weather-app-kappa-seven-88.vercel.app/"}
+            >
+              Weather-app - <span className="font-thin">A weather app</span>
+            </Link>
+          </li>
         </ul>
       </div>
       <div>
