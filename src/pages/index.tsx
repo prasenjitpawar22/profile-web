@@ -35,6 +35,12 @@ export default function Home() {
       title: "Weather-App",
       description: "A weather app",
     },
+    {
+      link: "https://todo-fawn-six.vercel.app/",
+      img: "/todoApp.png",
+      title: "Todo-App",
+      description: "Todo app",
+    },
   ];
 
   return (
