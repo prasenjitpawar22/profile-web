@@ -6,7 +6,7 @@ export default function LeftSideBar() {
   const { navState, setNavState } = useNavContext();
 
   return (
-    <div className="absolute flex flex-col gap-2 top-[30%] left-0">
+    <div className="absolute hidden md:flex flex-col gap-2 top-[30%] left-0">
       <motion.div
         onClick={() => setNavState(NavState.about)}
         initial={{ x: -100 }}
