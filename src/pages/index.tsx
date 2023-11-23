@@ -64,9 +64,9 @@ export default function Home() {
               "https://www.google.com/search?q=vadapav&tbm=isch&ved=2ahUKEwj7u_uXq9T_AhWTObcAHd8XChkQ2-cCegQIABAA&oq=vadap&gs_lcp=CgNpbWcQARgAMggIABCABBCxAzIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDoKCAAQigUQsQMQQzoHCAAQigUQQzoECCMQJ1DiIFi0J2DCMWgAcAB4AIABzAGIAeIGkgEFMC41LjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=eOmSZPufLpPz3LUP36-oyAE&bih=601&biw=1280&rlz=1C1UEAD_enIN1004IN1004"
             }
           >
-            Mumbai,
+            Mumbai
           </Link>{" "}
-          living in my tech bro basement. I enjoy{" "}
+          I enjoy{" "}
           <span className="font-medium text-slate-500">web development.</span>
         </p>
       </div>
@@ -180,7 +180,7 @@ export default function Home() {
           </span>{" "}
         </p>
       </div>
-      <div className="bottom-0">
+      <div className="bottom-0 mb-3">
         <p className="text-slate-700">This website doesn&apos;t use cookies</p>
       </div>
     </div>
