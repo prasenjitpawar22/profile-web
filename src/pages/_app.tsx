@@ -6,7 +6,7 @@ import { ParallaxProvider } from "react-scroll-parallax";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ParallaxProvider scrollAxis="vertical">
-      <ThemeProvider attribute="class" defaultTheme="dark">
+      <ThemeProvider attribute="class">
         <Component {...pageProps} />
       </ThemeProvider>
     </ParallaxProvider>

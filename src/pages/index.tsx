@@ -147,10 +147,7 @@ export default function Home() {
       <div className="mb-12 flex flex-col">
         <p className="mb-3 font-bold">Projects</p>
         <div className="relative flex gap-x-2">
-          <div
-            id="sliderContainer"
-            className="mb-3 w-full rounded border  border-slate-700"
-          >
+          <div id="sliderContainer" className="borde mb-3 w-full rounded">
             <Projects
               projectsInView={projectsInView}
               setProjectsInView={setProjectsInView}
@@ -162,7 +159,7 @@ export default function Home() {
             <div
               key={index}
               className={`h-1 w-6 rounded-md ${
-                value ? "bg-slate-400" : "bg-slate-700"
+                value ? "bg-foreground" : "bg-muted"
               } `}
             ></div>
           ))}
