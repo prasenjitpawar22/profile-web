@@ -8,6 +8,7 @@ import linkedIn from "../../public/linkedin.svg";
 import git from "../../public/github.svg";
 import hashnode from "../../public/hashnode.svg";
 import Projects from "@/components/projects";
+import { ThemeButton } from "@/components/theme-button";
 
 export default function Home() {
   const projects = [
@@ -50,9 +51,12 @@ export default function Home() {
 
   return (
     <div className="flex h-screen flex-col overflow-y-scroll xs:px-12 xs:pt-12 lg:px-80 lg:pt-14">
+      <div className="flex w-full justify-end">
+        <ThemeButton />
+      </div>
       <div className="mb-12">
-        <p className="mb-3 font-bold text-slate-400">About</p>
-        <p className="leading-5 text-slate-100">
+        <p className="mb-3 font-bold ">About</p>
+        <p className="leading-5 ">
           Hi, I&apos;m Prasenjit Pawar software engineer at{" "}
           <Link
             target={"_blank"}
@@ -71,13 +75,12 @@ export default function Home() {
           >
             Mumbai.
           </Link>{" "}
-          I enjoy{" "}
-          <span className="font-medium text-slate-500">web development.</span>
+          I enjoy <span className="font-medium">web development.</span>
         </p>
       </div>
       <div className="mb-12 flex flex-col">
-        <p className="mb-3 font-bold text-slate-400">Links</p>
-        <ul className="w-fit items-center text-slate-100">
+        <p className="mb-3 font-bold">Links</p>
+        <ul className="w-fit items-center ">
           <li className="flex gap-1">
             <Link
               className="flex items-end gap-1 hover:underline"
@@ -142,7 +145,7 @@ export default function Home() {
         </ul>
       </div>
       <div className="mb-12 flex flex-col">
-        <p className="mb-3 font-bold text-slate-400">Projects</p>
+        <p className="mb-3 font-bold">Projects</p>
         <div className="relative flex gap-x-2">
           <div
             id="sliderContainer"
@@ -166,9 +169,9 @@ export default function Home() {
         </div>
       </div>
       <div>
-        <p className="font-bold text-slate-400">
+        <p className="font-bold">
           Current Tech stack:{" "}
-          <span className="font-normal text-slate-100">
+          <span className="font-normal ">
             Next.js, tRPC, MongoBD, PostgreSQL.
           </span>{" "}
         </p>

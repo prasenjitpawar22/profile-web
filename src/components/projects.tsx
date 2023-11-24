@@ -92,23 +92,18 @@ export const Project = ({
   });
 
   useEffect(() => {
-    // console.log(isInView);
     const update = [...projectsInView];
     update[index] = isInView;
     setProjectsInView(update);
   }, [isInView]);
-
-  useEffect(() => {
-    console.log(projectsInView);
-  }, [projectsInView]);
 
   return (
     <li ref={ref} key={index} className={`project-card w-96  snap-center p-1`}>
       <Link
         target={"_blank"}
         href={project.link}
-        className={`flex w-[63vw] select-none flex-col items-center overflow-hidden rounded p-2 text-slate-100 shadow-sm shadow-slate-500 
-        transition duration-200 hover:bg-slate-800 hover:shadow-slate-800 sm:w-[200px]`}
+        className={`flex w-[63vw] select-none flex-col items-center overflow-hidden rounded p-2
+         shadow transition duration-200 hover:bg-accent sm:w-[200px]`}
       >
         <div className="relative mb-2 h-24 w-full object-cover opacity-60">
           <Image
