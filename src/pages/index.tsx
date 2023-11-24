@@ -157,6 +157,7 @@ export default function Home() {
         <div className="flex items-center justify-center gap-4">
           {projectsInView.map((value, index) => (
             <div
+              key={index}
               className={`h-1 w-6 rounded-md ${
                 value ? "bg-slate-400" : "bg-slate-700"
               } `}

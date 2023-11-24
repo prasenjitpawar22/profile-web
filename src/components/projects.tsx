@@ -59,6 +59,7 @@ export default function Projects({ setProjectsInView, projectsInView }: Props) {
     >
       {projects.map((project, index) => (
         <Project
+          key={index}
           container={container}
           project={project}
           index={index}
