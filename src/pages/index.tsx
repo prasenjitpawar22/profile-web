@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 import x from "../../public/twitter-x.svg";
 import insta from "../../public/instagram.svg";
 import linkedIn from "../../public/linkedin.svg";
 import git from "../../public/github.svg";
 import hashnode from "../../public/hashnode.svg";
+import Projects from "@/components/projects";
 
 export default function Home() {
   const projects = [
@@ -43,6 +43,11 @@ export default function Home() {
     },
   ];
 
+  const [projectsInView, setProjectsInView] = useState(() => {
+    const temp = Array.from({ length: projects.length }, (_, i) => false);
+    return temp;
+  });
+
   return (
     <div className="flex h-screen flex-col overflow-y-scroll xs:px-12 xs:pt-12 lg:px-80 lg:pt-14">
       <div className="mb-12">
@@ -64,7 +69,7 @@ export default function Home() {
               "https://www.google.com/search?q=vadapav&tbm=isch&ved=2ahUKEwj7u_uXq9T_AhWTObcAHd8XChkQ2-cCegQIABAA&oq=vadap&gs_lcp=CgNpbWcQARgAMggIABCABBCxAzIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDoKCAAQigUQsQMQQzoHCAAQigUQQzoECCMQJ1DiIFi0J2DCMWgAcAB4AIABzAGIAeIGkgEFMC41LjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=eOmSZPufLpPz3LUP36-oyAE&bih=601&biw=1280&rlz=1C1UEAD_enIN1004IN1004"
             }
           >
-            Mumbai
+            Mumbai.
           </Link>{" "}
           I enjoy{" "}
           <span className="font-medium text-slate-500">web development.</span>
@@ -141,35 +146,22 @@ export default function Home() {
         <div className="relative flex gap-x-2">
           <div
             id="sliderContainer"
-            className="w-full rounded border border-slate-700"
+            className="mb-3 w-full rounded border  border-slate-700"
           >
-            <ul id="slider" className="flex w-full overflow-auto">
-              {projects.map((project, index) => (
-                <li key={index} className="card w-96 p-5">
-                  <Link
-                    target={"_blank"}
-                    href={project.link}
-                    className="flex w-36 select-none flex-col items-center rounded p-2 text-slate-100 shadow-sm 
-                    shadow-slate-500 transition duration-200 hover:bg-slate-800 hover:shadow-slate-800"
-                  >
-                    <div className="relative mb-2 h-24 w-full object-cover opacity-60">
-                      <Image
-                        src={project.img}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded"
-                        alt={project.title}
-                      />
-                    </div>
-                    <div className="w-full text-center">
-                      <h2 className="font-bold ">{project.title}</h2>
-                      <p className="font-thin">{project.description}</p>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <Projects
+              projectsInView={projectsInView}
+              setProjectsInView={setProjectsInView}
+            />
           </div>
+        </div>
+        <div className="flex items-center justify-center gap-4">
+          {projectsInView.map((value, index) => (
+            <div
+              className={`h-1 w-6 rounded-md ${
+                value ? "bg-slate-400" : "bg-slate-700"
+              } `}
+            ></div>
+          ))}
         </div>
       </div>
       <div>
@@ -180,7 +172,7 @@ export default function Home() {
           </span>{" "}
         </p>
       </div>
-      <div className="bottom-0 mb-3">
+      <div className="bottom-0 mb-12">
         <p className="text-slate-700">This website doesn&apos;t use cookies</p>
       </div>
     </div>
