@@ -9,6 +9,7 @@ import git from "../../public/github.svg";
 import hashnode from "../../public/hashnode.svg";
 import Projects from "@/components/projects";
 import { ThemeButton } from "@/components/theme-button";
+import Snowfall from "react-snowfall";
 
 export default function Home() {
   const projects = [
@@ -51,6 +52,7 @@ export default function Home() {
 
   return (
     <div className="flex h-screen flex-col overflow-y-scroll xs:px-12 xs:pt-12 lg:px-80 lg:pt-14">
+      <Snowfall snowflakeCount={25} />
       <div className="flex w-full justify-end">
         <ThemeButton />
       </div>
