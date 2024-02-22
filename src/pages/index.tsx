@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <div className="flex h-screen flex-col overflow-y-scroll xs:px-12 xs:pt-12 lg:px-80 lg:pt-14">
-      <Snowfall snowflakeCount={25} />
+      {/* <Snowfall snowflakeCount={25} /> */}
       <div className="flex w-full justify-end">
         <ThemeButton />
       </div>
