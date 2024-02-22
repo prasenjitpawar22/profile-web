@@ -1,4 +1,4 @@
-import { NextFetchEvent, NextRequest } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse} from "next/server";
 
 export async function middleware(req:NextRequest) {
   let domain = req.headers.get("host") as string;
