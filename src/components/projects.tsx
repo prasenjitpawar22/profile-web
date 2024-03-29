@@ -18,7 +18,7 @@ type Props = {
 export default function Projects({ setProjectsInView, projectsInView }: Props) {
   const projects = [
     {
-      link: "https://link3-pi.vercel.app/",
+      link: "https://www.linkifyi.com/",
       img: "/link.png",
       title: "Link3",
       description: "link-a-bio tool",
