@@ -14,7 +14,7 @@ import Snowfall from "react-snowfall";
 export default function Home() {
   const projects = [
     {
-      link: "https://link3-pi.vercel.app/",
+      link: "https://www.linkifyi.com",
       img: "/link.png",
       title: "Link3",
       description: "link-a-bio tool",
