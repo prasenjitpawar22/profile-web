@@ -14,7 +14,7 @@ export default function Home() {
           alt="Prasenjit Pawar"
           className="rounded-full border"
         />
-        <h1 className="text-4xl font-semibold tracking-tight">
+        <h1 className="text-4xl font-bold text-stone-900 tracking-tight">
           Software Engineer. Writer.
         </h1>
         <p className="text-base text-stone-700 tracking-wide ">

@@ -77,7 +77,7 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "gradient-disco": "gradient .2s linear infinite",
+        "gradient-disco": "gradient-disco .2s linear infinite",
       },
     },
   },
