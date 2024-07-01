@@ -26,9 +26,7 @@ export default function Page() {
         <div>
           <SlideUpButton />
         </div>
-        <div>
-          <NavbarHoveredPath />
-        </div>
+        <div>{/* <NavbarHoveredPath /> */}</div>
       </div>
     </>
   );
