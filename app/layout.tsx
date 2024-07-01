@@ -17,9 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} min-h-screen`}>
         <NavBar />
-        {children}
+        <main className="p-12 md:p-16 lg:p-24">{children}</main>
       </body>
     </html>
   );

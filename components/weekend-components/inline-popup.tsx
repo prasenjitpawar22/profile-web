@@ -80,14 +80,14 @@ export default function InlinePopup() {
               className="flex justify-end w-full items-center gap-4 text-sm mt-2"
             >
               <button
-                className="px-4 py-1 rounded shadow-sm border-slate-200 border"
+                className="px-4 py-1 rounded shadow-sm border-slate-200 border focus-visible:outline-slate-300 focus-visible:outline-1"
                 onClick={() => setOpen(false)}
                 type={"submit"}
               >
                 Send
               </button>
               <button
-                className="border-slate-200 border px-4 py-1 rounded shadow-sm bg-slate-50"
+                className="border-slate-200 border px-4 py-1 rounded shadow-sm bg-slate-50 focus-visible:outline-slate-300 focus-visible:outline-1"
                 onClick={() => setOpen(false)}
                 type="button"
               >
