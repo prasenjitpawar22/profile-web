@@ -19,8 +19,8 @@ export default function Home() {
       <h1 className="mt-2 md:text-4xl text-2xl font-bold text-stone-900 tracking-tight">
         Software Engineer. Writer.
       </h1>
-      <p className="mt-2 text-base text-stone-700 tracking-wide ">
-        Hi, I'm Prasenjit. I'm a software engineer @Capgemini.
+      <p className="mt-2 text-base text-stone-700 tracking-wide">
+       {`Hi, I'm Prasenjit. I'm a software engineer @Capgemini.`}
       </p>
       <div className="mt-2 flex gap-3 items-center">
         <Link href={"https://twitter.com/PrasenjitPawar"}>
