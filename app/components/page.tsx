@@ -1,6 +1,7 @@
 import DiscoButton from "@/components/weekend-components/disco-button";
 import InlinePopup from "@/components/weekend-components/inline-popup";
 import NavbarHoveredPath from "@/components/weekend-components/navbar-hovered-path";
+import SlideUpButton from "@/components/weekend-components/slide-up-button";
 
 export default function Page() {
   return (
@@ -21,6 +22,9 @@ export default function Page() {
         </div>
         <div className="">
           <DiscoButton />
+        </div>
+        <div>
+          <SlideUpButton />
         </div>
         <div>{/* <NavbarHoveredPath /> */}</div>
       </div>
