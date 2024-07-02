@@ -16,7 +16,7 @@ export default function Page() {
           weekend coding experiments and learing.
         </p>
       </div>
-      <div className="mt-12 flex gap-4 flex-wrap">
+      <div className="mt-12 flex items-center justify-center gap-4 flex-wrap overflow-hidden">
         <div>
           <InlinePopup />
         </div>

@@ -16,13 +16,13 @@ export default function Home() {
           className="w-full h-full top-0 left-0 object-cover rounded-2xl"
         />
       </div>
-      <h1 className="mt-2 md:text-4xl text-2xl font-bold text-stone-900 tracking-tight">
+      <h1 className="mt-6 text-4xl font-bold text-stone-900 tracking-tighter">
         Software Engineer. Writer.
       </h1>
-      <p className="mt-2 text-base text-stone-700 tracking-wide">
+      <p className="mt-2 text-base text-stone-700">
         {`Hi, I'm Prasenjit. I'm a software engineer @Capgemini.`}
       </p>
-      <div className="mt-2 flex gap-3 items-center">
+      <div className="mt-6 flex gap-3 items-center">
         <Link href={"https://twitter.com/PrasenjitPawar"}>
           <XIcon />
         </Link>

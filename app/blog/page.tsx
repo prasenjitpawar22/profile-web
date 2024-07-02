@@ -13,10 +13,10 @@ export default async function Page() {
   return (
     <>
       <div className="gap-4 flex flex-col lg:max-w-[700px]">
-        <h1 className="text-4xl font-bold text-stone-800">
-          My curated thoughts on software development
+        <h1 className="text-4xl tracking-tighter font-bold text-stone-800">
+          My curated thoughts on software and, design
         </h1>
-        <p className="text-base text-stone-700 tracking-wide">
+        <p className="text-base text-stone-700">
           Writing down all my thoughts on software development and design
           trends.
         </p>
@@ -29,13 +29,11 @@ export default async function Page() {
               key={article.id}
               className="w-full flex flex-col gap-2 transition-all duration-400 hover:bg-stone-100 p-4 rounded-md"
             >
-              <h2 className="text-base font-bold text-stone-800 inline-flex justify-between">
+              <h2 className="text-base font-bold flex-wrap text-stone-800 inline-flex items-center justify-between">
                 {article.title}
                 <span className="text-sm font-normal">{article.date}</span>
               </h2>
-              <p className="text-sm text-stone-800 tracking-tight">
-                {article.description}
-              </p>
+              <p className="text-sm text-stone-800">{article.description}</p>
             </Link>
           ))}
         </div>

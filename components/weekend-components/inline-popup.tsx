@@ -17,11 +17,11 @@ export default function InlinePopup() {
   }, [open]);
 
   return (
-    <div className="p-12 flex items-center justify-center w-[500px] border rounded-md">
+    <div className="p-12 flex items-center justify-center md:w-[500px] border rounded-md">
       <motion.div
         initial={{ width: 200, height: 50 }}
         animate={{
-          width: open ? 500 : 200,
+          width: open ? 270 : 200,
           height: open ? 200 : 50,
         }}
         transition={{ type: "spring" }}
@@ -77,7 +77,7 @@ export default function InlinePopup() {
             <motion.div
               animate={{ display: open ? "flex" : "none" }}
               transition={{ duration: 0 }}
-              className="flex justify-end w-full items-center gap-4 text-sm mt-2"
+              className="flex justify-end w-full items-center gap-2 text-sm mt-2"
             >
               <button
                 className="px-4 py-1 rounded shadow-sm border-slate-200 border focus-visible:outline-slate-300 focus-visible:outline-1"
