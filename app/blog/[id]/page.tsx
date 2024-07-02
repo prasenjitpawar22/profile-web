@@ -1,9 +1,9 @@
 import { getArticleData } from "@/lib/article";
-import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const article = await getArticleData(params.id);
@@ -21,7 +21,8 @@ export default async function Page({ params }: { params: { id: string } }) {
           {article.date} | <BookOpen className="mx-2 opacity-40" size={20} />
           {article.read}
         </p>
-        <ReactMarkdown
+        <MDXRemote
+          source={article.markdown}
           components={{
             code({ node, inline, className, children, ...props }: any) {
               const match = /language-(\w+)/.exec(className || "");
@@ -38,10 +39,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <code>{children}</code>
               );
             },
+            pre: (props) => <pre {...props} className="bg-muted" />,
           }}
-        >
-          {article.markdown}
-        </ReactMarkdown>
+        />
       </article>
     </section>
   );

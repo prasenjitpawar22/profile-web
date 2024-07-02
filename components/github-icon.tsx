@@ -8,7 +8,7 @@ export default function GitHubIcon() {
       xmlns="http://www.w3.org/2000/svg"
       className="hover:scale-105 group cursor-pointer transition-all"
     >
-      <g clip-path="url(#clip0_15_195)">
+      <g clipPath="url(#clip0_15_195)">
         <path
           fill-rule="evenodd"
           clip-rule="evenodd"
