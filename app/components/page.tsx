@@ -1,4 +1,5 @@
 import DiscoButton from "@/components/weekend-components/disco-button";
+import { DynamicActionBar } from "@/components/weekend-components/dynamic-action-bar";
 import InlinePopup from "@/components/weekend-components/inline-popup";
 import NavbarHoveredPath from "@/components/weekend-components/navbar-hovered-path";
 import SlideUpButton from "@/components/weekend-components/slide-up-button";
@@ -16,7 +17,7 @@ export default function Page() {
           weekend coding experiments and learing.
         </p>
       </div>
-      <div className="mt-12 flex items-center justify-center gap-4 flex-wrap overflow-hidden">
+      <div className="mt-12 flex items-center justify-center md:justify-start gap-4 flex-wrap overflow-hidden">
         <div>
           <InlinePopup />
         </div>
@@ -27,6 +28,10 @@ export default function Page() {
           <SlideUpButton />
         </div>
         <div>{/* <NavbarHoveredPath /> */}</div>
+        <div></div>
+        <div>
+          <DynamicActionBar />
+        </div>
       </div>
     </>
   );

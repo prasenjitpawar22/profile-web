@@ -67,10 +67,16 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "gradient-disco": {
+          to: {
+            background: `linear-gradient(90deg, rgba(173,52,52,1) 0%, rgba(54,173,43,1) 27%, rgba(22,107,125,1) 50%, rgba(85,59,124,1) 75%, rgba(108,42,124,1) 84%, rgba(30,27,128,1) 100%, rgba(255,255,255,1) 100%, rgba(255,255,255,1) 100%, rgba(255,255,255,0.46559873949579833) 100%)`,
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "gradient-disco": "gradient-disco 0.2s alternate infinite",
       },
     },
   },

@@ -29,7 +29,7 @@ export default function InlinePopup() {
       >
         <motion.div
           transition={{ duration: 0.8 }}
-          className="relative flex-col border border-slate-200 w-full h-full justify-between"
+          className="relative flex-col border border-slate-200 w-full h-full justify-between rounded-md"
         >
           <motion.button
             onClick={() => {
@@ -41,7 +41,7 @@ export default function InlinePopup() {
               filter: !open ? "blur(0px)" : "blur(5px)",
             }}
             transition={{ duration: open ? 0 : 0.7 }}
-            className="w-full whitespace-nowrap h-full text-sm items-center justify-center cursor-pointer rounded"
+            className="w-full drop-shadow whitespace-nowrap h-full text-sm font-semibold text-slate-700 items-center justify-center cursor-pointer rounded-md"
           >
             Send feedback
           </motion.button>
@@ -49,7 +49,7 @@ export default function InlinePopup() {
           <motion.form
             initial={{ display: "none" }}
             animate={{ display: open ? "flex" : "none" }}
-            className="flex items-center justify-center px-4 py-2 h-full flex-col gap-2"
+            className="flex items-center justify-center px-4 py-2 h-full flex-col gap-2 rounded-md"
             onSubmit={(e) => e.preventDefault()}
             onKeyDown={(e) => (e.key === "Escape" ? setOpen(false) : null)}
           >
@@ -65,12 +65,12 @@ export default function InlinePopup() {
               className="gap-2 flex-col text-sm w-full"
             >
               <input
-                className="border border-slate-200 px-2 py-2 focus-visible:outline outline-slate-400 outline-offset-2 rounded"
+                className="border border-slate-200 px-2 py-2 focus-visible:outline text-slate-700 outline-slate-400 outline-offset-2 rounded"
                 placeholder="Name"
                 ref={nameRef}
               />
               <input
-                className="border border-slate-200 px-2 py-2 focus-visible:outline  outline-slate-400 outline-offset-2 rounded"
+                className="border border-slate-200 px-2 py-2 focus-visible:outline text-slate-700  outline-slate-400 outline-offset-2 rounded"
                 placeholder="Message"
               />
             </motion.div>
@@ -80,14 +80,14 @@ export default function InlinePopup() {
               className="flex justify-end w-full items-center gap-2 text-sm mt-2"
             >
               <button
-                className="px-4 py-1 rounded shadow-sm border-slate-200 border focus-visible:outline-slate-300 focus-visible:outline-1"
+                className="px-4 py-1 rounded text-slate-700 shadow-sm border-slate-200 border focus-visible:outline-slate-300 focus-visible:outline-1"
                 onClick={() => setOpen(false)}
                 type={"submit"}
               >
                 Send
               </button>
               <button
-                className="border-slate-200 border px-4 py-1 rounded shadow-sm bg-slate-50 focus-visible:outline-slate-300 focus-visible:outline-1"
+                className="border-slate-200 text-slate-700 border px-4 py-1 rounded shadow-sm bg-slate-50 focus-visible:outline-slate-300 focus-visible:outline-1"
                 onClick={() => setOpen(false)}
                 type="button"
               >
