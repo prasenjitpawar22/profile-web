@@ -7,7 +7,7 @@ import { AnimatePresence, Variant, motion } from 'framer-motion'
 import { AppWindowMacIcon } from './app-window-mac-icon'
 import { CodeIcon } from './code-icon'
 import { NotePadIcon } from './notepad-icon'
-import { MoveUpRight, SquareArrowOutUpRight, TwitchIcon } from 'lucide-react'
+import { SquareArrowOutUpRight, CodeIcon as LucideCodeIcon, PaperclipIcon, Paperclip } from 'lucide-react'
 
 const CollapsibleContent = motion(CollapsiblePrimitive.Content)
 const CollapsibleRoot = motion(CollapsiblePrimitive.Root)
@@ -22,7 +22,7 @@ export const DynamicActionBar = () => {
   const [state, setState] = useState<{
     isOpen: boolean
     state?: null | BarButtons
-  }>({ isOpen: true, state: BarButtons.App })
+  }>({ isOpen: false, state: null })
 
   return (
     <motion.div className='flex w-[500px] bg-slate-50 h-[200px] items-end justify-center border p-3 rounded-md'>
@@ -63,7 +63,7 @@ export const DynamicActionBar = () => {
                     <p className='text-xs text-black/[0.7]'>Streams</p>
                   </div>
                 </div>
-                <span className='text-xs hidden group-hover:block text-black/[.4]'>Web</span>
+                <span className='text-xs hidden group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>Web</span>
               </div>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
@@ -83,7 +83,7 @@ export const DynamicActionBar = () => {
                     <p className='text-xs text-black/[0.7]'>Streams</p>
                   </div>
                 </div>
-                <span className='text-xs hidden group-hover:block text-black/[.4]'>Web</span>
+                <span className='text-xs hidden group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>Web</span>
               </div>
             </CollapsibleContent>
           )}
@@ -92,32 +92,68 @@ export const DynamicActionBar = () => {
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.components })}
               onMouseLeave={() => setState({ isOpen: false })}
               initial={{ display: 'none', height: 0 }}
-              animate={{ display: 'flex', height: 100 }}
+              animate={{ display: 'flex', height: 110 }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden px-4 h-full flex-col gap-2 rounded-md'>
-              components hai
+              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+                <div className='flex gap-2 items-center justify-start'>
+                  <LucideCodeIcon size={14} />
+                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>Dynamic Action Bar</h1>
+                </div>
+                <div className='flex text-xs gap-1 justify-between items-center'>
+                  <span className='group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>Dynamic</span>
+                  <span> 07 - 24 </span>
+                </div>
+              </div>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+                <div className='flex gap-2 items-center justify-start'>
+                  <LucideCodeIcon size={14} />
+                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>Slack</h1>
+                </div>
+                <div className='flex text-xs gap-1 justify-between items-center'>
+                  <span className='group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>Dynamic</span>
+                  <span> 07 - 24 </span>
+                </div>
+              </div>
             </CollapsibleContent>
           )}
           {state.isOpen && state.state === BarButtons.Notes && (
             <CollapsibleContent
-              onMouseEnter={() =>
-                setState({
-                  isOpen: true,
-                  state: BarButtons.Notes,
-                })
-              }
+              onMouseEnter={() => setState({ isOpen: true, state: BarButtons.Notes })}
               onMouseLeave={() => setState({ isOpen: false })}
               initial={{ display: 'none', height: 0 }}
-              animate={{ display: 'flex', height: 100 }}
-              transition={{
-                type: 'spring',
-                bounce: 0.5,
-                duration: 0.73,
-              }}
+              animate={{ display: 'flex', height: 110 }}
+              transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden px-4 h-full flex-col gap-2 rounded-md'>
-              Notes ahi
+              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+                <div className='flex gap-2 items-center justify-start'>
+                  <Paperclip size={14} />
+                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>Dappper split-on</h1>
+                </div>
+                <div className='flex text-xs gap-1 justify-between items-center'>
+                  <span> May, 2024</span>
+                </div>
+              </div>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+                <div className='flex gap-2 items-center justify-start'>
+                  <Paperclip size={14} />
+                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>Feedback component</h1>
+                </div>
+                <div className='flex text-xs gap-1 justify-between items-center'>
+                  <span> Apr, 2024 </span>
+                </div>
+              </div>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+                <div className='flex gap-2 items-center justify-start'>
+                  <Paperclip size={14} />
+                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>Rolling back database</h1>
+                </div>
+                <div className='flex text-xs gap-1 justify-between items-center'>
+                  <span> Dec, 2025 </span>
+                </div>
+              </div>
             </CollapsibleContent>
           )}
         </AnimatePresence>
@@ -129,7 +165,7 @@ export const DynamicActionBar = () => {
               onMouseLeave={() => setState({ isOpen: false })}
               onClick={(e) => e.preventDefault()}
               className={cn(
-                'inline-flex items-center justify-center gap-1 w-full px-2 hover:text-white hover:bg-slate-700 transition-all duration-300 py-1 rounded-md text-xs',
+                'inline-flex items-center cursor-default justify-center gap-1 w-full px-2 hover:text-white hover:bg-slate-700 transition-all duration-300 py-1 rounded-md text-xs',
                 state.isOpen && state.state === BarButtons.App ? 'bg-slate-700 text-white' : null,
               )}
               variants={{ default: { opacity: 1 }, hover: { opacity: 1 } }}
@@ -143,13 +179,12 @@ export const DynamicActionBar = () => {
           <CollapsiblePrimitive.Trigger asChild>
             <motion.button
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.components })}
-              key={'components'}
               onMouseLeave={() => setState({ isOpen: false })}
               onClick={(e) => {
                 e.preventDefault()
               }}
               className={cn(
-                'inline-flex items-center gap-1 justify-center w-full hover:text-white hover:bg-slate-700 px-2 transition-all duration-300 py-1 rounded-md text-sm',
+                'inline-flex items-center cursor-default gap-1 justify-center w-full hover:text-white hover:bg-slate-700 px-2 transition-all duration-300 py-1 rounded-md text-sm',
                 state.isOpen && state.state === BarButtons.components ? 'bg-slate-700 text-white ' : null,
               )}
               variants={{ default: { opacity: 1 }, hover: { opacity: 1 } }}
@@ -164,12 +199,9 @@ export const DynamicActionBar = () => {
             <motion.button
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.Notes })}
               onMouseLeave={() => setState({ isOpen: false })}
-              key={'notes'}
-              id='notes'
-              layoutId='notes'
               onClick={(e) => e.preventDefault()}
               className={cn(
-                'inline-flex items-center group gap-1 justify-center w-full hover:text-white hover:bg-slate-700 px-2 transition-all duration-300 py-1 rounded-md text-sm',
+                'inline-flex items-center cursor-default group gap-1 justify-center w-full hover:text-white hover:bg-slate-700 px-2 transition-all duration-300 py-1 rounded-md text-sm',
                 state.isOpen && state.state === BarButtons.Notes ? 'bg-slate-700 text-white' : null,
               )}
               variants={{ default: { opacity: 1 }, hover: { opacity: 1 } }}
