@@ -3,6 +3,7 @@ import { DynamicActionBar } from '@/components/weekend-components/dynamic-action
 import InlinePopup from '@/components/weekend-components/inline-popup'
 import NavbarHoveredPath from '@/components/weekend-components/navbar-hovered-path'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
+import { Testing } from '@/components/weekend-components/testing/tesing'
 
 export default function Page() {
   return (
@@ -12,20 +13,11 @@ export default function Page() {
         <p className='text-base text-stone-700 tracking-wide'>Welcome to my weekend code showcase! This is where I document all my weekend coding experiments and learing.</p>
       </div>
       <div className='mt-12 flex items-center justify-center md:justify-start gap-4 flex-wrap overflow-hidden'>
-        <div>
-          <InlinePopup />
-        </div>
-        <div className=''>
-          <DiscoButton />
-        </div>
-        <div>
-          <SlideUpButton />
-        </div>
-        <div>{/* <NavbarHoveredPath /> */}</div>
-        <div></div>
-        <div>
-          <DynamicActionBar />
-        </div>
+        <InlinePopup />
+        <DiscoButton />
+        <SlideUpButton />
+        <DynamicActionBar />
+        {/* <Testing /> */}
       </div>
     </>
   )

@@ -38,11 +38,11 @@ export const DynamicActionBar = () => {
               layout='position'
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.App })}
               onMouseLeave={() => setState({ isOpen: false })}
-              initial={{ display: 'none', height: 0 }}
-              animate={{ display: 'flex', height: 110 }}
+              initial={{ display: 'flex', height: 0, marginBottom: 6, marginTop: 12 }}
+              animate={{ display: 'flex', height: 'auto', marginBottom: 6, marginTop: 12 }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              className='flex w-full items-center justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <svg className='bg-slate-700 fill-white border rounded-lg p-1' width='34' height='34' viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'>
@@ -91,11 +91,11 @@ export const DynamicActionBar = () => {
             <CollapsibleContent
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.components })}
               onMouseLeave={() => setState({ isOpen: false })}
-              initial={{ display: 'none', height: 0 }}
-              animate={{ display: 'flex', height: 110 }}
+              animate={{ display: 'flex', height: 'auto', marginBottom: 6, marginTop: 12 }}
+              initial={{ display: 'flex', height: 0, marginBottom: 6, marginTop: 12 }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              className='flex w-full items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <LucideCodeIcon size={14} />
@@ -122,11 +122,10 @@ export const DynamicActionBar = () => {
             <CollapsibleContent
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.Notes })}
               onMouseLeave={() => setState({ isOpen: false })}
-              initial={{ display: 'none', height: 0 }}
-              animate={{ display: 'flex', height: 110 }}
+              animate={{ display: 'flex', height: 'auto', marginBottom: 6, marginTop: 12 }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center border-b rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              className='flex w-full items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <Paperclip size={14} />
@@ -158,7 +157,7 @@ export const DynamicActionBar = () => {
           )}
         </AnimatePresence>
 
-        <div className={cn('flex gap-2 justify-center items-center py-1 rounded-xl')}>
+        <div className={cn('flex gap-2 justify-center items-center py-1 rounded-xl', state.isOpen && 'border-t rounded-t-none')}>
           <CollapsiblePrimitive.Trigger asChild>
             <motion.button
               onMouseEnter={() => setState({ isOpen: true, state: BarButtons.App })}
