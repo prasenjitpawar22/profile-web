@@ -3,11 +3,11 @@ import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 
-import { AnimatePresence, Variant, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { AppWindowMacIcon } from './app-window-mac-icon'
 import { CodeIcon } from './code-icon'
 import { NotePadIcon } from './notepad-icon'
-import { SquareArrowOutUpRight, CodeIcon as LucideCodeIcon, PaperclipIcon, Paperclip } from 'lucide-react'
+import { SquareArrowOutUpRight, CodeIcon as LucideCodeIcon, Paperclip } from 'lucide-react'
 
 const CollapsibleContent = motion(CollapsiblePrimitive.Content)
 const CollapsibleRoot = motion(CollapsiblePrimitive.Root)

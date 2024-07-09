@@ -17,7 +17,7 @@ export default function Page() {
         <DiscoButton />
         <SlideUpButton />
         <DynamicActionBar />
-        {/* <Testing /> */}
+        <Testing />
       </div>
     </>
   )
