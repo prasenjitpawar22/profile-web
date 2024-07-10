@@ -49,18 +49,13 @@ export const DynamicActionBar = () => {
               initial={{
                 display: 'flex',
                 height: 0,
-                marginBottom: 6,
-                marginTop: 12,
               }}
-              animate={{
-                display: 'flex',
-                height: 'auto',
-                marginBottom: 6,
-                marginTop: 12,
-              }}
+              animate={{ display: 'flex', height: 'auto' }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              className={cn(
+                `flex w-full items-center mt-4 justify-center overflow-hidden h-full flex-col gap-2 rounded-md`,
+              )}>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <svg
@@ -130,6 +125,7 @@ export const DynamicActionBar = () => {
                   Web
                 </span>
               </div>
+              <span className='w-full h-[1px] border my-2'></span>
             </CollapsibleContent>
           )}
           {state.isOpen && state.state === BarButtons.components && (
@@ -141,18 +137,14 @@ export const DynamicActionBar = () => {
               animate={{
                 display: 'flex',
                 height: 'auto',
-                marginBottom: 6,
-                marginTop: 12,
               }}
               initial={{
                 display: 'flex',
                 height: 0,
-                marginBottom: 6,
-                marginTop: 12,
               }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <LucideCodeIcon size={14} />
@@ -181,6 +173,7 @@ export const DynamicActionBar = () => {
                   <span> 07 - 24 </span>
                 </div>
               </div>
+              <span className='w-full h-[1px] border my-2'></span>
             </CollapsibleContent>
           )}
           {state.isOpen && state.state === BarButtons.Notes && (
@@ -192,12 +185,10 @@ export const DynamicActionBar = () => {
               animate={{
                 display: 'flex',
                 height: 'auto',
-                marginBottom: 6,
-                marginTop: 12,
               }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
-              className='flex w-full items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
+              className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <Paperclip size={14} />
@@ -231,15 +222,21 @@ export const DynamicActionBar = () => {
                   <span> Dec, 2025 </span>
                 </div>
               </div>
+              <span className='w-full h-[1px] border my-2'></span>
             </CollapsibleContent>
           )}
         </AnimatePresence>
 
-        <div
-          className={cn(
-            'flex gap-2 justify-center items-center py-1 rounded-xl',
-            state.isOpen && 'border-t rounded-t-none',
-          )}>
+        <motion.div
+          initial={{
+            paddingTop: state.isOpen ? '0px' : '4px',
+            paddingBottom: '4px',
+          }}
+          animate={{
+            paddingTop: state.isOpen ? '0px' : '4px',
+            paddingBottom: '4px',
+          }}
+          className={cn('flex gap-2 justify-center items-center rounded-xl')}>
           <CollapsiblePrimitive.Trigger asChild>
             <motion.button
               onMouseEnter={() =>
@@ -305,7 +302,7 @@ export const DynamicActionBar = () => {
               {BarButtons.Notes}
             </motion.button>
           </CollapsiblePrimitive.Trigger>
-        </div>
+        </motion.div>
       </CollapsibleRoot>
     </motion.div>
   )
