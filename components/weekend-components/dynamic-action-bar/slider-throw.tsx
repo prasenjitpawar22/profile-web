@@ -1,19 +1,10 @@
 'use client'
-import { useMousePosition } from '@/hooks/use-mouse-position'
 import { cn } from '@/lib/utils'
-import {
-  AnimatePresence,
-  Variants,
-  motion,
-  useAnimationControls,
-  useDragControls,
-  useMotionValue,
-  useTransform,
-} from 'framer-motion'
-import { BatteryLowIcon, ChevronRightCircleIcon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronRightCircleIcon } from 'lucide-react'
+import { useState } from 'react'
 
-export const Testing = () => {
+export const SliderThrow = () => {
   const [cur, setCur] = useState('2')
   const [prev, setPrev] = useState('1')
   const [next, setNext] = useState('3')
