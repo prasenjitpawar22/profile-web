@@ -46,10 +46,7 @@ export const DynamicActionBar = () => {
                 setState({ isOpen: true, state: BarButtons.App })
               }
               onMouseLeave={() => setState({ isOpen: false })}
-              initial={{
-                display: 'flex',
-                height: 0,
-              }}
+              initial={{ display: 'flex', height: 0 }}
               animate={{ display: 'flex', height: 'auto' }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
@@ -134,14 +131,8 @@ export const DynamicActionBar = () => {
                 setState({ isOpen: true, state: BarButtons.components })
               }
               onMouseLeave={() => setState({ isOpen: false })}
-              animate={{
-                display: 'flex',
-                height: 'auto',
-              }}
-              initial={{
-                display: 'flex',
-                height: 0,
-              }}
+              initial={{ display: 'flex', height: 0 }}
+              animate={{ display: 'flex', height: 'auto' }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
               className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
@@ -182,11 +173,12 @@ export const DynamicActionBar = () => {
                 setState({ isOpen: true, state: BarButtons.Notes })
               }
               onMouseLeave={() => setState({ isOpen: false })}
-              animate={{
-                display: 'flex',
-                height: 'auto',
-              }}
+              initial={{ display: 'flex', height: 0 }}
+              animate={{ display: 'flex', height: 'auto' }}
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
+              exit={{
+                transition: { duration: 0.5, type: 'tween' },
+              }}
               forceMount
               className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
               <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>

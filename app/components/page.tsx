@@ -1,10 +1,9 @@
+import { CardsShuffle } from '@/components/weekend-components/cards-shuffle'
 import DiscoButton from '@/components/weekend-components/disco-button'
 import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar/index'
 import { SliderThrow } from '@/components/weekend-components/dynamic-action-bar/slider-throw'
 import InlinePopup from '@/components/weekend-components/inline-popup'
-import NavbarHoveredPath from '@/components/weekend-components/navbar-hovered-path'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
-import { Testing } from '@/components/weekend-components/testing/tesing'
 
 export default function Page() {
   return (
@@ -25,6 +24,7 @@ export default function Page() {
         <SlideUpButton />
         <DynamicActionBar />
         <SliderThrow />
+        <CardsShuffle />
       </div>
     </>
   )
