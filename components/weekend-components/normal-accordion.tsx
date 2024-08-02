@@ -91,6 +91,7 @@ const AccordionTrigger = React.forwardRef<
     </Accordion.Trigger>
   </Accordion.Header>
 ))
+AccordionTrigger.displayName = 'AccordionTrigger'
 
 const AccordionContentPremitive = React.forwardRef<
   ElementRef<typeof Accordion.AccordionContent>,
@@ -105,3 +106,4 @@ const AccordionContentPremitive = React.forwardRef<
     </Accordion.AccordionContent>
   </Accordion.Header>
 ))
+AccordionContentPremitive.displayName = 'AccordionContentPremitive'

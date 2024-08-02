@@ -60,7 +60,7 @@ function Digit({ place, value }: { place: number; value: number }) {
 
   return (
     <div style={{ height }} className='relative w-[1ch] tabular-nums'>
-      {[...Array(10).keys()].map((i) => (
+      {Array.from({ length: 10 }, (_, i) => (
         <Number key={i} mv={animatedValue} number={i} />
       ))}
     </div>
