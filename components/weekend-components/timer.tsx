@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { MotionValue, motion, useSpring, useTransform } from 'framer-motion'
+import Link from 'next/link'
+import { ExternalLink } from 'lucide-react'
 
 const fontSize = 30
 const padding = 15
@@ -31,10 +33,19 @@ export default function Timer() {
   }, [])
   // aababbab
   return (
-    <div className='flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-[500px] items-center justify-center'>
+    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-[500px] items-center justify-center'>
       <Counter value={minutes} />
       <span className='font-bold mx-2'>:</span>
       <Counter value={seconds} />
+      <Link
+        href={'https://buildui.com/recipes/animated-counter'}
+        target='_blank'
+        className='absolute flex cursor-pointer bottom-0 right-0 text-xs'>
+        <p className='w-full flex items-center gap-1 rounded-md px-2'>
+          Reference from
+          <ExternalLink size={12} className='mb-[1px]' />
+        </p>
+      </Link>
     </div>
   )
 }
@@ -43,7 +54,7 @@ function Counter({ value }: { value: number }) {
   return (
     <div
       style={{ fontSize }}
-      className='flex space-x-3 overflow-hidden rounded bg-white px-2 leading-none text-gray-900'>
+      className='flex space-x-3 overflow-hidden rounded bg-black px-2 leading-none text-gray-900'>
       <Digit place={10} value={value} />
       <Digit place={1} value={value} />
     </div>
@@ -84,8 +95,8 @@ function Number({ mv, number }: { mv: MotionValue; number: number }) {
   return (
     <motion.span
       style={{ y }}
-      className='absolute inset-0 flex items-center justify-center'>
-      {number}
+      className='absolute inset-0 flex gap-3 items-center justify-center'>
+      <span className='bg-white rounded curved-text'>{number}</span>
     </motion.span>
   )
 }

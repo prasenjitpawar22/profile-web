@@ -5,6 +5,7 @@ import { SliderThrow } from '@/components/weekend-components/dynamic-action-bar/
 import InlinePopup from '@/components/weekend-components/inline-popup'
 import { NormalAccordion } from '@/components/weekend-components/normal-accordion'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
+import Test from '@/components/weekend-components/testing/test'
 import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
@@ -29,6 +30,7 @@ export default function Page() {
         <CardsShuffle />
         <NormalAccordion />
         <Timer />
+        {/* <Test /> */}
       </div>
     </>
   )
