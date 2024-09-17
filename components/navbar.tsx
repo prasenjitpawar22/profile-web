@@ -11,6 +11,7 @@ const navItems: NavItems[] = [
   { name: "Blog", path: "/blog" },
   // { name: "Projects", path: "/projects" },
   { name: "Components", path: "/components" },
+  { name: "Projects", path: "/projects" },
 ];
 export default function NavBar() {
   const pathname = usePathname();
@@ -38,31 +39,31 @@ export default function NavBar() {
               {nav.name}
               {(hoveredItem === nav.path ||
                 hoveredItem.startsWith(nav.path + "/")) && (
-                <motion.span
-                  layoutId="navbar"
-                  className="absolute bottom-0 w-full left-0 h-full bg-stone-100 rounded-full -z-10"
-                  animate={
-                    (nav.path === pathname ||
-                      pathname.startsWith(nav.path + "/")) && {
-                      height: 2,
-                      scale: 0.4,
-                      backgroundColor: [
-                        "rgb(245 245 244 /1)",
-                        "rgb(120 113 108/1)",
-                        "rgb(41 37 36 /1)",
-                      ],
-                      transition: { delay: 0.6 },
+                  <motion.span
+                    layoutId="navbar"
+                    className="absolute bottom-0 w-full left-0 h-full bg-stone-100 rounded-full -z-10"
+                    animate={
+                      (nav.path === pathname ||
+                        pathname.startsWith(nav.path + "/")) && {
+                        height: 2,
+                        scale: 0.4,
+                        backgroundColor: [
+                          "rgb(245 245 244 /1)",
+                          "rgb(120 113 108/1)",
+                          "rgb(41 37 36 /1)",
+                        ],
+                        transition: { delay: 0.6 },
+                      }
                     }
-                  }
-                  transition={{
-                    type: "spring",
-                    bounce: 0.25,
-                    stiffness: 130,
-                    damping: 20,
-                    duration: 0.3,
-                  }}
-                ></motion.span>
-              )}
+                    transition={{
+                      type: "spring",
+                      bounce: 0.25,
+                      stiffness: 130,
+                      damping: 20,
+                      duration: 0.3,
+                    }}
+                  ></motion.span>
+                )}
             </motion.li>
           </Link>
         ))}

@@ -11,7 +11,7 @@ import Timer from '@/components/weekend-components/timer'
 export default function Page() {
   return (
     <>
-      <div className='lg:max-w-[700px] gap-4 flex flex-col'>
+      <div className='gap-4 flex flex-col'>
         <h1 className='text-2xl md:text-4xl font-bold text-stone-800'>
           My Weekend Pursuits in Building Innovative Component and learning
           Design

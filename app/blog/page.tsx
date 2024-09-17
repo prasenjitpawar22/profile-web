@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <>
-      <div className="gap-4 flex flex-col lg:max-w-[700px]">
+      <div className="gap-4 flex flex-col">
         <h1 className="text-4xl tracking-tighter font-bold text-stone-800">
           My curated thoughts on software and, design
         </h1>
