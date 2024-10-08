@@ -2,10 +2,11 @@ import { CardsShuffle } from '@/components/weekend-components/cards-shuffle'
 import DiscoButton from '@/components/weekend-components/disco-button'
 import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar/index'
 import { SliderThrow } from '@/components/weekend-components/dynamic-action-bar/slider-throw'
+import { GlideRadioButton } from '@/components/weekend-components/glide-radio-button'
 import InlinePopup from '@/components/weekend-components/inline-popup'
 import { NormalAccordion } from '@/components/weekend-components/normal-accordion'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
-import Test from '@/components/weekend-components/testing/test'
+// import { Test } from '@/components/weekend-components/testing/test'
 import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
@@ -31,6 +32,7 @@ export default function Page() {
         <NormalAccordion />
         <Timer />
         {/* <Test /> */}
+        <GlideRadioButton />
       </div>
     </>
   )
