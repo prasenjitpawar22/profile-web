@@ -20,7 +20,7 @@ const GitHub = motion(GitHubLogoIcon)
 const Framer = motion(FramerLogoIcon)
 const Message = motion(MessageCircle)
 
-export function Test() {
+export function AppSelector() {
   const [open, onOpenChange] = useState(false)
   const [selectedApp, setSelectedApp] = useState(
     <Instagram layoutId='Instagram' />,
@@ -103,8 +103,11 @@ export function Test() {
               <MotionButton
                 key={'button'}
                 layoutId='title'
+                initial={false}
+                animate={{ height: 'fit' }}
                 className='rounded-full text-sm flex gap-2'
-                onClick={() => onOpenChange(true)}>
+                onClick={() => onOpenChange(true)}
+                variant={'default'}>
                 {selectedApp} Apps
               </MotionButton>
             ) : (
@@ -120,6 +123,9 @@ export function Test() {
                 </div>
                 <motion.div
                   key={'block-child'}
+                  initial={{ opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  animate={{ opacity: 1, transition: { duration: 0.3 } }}
                   className='grid grid-cols-6 gap-4 z-10 shadow-inner rounded-b-none rounded-2xl p-2 text-foreground bg-background w-full'>
                   {icons.map((item, index) => (
                     <button
