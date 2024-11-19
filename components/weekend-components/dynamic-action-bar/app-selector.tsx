@@ -94,7 +94,7 @@ export function AppSelector() {
         a compact and engaging way to switch between different tools or
         platforms within an application.`}
       </p>
-      <div className='flex items-center'>
+      <div className='flex items-center h-[100px]'>
         <motion.div
           onKeyDown={(e) => e.code === 'Escape' && onOpenChange(false)}
           className='border-2 bg-foreground text-sm text-background flex flex-col gap-4 rounded-2xl shadow overflow-hidden'>
