@@ -84,7 +84,7 @@ export function AppSelector() {
   ]
 
   return (
-    <div className='bg-slate-50 py-2 w-full relative h-[200px] gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
+    <div className='bg-slate-50 py-2 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
       <p className='text-sm text-stone-700 tracking-wide'>
         {` This component is an animated app switcher that provides a visually
         interactive way to choose between various application icons. When
