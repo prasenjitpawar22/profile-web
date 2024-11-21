@@ -41,7 +41,7 @@ export default function Timer() {
         href={'https://buildui.com/recipes/animated-counter'}
         target='_blank'
         className='absolute flex cursor-pointer bottom-0 right-0 text-xs'>
-        <p className='w-full flex items-center gap-1 rounded-md px-2'>
+        <p className='w-full flex items-center gap-1 rounded-md px-2 mb-2'>
           Reference from
           <ExternalLink size={12} className='mb-[1px]' />
         </p>
