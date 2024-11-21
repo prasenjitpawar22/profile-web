@@ -221,6 +221,8 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
   },
 )
 
+MultiSelect.displayName = 'MultiSelect'
+
 // example
 export const MultiSelectExample = () => {
   const options = [
