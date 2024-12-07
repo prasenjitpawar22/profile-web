@@ -23,33 +23,6 @@ declare module "@tanstack/react-table" {
   }
 }
 
-// const defaultColumn: Partial<ColumnDef<Person>> = {
-//   cell: ({ getValue, row: { index }, column: { id }, table, cell }) => {
-//     const initialValue = getValue();
-//     const [value, setValue] = React.useState(initialValue);
-
-//     const onBlur = () => {
-//       if (initialValue !== value) table.options.meta?.updateData(index, id, value);
-//     };
-
-//     React.useEffect(() => {
-//       setValue(initialValue);
-//     }, [initialValue]);
-
-//     // Determine if the cell is edited
-//     const isEdited = table.options.meta?.isCellEdited(index, id);
-
-//     return (
-//       <input
-//         value={value as string}
-//         onChange={(e) => setValue(e.target.value)}
-//         onBlur={onBlur}
-//         className={cn(isEdited && 'bg-green-400')}
-//       />
-//     );
-//   },
-// };
-
 function useSkipper() {
   const shouldSkipRef = React.useRef(true);
   const shouldSkip = shouldSkipRef.current;
@@ -74,7 +47,6 @@ const options = [
 
 export function Test() {
   const [data, setData] = React.useState(() => makeData(1000));
-  data.map((d) => console.log(d))
   const [editedCells, setEditedCells] = React.useState<Set<string>>(new Set());
   const originalData = React.useRef(data);
 
@@ -120,7 +92,8 @@ export function Test() {
         header: 'Active',
         cell: ({ cell, column: { id }, getValue, row: { index } }) => {
           const currentValue = table.getRowModel().rows[index]?.original.active
-          const handleChange = (selectedOptions: boolean) => {
+          const handleChange = (selectedOptions: any) => {
+
             const values = selectedOptions
             table.options.meta?.updateData(index, id, values);
           };
@@ -128,9 +101,11 @@ export function Test() {
           const isEdited = table.options.meta?.isCellEdited(index, id);
 
           return (
-            <Checkbox checked={currentValue} onCheckedChange={handleChange}
-              className={cn(isEdited && 'bg-green-200 data-[state=checked]:bg-green-200 data-[state=checked]:text-primary ',
-              )} />
+            <input type="checkbox" checked={currentValue} onChange={() => handleChange(!currentValue)} />
+            // <Checkbox checked={currentValue} onCheckedChange={handleChange}
+            // className={cn(isEdited && 'bg-green-200 data-[state=checked]:bg-green-200 data-[state=checked]:text-primary ',
+            // )} 
+            // />
           )
         }
       },
@@ -158,7 +133,6 @@ export function Test() {
   const table = useReactTable({
     data,
     columns,
-    // defaultColumn,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
