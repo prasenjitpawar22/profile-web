@@ -52,7 +52,7 @@ const multiSelectVariants = cva(
 
 interface MultiSelectProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof multiSelectVariants> {
+  VariantProps<typeof multiSelectVariants> {
   options: {
     label: string
     value: string
@@ -129,7 +129,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
             className={cn(
               'rounded-full group flex py-2 gap-2 items-center hover:cursor-pointer',
               selectedValues.length &&
-                'hover:bg-background hover:cursor-default',
+              'hover:bg-background hover:cursor-default',
               className,
             )}>
             {selectedValues.length === 0 ? (
@@ -140,11 +140,11 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                   <AnimatePresence>
                     {maxCount
                       ? selectedValues
-                          .slice(0, maxCount)
-                          .map((app) => renderSelectedItems(app))
+                        .slice(0, maxCount)
+                        .map((app) => renderSelectedItems(app))
                       : selectedValues.map((value) =>
-                          renderSelectedItems(value),
-                        )}
+                        renderSelectedItems(value),
+                      )}
                   </AnimatePresence>
                   {maxCount && selectedValues.length > maxCount ? (
                     <span className='border font-normal text-accent-foreground rounded-full shadow-sm text-xs underline underline-offset-2 px-3 py-1 cursor-default'>
@@ -246,10 +246,10 @@ export const MultiSelectExample = () => {
           href={'https://shadcn-multi-select-component.vercel.app/'}
           target='_blank'
           className='absolute flex cursor-pointer bottom-0 right-0 text-xs'>
-          <p className='w-full flex items-center gap-1 rounded-md px-2 mb-2'>
+          <span className='w-full flex items-center gap-1 rounded-md px-2 mb-2'>
             Inspired from
             <ExternalLink size={12} className='mb-px' />
-          </p>
+          </span>
         </Link>
       </p>
       <h2 className='text-sm text-stone-700 tracking-wide'>Select Your Apps</h2>
