@@ -23,7 +23,7 @@ const projectList: { link: string, name: string, description: string, status: St
   , techStack: 'Next.js, Supabase, AWS'
 },
 {
-  name: 'Abhi Atul Sounds and Lights', link: 'https://atul-abhi-web.vercel.app/', status: 'Inprogress', description: 'Sound and Lights services', logo: <svg width="248" height="120" viewBox="0 0 248 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  name: 'Abhi and Atul', link: 'https://atul-abhi-web.vercel.app/', status: 'Inprogress', description: 'Sound and Lights services', logo: <svg width="248" height="120" viewBox="0 0 248 120" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g filter="url(#filter0_d_170_2)">
   <path d="M39.5 0H30L9 77.5C9 77.5 11.6476 76 13.5 76C15.3524 76 18 77.5 18 77.5H50C51 77.5 51.5 78.5 51.5 78.5C51.5 78.5 61 113.5 61.5 114C62 114.5 65.3443 114.918 67.5 114C69.1562 113.294 71 111 71 111C71 111 70 110.5 70 110C70 109.5 60.5 74 60 73C59.5 72 57 69.5 56.5 69C56 68.5 53 67 52.5 67H21C21 67 34 17.5 34.5 17.5C35 17.5 35.5 17.5 36 18.5C36.5 19.5 48.5 62.5 48.5 62.5C48.5 62.5 52 62 53.5 62.5C55 63 59 65 59 65C59 65 57 62.5 56.5 61.5C56 60.5 39.5 0 39.5 0Z" fill="black"/>
   <path d="M7.50002 83.5562L0 110.556C0 110.556 1.62394 113.515 3.5 114.056C5.78233 114.715 10 112.556 10 112.556L17.5 85.0562C17.5 85.0562 16.5 81.5562 13 81.0562C9.50002 80.5562 7.50002 83.5562 7.50002 83.5562Z" fill="black"/>
@@ -51,7 +51,7 @@ const projectList: { link: string, name: string, description: string, status: St
   </filter>
   </defs>
   </svg>,
-  techStack: 'Next.js, Supabase, AWS',
+  techStack: 'Next.js, Vercel, Tailwind CSS, Aceternity UI',
 },
 ]
 
