@@ -2,7 +2,7 @@
 title: "Interface Segregation: Don't Force Your Minions to Do Useless Work"
 description: "ISP keeps code clean by ensuring classes only implement what they need."
 category: "technical"
-date: "12-03-25"
+date: "03-12-25"
 read: "4 min read"
 ---
 
