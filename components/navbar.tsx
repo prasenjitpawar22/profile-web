@@ -42,6 +42,7 @@ export default function NavBar() {
                   <motion.span
                     layoutId="navbar"
                     className="absolute bottom-0 w-full left-0 h-full bg-stone-100 rounded-full -z-10"
+                    style={{borderRadius: 9999}}
                     animate={
                       (nav.path === pathname ||
                         pathname.startsWith(nav.path + "/")) && {
