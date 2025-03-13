@@ -43,19 +43,19 @@ export default function NavBar() {
                     layoutId="navbar"
                     className="absolute bottom-0 w-full left-0 h-full bg-stone-100 rounded-full -z-10"
                     style={{borderRadius: 9999}}
-                    animate={
-                      (nav.path === pathname ||
-                        pathname.startsWith(nav.path + "/")) && {
-                        height: 2,
-                        scale: 0.4,
-                        backgroundColor: [
-                          "rgb(245 245 244 /1)",
-                          "rgb(120 113 108/1)",
-                          "rgb(41 37 36 /1)",
-                        ],
-                        transition: { delay: 0.6 },
-                      }
-                    }
+                    // animate={
+                    //   (nav.path === pathname ||
+                    //     pathname.startsWith(nav.path + "/")) && {
+                    //     height: 2,
+                    //     scale: 0.4,
+                    //     backgroundColor: [
+                    //       "rgb(245 245 244 /1)",
+                    //       "rgb(120 113 108/1)",
+                    //       "rgb(41 37 36 /1)",
+                    //     ],
+                    //     transition: { delay: 0.6 },
+                    //   }
+                    // }
                     transition={{
                       type: "spring",
                       bounce: 0.25,
