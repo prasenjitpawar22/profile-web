@@ -1,3 +1,7 @@
+'use client'
+
+import { useBreakToastContext } from '@/components/break-toast/provider'
+import { Button } from '@/components/ui/button'
 import { CardsShuffle } from '@/components/weekend-components/cards-shuffle'
 import DiscoButton from '@/components/weekend-components/disco-button'
 import { AppSelector } from '@/components/weekend-components/dynamic-action-bar/app-selector'
@@ -12,6 +16,8 @@ import { Test } from '@/components/weekend-components/testing/test'
 import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
+  const { open, setOpen } = useBreakToastContext()
+
   return (
     <>
       <div className='gap-4 flex flex-col'>
@@ -25,6 +31,13 @@ export default function Page() {
         </p>
       </div>
       <div className='my-12 flex items-center justify-center md:justify-start gap-4 flex-wrap overflow-hidden'>
+        <Button
+          onClick={() => {
+            setOpen(true)
+            console.log('asas')
+          }}>
+          Click
+        </Button>
         <InlinePopup />
         <DiscoButton />
         <SlideUpButton />
