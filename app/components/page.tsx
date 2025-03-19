@@ -1,6 +1,6 @@
 'use client'
 
-import { useBreakToastContext } from '@/components/drawer-blur/provider'
+import { useDrawer } from '@/components/drawer-blur/provider'
 import { Button } from '@/components/ui/button'
 import { CardsShuffle } from '@/components/weekend-components/cards-shuffle'
 import DiscoButton from '@/components/weekend-components/disco-button'
@@ -16,7 +16,7 @@ import { Test } from '@/components/weekend-components/testing/test'
 import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
-  const { open, setOpen } = useBreakToastContext()
+  const { open, setOpen } = useDrawer()
 
   return (
     <>
@@ -31,13 +31,6 @@ export default function Page() {
         </p>
       </div>
       <div className='my-12 flex items-center justify-center md:justify-start gap-4 flex-wrap overflow-hidden'>
-        <Button
-          onClick={() => {
-            setOpen(true)
-            console.log('asas')
-          }}>
-          Click
-        </Button>
         <InlinePopup />
         <DiscoButton />
         <SlideUpButton />
@@ -50,6 +43,15 @@ export default function Page() {
         <AppSelector />
         <MultiSelectExample />
         {/* <Test /> */}
+        <div className='bg-slate-50 py-6 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
+          <Button
+            onClick={() => {
+              setOpen(true)
+              console.log('asas')
+            }}>
+            Open Drawer
+          </Button>
+        </div>
       </div>
     </>
   )

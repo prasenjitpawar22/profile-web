@@ -24,11 +24,11 @@ const BreakToastContext = createContext<{
 }>({ open: false, setOpen: () => null })
 
 const transition: Transition = {
-  duration: 0.4,
+  duration: .2,
   ease: 'easeIn',
 }
 
-export const useBreakToastContext = () => {
+export const useDrawer = () => {
   const context = useContext(BreakToastContext)
 
   if (!context) throw 'context error break toast!'
@@ -76,9 +76,6 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
         <motion.div
           ref={scope}
           data-open={open}
-          transition={transition}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className='fixed inset-0 z-[8888] overflow-hidden'>
           <motion.div
             onClick={handleClose}
@@ -91,7 +88,7 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
               id='drawer'
               ref={drawerRef}
               onClick={(e) => e.stopPropagation()}
-              initial={{ y: 100 }}
+              initial={{ y: 500 }}
               animate={{ y: 0 }}
               drag='y'
               dragControls={dragControls}
@@ -105,14 +102,14 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
                   handleClose()
                 }
               }}
-              className='absolute shadow-2xl border bottom-0 h-[75vh] w-full overflow-hidden bg-white rounded-t-3xl z-[9999]'>
+              className='absolute py-3 px-4 shadow-2xl border bottom-0 h-[75vh] w-full overflow-hidden bg-white rounded-t-3xl z-[9999]'>
               <motion.button
               style={{ touchAction: "none" }}
                 onPointerDown={(e) => dragControls.start(e)}
                 className='w-full inline-flex items-center justify-center'>
                 <span className='h-2 w-14 rounded-full bg-slate-200'></span>
               </motion.button>
-              <div className='flex items-end justify-end p-2'>Hello</div>
+              <div className='flex items-center justify-center p-2 text-center'></div>
             </motion.div>
           </motion.div>
         </motion.div>
