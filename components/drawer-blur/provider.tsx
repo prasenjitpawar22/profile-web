@@ -100,9 +100,6 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
               dragConstraints={{ top: 0, bottom:0 }}
               dragElastic={{ top: 0, bottom: 1 }}
               style={{ y }}
-              onDrag={() => {
-                console.log(y.get(), 'y')
-              }}
               onDragEnd={() => {
                 if (y.get() >= 150) {
                   handleClose()
@@ -110,6 +107,7 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
               }}
               className='absolute shadow-2xl border bottom-0 h-[75vh] w-full overflow-hidden bg-white rounded-t-3xl z-[9999]'>
               <motion.button
+              style={{ touchAction: "none" }}
                 onPointerDown={(e) => dragControls.start(e)}
                 className='w-full inline-flex items-center justify-center'>
                 <span className='h-2 w-14 rounded-full bg-slate-200'></span>
