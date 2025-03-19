@@ -5,6 +5,7 @@ import {
   ReactNode,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 import {
@@ -14,7 +15,6 @@ import {
   useDragControls,
   useMotionValue,
   useTransform,
-  Variants,
 } from 'framer-motion'
 import useMeasure from 'react-use-measure'
 
@@ -40,10 +40,10 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
   const dragControls = useDragControls()
   const [scope, animate] = useAnimate()
   const [drawerRef, { height }] = useMeasure()
-  const y = useMotionValue(200)
+  const y = useMotionValue(height)
 
-  const transformPage = useTransform(y, [0, 200], ['scale(0.9)', 'scale(1)'])
-  const backdropBlur = useTransform(y, [0, 200], ['blur(3px)', 'blur(0px)'])
+  const transformPage = useTransform(y, [0, height], ['scale(0.9)', 'scale(1)'])
+  const backdropBlur = useTransform(y, [0, height], ['blur(3px)', 'blur(0px)'])
 
   const handleClose = async () => {
     animate(scope.current, { opacity: [1, 0] })
@@ -54,9 +54,21 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
       y: [yStart, height],
     })
 
-    y.set(200)
+    y.set(height)
     setOpen(false)
   }
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden"; // Disable scrolling
+    } else {
+      document.body.style.overflow = ""; // Re-enable scrolling
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // Cleanup when component unmounts
+    };
+  }, [open]);
 
   return (
     <BreakToastContext.Provider value={{ open, setOpen }}>
@@ -67,10 +79,10 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
           transition={transition}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className='fixed inset-0 z-[8888]'>
+          className='fixed inset-0 z-[8888] overflow-hidden'>
           <motion.div
             onClick={handleClose}
-            className='h-screen w-full fixed z-[8888]  '
+            className='h-screen w-full fixed z-[8888]'
             style={{
               backdropFilter: backdropBlur,
               WebkitBackdropFilter: backdropBlur,
@@ -79,27 +91,29 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
               id='drawer'
               ref={drawerRef}
               onClick={(e) => e.stopPropagation()}
-              initial={{ y: 500 }}
+              initial={{ y: 100 }}
               animate={{ y: 0 }}
               drag='y'
               dragControls={dragControls}
               transition={transition}
               dragListener={false}
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.5 }}
+              dragConstraints={{ top: 0, bottom:0 }}
+              dragElastic={{ top: 0, bottom: 1 }}
               style={{ y }}
               onDrag={() => {
                 console.log(y.get(), 'y')
               }}
               onDragEnd={() => {
-                if (y.get() >= 100) {
+                if (y.get() >= 150) {
                   handleClose()
                 }
               }}
-              className='absolute bottom-0 h-[75vh] w-full overflow-hidden bg-white rounded-t-3xl z-[9999]'>
+              className='absolute shadow-2xl border bottom-0 h-[75vh] w-full overflow-hidden bg-white rounded-t-3xl z-[9999]'>
               <motion.button
                 onPointerDown={(e) => dragControls.start(e)}
-                className='w-full inline-flex items-center justify-center bg-slate-50 h-12'></motion.button>
+                className='w-full inline-flex items-center justify-center'>
+                <span className='h-2 w-14 rounded-full bg-slate-200'></span>
+              </motion.button>
               <div className='flex items-end justify-end p-2'>Hello</div>
             </motion.div>
           </motion.div>
@@ -107,10 +121,7 @@ export function BreakToastProvider({ children }: { children: ReactNode }) {
       )}
       <motion.div
         transition={transition}
-        // variants={variants}
-        // animate={open ? { transform: transformPage } : {}}
-        style={{ transform: transformPage }}
-        // initial={'close'}
+        style={{ transform: transformPage}}
       >
         {children}
       </motion.div>
