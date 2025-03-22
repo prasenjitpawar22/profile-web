@@ -18,11 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} min-h-screen`}>
-        <BreakToastProvider>
-          <NavBar />
-          <main className='p-4 md:p-16 lg:p-24'>{children}</main>
-        </BreakToastProvider>
+      <body className={`${inter.className} min-h-screen`} suppressHydrationWarning={true}>
+        <NavBar />
+        <main className='p-4 md:p-16 lg:p-24'>{children}</main>
       </body>
     </html>
   )

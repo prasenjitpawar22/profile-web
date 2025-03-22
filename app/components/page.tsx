@@ -1,5 +1,6 @@
 'use client'
 
+import { Drawer, DrawerComp } from '@/components/drawer'
 import { useDrawer } from '@/components/drawer-blur/provider'
 import { Button } from '@/components/ui/button'
 import { CardsShuffle } from '@/components/weekend-components/cards-shuffle'
@@ -42,15 +43,8 @@ export default function Page() {
         <GlideRadioButton />
         <AppSelector />
         <MultiSelectExample />
-        {/* <Test /> */}
         <div className='bg-slate-50 py-6 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
-          <Button
-            onClick={() => {
-              setOpen(true)
-              console.log('asas')
-            }}>
-            Open Drawer
-          </Button>
+          <DrawerComp />
         </div>
       </div>
     </>
