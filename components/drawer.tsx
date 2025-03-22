@@ -3,6 +3,7 @@ import { Root, } from '@radix-ui/react-portal'
 import { useAnimate, useDragControls, useMotionValue, useTransform, motion, Transition, DragControls, AnimationScope, MotionValue, motionValue, animate as framerAnimate } from "framer-motion";
 import useMeasure from "react-use-measure";
 import { Button } from "./ui/button";
+import { Slot } from "@radix-ui/react-slot";
 
 interface DrawerContextProps {
     open: boolean,
@@ -86,10 +87,13 @@ DrawerOverlay.displayName = "DrawerOverlay"
 
 export interface DrawerTiggerProps extends ComponentPropsWithoutRef<'button'> {
     // asChild?: boolean
+    asChild?: boolean
+
 }
 
-export const DrawerTigger = forwardRef<ElementRef<'button'>, DrawerTiggerProps>(({ ...props }, ref) => {
+export const DrawerTigger = forwardRef<ElementRef<'button'>, DrawerTiggerProps>(({  asChild, ...props }, ref) => {
     const { setOpen, open } = useDrawer()
+    const Comp = asChild ? Slot : "button"
 
     useEffect(() => {
         if (open) {
@@ -105,9 +109,9 @@ export const DrawerTigger = forwardRef<ElementRef<'button'>, DrawerTiggerProps>(
         };
     }, [open]);
 
-    return <button ref={ref} {...props} onClick={() => {
+    return <Comp ref={ref} {...props} onClick={() => {
         setOpen(true)
-    }} />
+    }}/>
 })
 
 DrawerTigger.displayName = "DrawerTigger"
@@ -183,7 +187,7 @@ DrawerContent.displayName = "DrawerContent"
 
 export const DrawerComp = () => {
     return <Drawer>
-        <DrawerTigger>
+        <DrawerTigger asChild >
             <Button>Open Drawer</Button>
         </DrawerTigger>
         <DrawerPortal>
