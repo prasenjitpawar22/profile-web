@@ -31,19 +31,19 @@ export default function Page() {
           weekend coding experiments and learing.
         </p>
       </div>
-      <div className='my-12 flex items-center justify-center md:justify-start gap-4 flex-wrap overflow-hidden'>
-        <InlinePopup />
-        <DiscoButton />
+      <div className='my-12 flex items-center justify-center flex-col md:justify-start gap-4 flex-wrap overflow-hidden'>
+        {/* <InlinePopup /> */}
+        {/* <DiscoButton /> */}
         <SlideUpButton />
         <DynamicActionBar />
-        <SliderThrow />
-        <CardsShuffle />
-        <NormalAccordion />
+        {/* <SliderThrow /> */}
+        {/* <CardsShuffle /> */}
+        {/* <NormalAccordion /> */}
         <Timer />
         <GlideRadioButton />
         <AppSelector />
         <MultiSelectExample />
-        <div className='bg-slate-50 py-6 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
+        <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
           <DrawerComp />
         </div>
       </div>

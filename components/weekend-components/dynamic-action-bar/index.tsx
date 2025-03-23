@@ -29,7 +29,7 @@ export const DynamicActionBar = () => {
   }>({ isOpen: false, state: null })
 
   return (
-    <motion.div className='flex w-[500px] bg-slate-50 h-[200px] items-end justify-center border p-3 rounded-md'>
+    <motion.div className='flex w-full bg-slate-50 h-[200px] items-end justify-center border p-3 rounded-md'>
       <CollapsibleRoot
         initial={{ width: 280 }}
         animate={{ width: state.isOpen ? 300 : 280 }}

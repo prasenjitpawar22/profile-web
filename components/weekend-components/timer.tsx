@@ -33,7 +33,7 @@ export default function Timer() {
   }, [])
   // aababbab
   return (
-    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-[500px] items-center justify-center'>
+    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
       <Counter value={minutes} />
       <span className='font-bold mx-2'>:</span>
       <Counter value={seconds} />
