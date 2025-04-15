@@ -7,7 +7,7 @@ import { DynamicActionBar } from '@/components/weekend-components/dynamic-action
 import { GlideRadioButton } from '@/components/weekend-components/glide-radio-button'
 import { MultiSelectExample } from '@/components/weekend-components/multi-select'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
-import Timer from '@/components/weekend-components/timer'
+// import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
 
@@ -31,13 +31,13 @@ export default function Page() {
         {/* <SliderThrow /> */}
         {/* <CardsShuffle /> */}
         {/* <NormalAccordion /> */}
-        {/* <Timer />
+        {/* <Timer /> */}
         <GlideRadioButton />
         <AppSelector />
-        <MultiSelectExample /> */}
-        {/* <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
+        <MultiSelectExample />
+        <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
           <DrawerComp />
-        </div> */}
+        </div>
         <div className='relative flex p-2  text-slate-700 rounded-md h-[300px] w-full items-center justify-center'>
           <TodoCheckboxExample />
         </div>
