@@ -25,8 +25,8 @@ export const TodoCheckbox = ({ lineId, tickId, backgroundId, borderId, textId, t
 
      
     async function handleCheck() {
-        if (isAnimating.current) return // ⛔ Block if already animating
-        isAnimating.current = true // 🔒 Lock
+        if (isAnimating.current) return // 
+        isAnimating.current = true  
         if (checked) {
             animate('#line', { width: '0', opacity: 1 })
             await animate('#text', { opacity: 1, x: [3, 2, 0, -1, 0] })
@@ -44,7 +44,7 @@ export const TodoCheckbox = ({ lineId, tickId, backgroundId, borderId, textId, t
             await animate('#text', { opacity: .4, x: [3, 2, 0, -1, 0] })
         }
         setChecked((prev) => !prev)
-        isAnimating.current = false // 🔓 Unlock
+        isAnimating.current = false  
     }
 
     return <div onClick={handleCheck} className={`flex items-center cursor-pointer gap-2 hover:bg-gray-100 p-2 rounded-md w-fit`} ref={scope}>
