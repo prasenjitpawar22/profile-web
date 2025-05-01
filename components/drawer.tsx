@@ -236,8 +236,6 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
           drag='y'
           dragControls={dragControls}
           transition={transition}
-          // dragListener={false}
-          // style={{ touchAction: 'none' }}
           onPointerDown={(e) => dragControls?.start(e)}
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={{ top: 0.2, bottom: 1 }}
@@ -252,8 +250,7 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
               handleClose()
             }
           }}
-          className="fixed border-t bottom-0 h-[75vh] w-full overflow-hidden bg-white rounded-t-3xl z-[9999] 
-          after:content-[''] after:absolute p-2 after:top-[100%] after:left-0 after:right-0 after:h-[200%] flex flex-col"
+          className="border-t bottom-0 fixed  z-50 h-[75vh] w-full bg-white after:top-[100%] rounded-t-3xl after:content-[''] after:bg-inherit after:w-full after:h-[90%] after:absolute"
           {...props}>
           <DrawerPortalContext.Provider value={{ handleClose }}>
             <motion.span

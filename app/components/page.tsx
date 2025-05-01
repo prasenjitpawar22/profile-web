@@ -41,9 +41,6 @@ export default function Page() {
         <div className='relative flex p-2 bg-slate-50 text-slate-700 rounded-md h-[300px] w-full items-center justify-center'>
           <TodoCheckboxExample />
         </div>
-        <div className='relative flex p-2  text-slate-700 rounded-md h-[300px] w-full items-center justify-center'>
-          <TodoCheckboxExample />
-        </div>
       </div>
     </>
   )
