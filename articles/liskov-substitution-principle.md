@@ -2,7 +2,7 @@
 title: "Liskov's Substitution Principle"
 description: "How a Penguin can break your code"
 category: "technical"
-date: "28-06-25"
+date: "06-28-25"
 read: "4 min read"
 ---
 
