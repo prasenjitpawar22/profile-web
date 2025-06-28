@@ -2,7 +2,7 @@ import fs from "fs";
 import { remark } from "remark";
 import html from "remark-html";
 import matter from "gray-matter";
-import momemet from "moment";
+import moment from "moment";
 import path from "path";
 import type { ArticleItem } from "@/types/index";
 
@@ -21,16 +21,15 @@ export const getSortedArticles = async (): Promise<ArticleItem[]> => {
     return {
       id,
       title: matterResult.data.title,
-      date: momemet(matterResult.data.date).format("MMM DD, YY"),
+      date: moment(matterResult.data.date).format("MMM DD, YY"),
       description: matterResult.data.description,
       category: matterResult.data.category,
     };
   });
 
   return allArticlesData.sort((a, b) => {
-    const format = "MMM DD, YY";
-    const dateOne = momemet(a.date, format);
-    const dateTwo = momemet(b.date, format);
+    const dateOne = moment(a.date);
+    const dateTwo = moment(b.date);
 
     if (dateOne.isBefore(dateTwo)) {
       return 1;
@@ -62,7 +61,7 @@ export const getArticleData = async (id: string) => {
     title: matterResult.data.title,
     description: matterResult.data.description,
     category: matterResult.data.category,
-    date: momemet(matterResult.data.date).format("MMM DD, YY"),
+    date: moment(matterResult.data.date).format("MMM DD, YY"),
     read: matterResult.data.read,
   };
 };
