@@ -33,10 +33,10 @@ export const getSortedArticles = async (): Promise<ArticleItem[]> => {
     const dateTwo = momemet(b.date, format);
 
     if (dateOne.isBefore(dateTwo)) {
-      return -1;
+      return 1;
     }
     if (dateTwo.isAfter(dateOne)) {
-      return 1;
+      return -1;
     } else {
       return 0;
     }
