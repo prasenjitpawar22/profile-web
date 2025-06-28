@@ -28,17 +28,7 @@ export const getSortedArticles = async (): Promise<ArticleItem[]> => {
   });
 
   return allArticlesData.sort((a, b) => {
-    const dateOne = moment(a.date);
-    const dateTwo = moment(b.date);
-
-    if (dateOne.isBefore(dateTwo)) {
-      return 1;
-    }
-    if (dateTwo.isAfter(dateOne)) {
-      return -1;
-    } else {
-      return 0;
-    }
+    return moment(b.date).diff(moment(a.date));
   });
 };
 
