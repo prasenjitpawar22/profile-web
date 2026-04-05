@@ -8,6 +8,7 @@ import { GlideRadioButton } from '@/components/weekend-components/glide-radio-bu
 import { MultiSelectExample } from '@/components/weekend-components/multi-select'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
 import { SearchBoxGooey } from '@/components/weekend-components/search-box-gooey'
+import Timer from '@/components/weekend-components/timer'
 // import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
@@ -25,7 +26,7 @@ export default function Page() {
       </div>
       <div className='my-12 flex items-center justify-center flex-col md:justify-start gap-4 flex-wrap overflow-hidden'>
         {/* <InlinePopup /> */}
-        {/* <DiscoButton /> */}
+        {/* <DiscoButton /> as*/}
         <SlideUpButton />
         <DynamicActionBar />
         {/* <SliderThrow /> */}
