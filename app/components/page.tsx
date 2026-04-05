@@ -9,6 +9,7 @@ import { MultiSelectExample } from '@/components/weekend-components/multi-select
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
 import { SearchBoxGooey } from '@/components/weekend-components/search-box-gooey'
 import Timer from '@/components/weekend-components/timer'
+import { Testing } from '@/components/weekend-components/testing'
 // import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
@@ -43,6 +44,7 @@ export default function Page() {
           <TodoCheckboxExample />
         </div>
         <SearchBoxGooey />
+        {/* <Testing/> */}
       </div>
     </>
   )
