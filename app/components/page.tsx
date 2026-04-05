@@ -7,10 +7,10 @@ import { DynamicActionBar } from '@/components/weekend-components/dynamic-action
 import { GlideRadioButton } from '@/components/weekend-components/glide-radio-button'
 import { MultiSelectExample } from '@/components/weekend-components/multi-select'
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
+import { SearchBoxGooey } from '@/components/weekend-components/search-box-gooey'
 // import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
-
   return (
     <>
       <div className='gap-4 flex flex-col'>
@@ -38,9 +38,10 @@ export default function Page() {
         <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
           <DrawerComp />
         </div>
-        <div className='relative flex p-2 bg-slate-50 text-slate-700 rounded-md h-[300px] w-full items-center justify-center'>
+        <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[300px] w-full items-center justify-center'>
           <TodoCheckboxExample />
         </div>
+        <SearchBoxGooey />
       </div>
     </>
   )

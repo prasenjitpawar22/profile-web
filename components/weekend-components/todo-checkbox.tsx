@@ -50,7 +50,7 @@ export const TodoCheckbox = ({ lineId, tickId, backgroundId, borderId, textId, t
     return <div onClick={handleCheck} className={`flex items-center cursor-pointer gap-2 hover:bg-gray-100 p-2 rounded-md w-fit`} ref={scope}>
         <motion.div  className='relative isolate w-fit h-fit cursor-pointer'>
             <motion.svg className={'w-4 h-4'} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <motion.path id={'background'} initial={{opacity: 0, scale: 0}} opacity="0.4" d="M3 22V8C3 5.23858 5.23858 3 8 3H22C24.7614 3 27 5.23858 27 8V22C27 24.7614 24.7614 27 22 27H8C5.23858 27 3 24.7614 3 22Z" fill="#0811EC" stroke="#0811EC" stroke-width="5" />
+                <motion.path id={'background'} initial={{opacity: 0, scale: 0}} opacity="0.4" d="M3 22V8C3 5.23858 5.23858 3 8 3H22C24.7614 3 27 5.23858 27 8V22C27 24.7614 24.7614 27 22 27H8C5.23858 27 3 24.7614 3 22Z" fill="#0811EC" stroke="#0811EC" strokeWidth="5" />
                 <motion.defs>
                     <motion.clipPath id="clip0_0_1">
                         <motion.rect width="16" height="12" fill="white" transform="translate(8 9)" />
@@ -58,7 +58,7 @@ export const TodoCheckbox = ({ lineId, tickId, backgroundId, borderId, textId, t
                 </motion.defs>
             </motion.svg>
             <motion.svg className='w-4 h-4 absolute top-0' width="30" height="30" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <motion.path id={'border'} initial={{pathLength: 1}} d="M1 20V6C1 3.23858 3.23858 1 6 1H20C22.7614 1 25 3.23858 25 6V20C25 22.7614 22.7614 25 20 25H6C3.23858 25 1 22.7614 1 20Z" stroke="#A4A4A4" stroke-width="2" />
+                <motion.path id={'border'} initial={{pathLength: 1}} d="M1 20V6C1 3.23858 3.23858 1 6 1H20C22.7614 1 25 3.23858 25 6V20C25 22.7614 22.7614 25 20 25H6C3.23858 25 1 22.7614 1 20Z" stroke="#A4A4A4" strokeWidth="2" />
             </motion.svg>
             <motion.svg
                 className={'absolute top-0 scale-75 text-white'}
