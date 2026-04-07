@@ -33,7 +33,7 @@ export default function Page() {
         {/* <SliderThrow /> */}
         {/* <CardsShuffle /> */}
         {/* <NormalAccordion /> */}
-        {/* <Timer /> */}
+        <Timer />
         <GlideRadioButton />
         <AppSelector />
         <MultiSelectExample />

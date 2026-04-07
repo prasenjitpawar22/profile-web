@@ -33,28 +33,50 @@ export default function Timer() {
   }, [])
   // aababbab
   return (
-    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
-      <Counter value={minutes} />
-      <span className='font-bold mx-2'>:</span>
-      <Counter value={seconds} />
-      <Link
-        href={'https://buildui.com/recipes/animated-counter'}
-        target='_blank'
-        className='absolute flex cursor-pointer bottom-0 right-0 text-xs'>
-        <p className='w-full flex items-center gap-1 rounded-md px-2 mb-2'>
-          Reference from
-          <ExternalLink size={12} className='mb-[1px]' />
-        </p>
-      </Link>
-    </div>
+    <>
+      <div className='relative flex p-2 border rounded-md h-[200px] bg-slate-100 w-full items-center justify-center'>
+        <svg width='0' height='0'>
+          <filter id='gooey-counter'>
+            <feGaussianBlur in='SourceGraphic' stdDeviation='6' result='blur' />
+            <feColorMatrix
+              in='blur'
+              mode='matrix'
+              values='
+              1 0 0 0 0
+              0 1 0 0 0
+              0 0 1 0 0
+              0 0 0 35 -8
+            '
+              result='gooey-counter'
+            />
+            <feBlend in='SourceGraphic' in2='gooey-counter' />
+          </filter>
+        </svg>
+        <div className='relative bg-foreground shadow shadow-black flex p-2 border rounded-full px-3 items-center justify-center'>
+          <Counter value={minutes} />
+          <span className='text-white/80 mx-1'>:</span>
+          <Counter value={seconds} />
+        </div>
+        <Link
+          href={'https://buildui.com/recipes/animated-counter'}
+          target='_blank'
+          className='absolute flex cursor-pointer bottom-0 right-0 text-xs'>
+          <p className='w-full flex items-center gap-1 rounded-md px-2 mb-2'>
+            Reference from
+            <ExternalLink size={12} className='mb-[1px]' />
+          </p>
+        </Link>
+      </div>
+    </>
   )
 }
 
 function Counter({ value }: { value: number }) {
   return (
     <div
-      style={{ fontSize }}
-      className='flex space-x-3 overflow-hidden rounded bg-black px-2 leading-none text-gray-900'>
+      style={{ fontSize, filter: 'url(#gooey-counter)' }}
+      // style={{  }}
+      className='flex space-x-3 overflow-hidden rounded px-2 leading-none text-gray-900'>
       <Digit place={10} value={value} />
       <Digit place={1} value={value} />
     </div>
@@ -63,7 +85,7 @@ function Counter({ value }: { value: number }) {
 
 function Digit({ place, value }: { place: number; value: number }) {
   let valueRoundedToPlace = Math.floor(value / place)
-  let animatedValue = useSpring(valueRoundedToPlace)
+  let animatedValue = useSpring(valueRoundedToPlace, { bounce: 0.2 })
 
   useEffect(() => {
     animatedValue.set(valueRoundedToPlace)
@@ -95,8 +117,10 @@ function Number({ mv, number }: { mv: MotionValue; number: number }) {
   return (
     <motion.span
       style={{ y }}
-      className='absolute inset-0 flex gap-3 items-center justify-center'>
-      <span className='bg-white rounded curved-text'>{number}</span>
+      className='absolute inset-0 flex items-center justify-center'>
+      <span className='bg-gradient-to-t from-red-500 to-blue-500 text-md'>
+        {number}
+      </span>
     </motion.span>
   )
 }
