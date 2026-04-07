@@ -48,13 +48,13 @@ export default function NavBar() {
       <ul className='absolute flex shadow-inner gap-1 shadow-foreground/10 border mt-3 rounded-full p-2 items-center'>
         {navItems.map((nav) => (
           <motion.div
+            key={nav.name}
             onHoverStart={() => setHoveredItem(nav.path)}
             onHoverEnd={() => setHoveredItem(null)}>
             <Link
-              key={nav.name}
               href={nav.path}
               ref={highlightTarget === nav.path ? activeElementRef : null}
-               className='rounded-full focus-visible:outline-1'>
+              className='rounded-full focus-visible:outline-1'>
               <motion.li className='relative px-2 py-1 text-sm inline-flex items-center focus-visible:outline-0 rounded-full tracking-tight cursor-pointer'>
                 {nav.name}
               </motion.li>
@@ -69,15 +69,13 @@ export default function NavBar() {
         className='absolute flex shadow-inner gap-1  shadow-foreground/10 border mt-3 rounded-full p-2 items-center tranistion-[clip-path] duration-300'>
         {navItems.map((nav) => (
           <motion.div
+            key={nav.name}
             onHoverStart={() => setHoveredItem(nav.path)}
             onHoverEnd={() => setHoveredItem(null)}>
             <Link
-              key={nav.name}
               href={nav.path}
               className='rounded-full focus-visible:outline-1'>
-              <motion.li
-                className='relative bg-foreground text-background px-2 py-1 text-sm inline-flex items-center focus-visible:outline-0 rounded-full tracking-tight cursor-pointer'
-              >
+              <motion.li className='relative bg-foreground text-background px-2 py-1 text-sm inline-flex items-center focus-visible:outline-0 rounded-full tracking-tight cursor-pointer'>
                 {nav.name}
               </motion.li>
             </Link>
