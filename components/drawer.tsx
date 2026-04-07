@@ -102,8 +102,9 @@ export const Drawer = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 Drawer.displayName = 'Drawer'
 
 const MotionOverlay = motion(Root)
-interface DrawerOverlayProps
-  extends ComponentPropsWithoutRef<typeof MotionOverlay> {
+interface DrawerOverlayProps extends ComponentPropsWithoutRef<
+  typeof MotionOverlay
+> {
   children?: ReactNode
   transformElement?: string
 }
@@ -198,8 +199,9 @@ export const DrawerTigger = forwardRef<ElementRef<'button'>, DrawerTiggerProps>(
 DrawerTigger.displayName = 'DrawerTigger'
 
 const MotionPortal = motion(Root)
-interface DrawerPortalProps
-  extends ComponentPropsWithoutRef<typeof MotionPortal> {
+interface DrawerPortalProps extends ComponentPropsWithoutRef<
+  typeof MotionPortal
+> {
   children?: ReactNode
 }
 
@@ -250,14 +252,14 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
               handleClose()
             }
           }}
-          className="border-t bottom-0 fixed  z-50 h-[75vh] w-full bg-white after:top-[100%] rounded-t-3xl after:content-[''] after:bg-inherit after:w-full after:h-[90%] after:absolute"
+          className="border-t bottom-0 fixed bg-background z-50 h-[75vh] w-full after:top-[100%] rounded-t-3xl after:content-[''] after:bg-inherit after:w-full after:h-[90%] after:absolute"
           {...props}>
           <DrawerPortalContext.Provider value={{ handleClose }}>
             <motion.span
               style={{ touchAction: 'none' }}
               onPointerDown={(e) => dragControls?.start(e)}
               className='w-full inline-flex items-center justify-center'>
-              <span className='h-2 w-14 rounded-full bg-slate-200'></span>
+              <span className='h-2 w-14 rounded-full bg-muted'></span>
             </motion.span>
             {children}
           </DrawerPortalContext.Provider>
@@ -292,14 +294,14 @@ export const DrawerComp = () => {
   return (
     <Drawer>
       <DrawerTigger asChild>
-        <Button>Open Drawer</Button>
+        <Button className='bg-foreground/[.01] border-2 shadow-sm shadow-black text-foreground hover:bg-background rounded-full'>Open Drawer</Button>
       </DrawerTigger>
       <DrawerPortal>
         <DrawerOverlay transformElement='main' />
         <DrawerContent className='w-full items-center flex-col flex justify-center overflow-y-auto h-full'>
           <div className='md:max-w-[600px] max-w-80'>
             <p className='text-md mb-2'>React Drawer.</p>
-            <p className='text-md text-black/[.5]'>
+            <p className='text-md'>
               This drawer component provides a smooth and interactive way to
               display hidden content or settings. It slides in when triggered,
               offering a clean and modern UI for managing additional options

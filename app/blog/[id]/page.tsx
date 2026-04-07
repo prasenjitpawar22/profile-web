@@ -9,11 +9,11 @@ export default async function Page({ params }: { params: { id: string } }) {
   const article = await getArticleData(params.id);
 
   return (
-    <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl mx-auto">
+    <article className="prose text-foreground prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl mx-auto dark:prose-invert">
       <p className="w-full flex-col md:flex-row inline-flex gap-2 md:items-center items-start  justify-start transition-all duration-300 relative">
         <Link
           href={"/blog"}
-          className="md:absolute -left-16 text-stone-600 hover:text-stone-800 cursor-pointer"
+          className="md:absolute -left-16 text-foreground/50 hover:text-foreground cursor-pointer"
         >
           <ArrowLeft />
         </Link>

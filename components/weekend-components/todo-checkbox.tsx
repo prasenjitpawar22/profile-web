@@ -47,7 +47,7 @@ export const TodoCheckbox = ({ lineId, tickId, backgroundId, borderId, textId, t
         isAnimating.current = false  
     }
 
-    return <div onClick={handleCheck} className={`flex items-center cursor-pointer gap-2 hover:bg-gray-100 p-2 rounded-md w-fit`} ref={scope}>
+    return <div onClick={handleCheck} className={`flex transition-all duration-200 items-center cursor-pointer gap-2 hover:bg-foreground/[.05] p-2 rounded-md w-fit`} ref={scope}>
         <motion.div  className='relative isolate w-fit h-fit cursor-pointer'>
             <motion.svg className={'w-4 h-4'} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path id={'background'} initial={{opacity: 0, scale: 0}} opacity="0.4" d="M3 22V8C3 5.23858 5.23858 3 8 3H22C24.7614 3 27 5.23858 27 8V22C27 24.7614 24.7614 27 22 27H8C5.23858 27 3 24.7614 3 22Z" fill="#0811EC" stroke="#0811EC" strokeWidth="5" />
@@ -78,7 +78,7 @@ export const TodoCheckbox = ({ lineId, tickId, backgroundId, borderId, textId, t
             </motion.svg>
             <Input checked={checked} className='hidden' type='checkbox' />
         </motion.div>
-        <motion.p id='text' className='text-black relative'>
+        <motion.p id='text' className='relative'>
             {text}
             <motion.span id={'line'} initial={{width:'0'}} className="absolute left-0 top-1/2 h-[2px] bg-gray-500" />
         </motion.p>

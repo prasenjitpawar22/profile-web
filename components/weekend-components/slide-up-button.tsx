@@ -1,7 +1,7 @@
 import { ChevronsRight } from 'lucide-react'
 export default function SlideUpButton() {
   return (
-    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
+    <div className='relative flex p-2 border bg-foreground/[.02] rounded-md h-[200px] w-full items-center justify-center'>
       <button
         className='relative w-52 h-12 inline-flex items-center justify-center
     px-4 py-3 group rounded-full ring-none border overflow-hidden'>

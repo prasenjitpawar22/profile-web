@@ -84,8 +84,8 @@ export function AppSelector() {
   ]
 
   return (
-    <div className='bg-slate-50 py-2 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
-      <p className='text-sm text-stone-700 tracking-wide'>
+    <div className='bg-foreground/[.02] py-2 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
+      <p className='text-sm tracking-wide'>
         {` This component is an animated app switcher that provides a visually
         interactive way to choose between various application icons. When
         clicked, it expands to display all available app icons, allowing the
@@ -97,7 +97,7 @@ export function AppSelector() {
       <div className='flex items-center h-[100px]'>
         <motion.div
           onKeyDown={(e) => e.code === 'Escape' && onOpenChange(false)}
-          className='border-2 bg-foreground text-sm text-background flex flex-col gap-4 rounded-2xl shadow overflow-hidden'>
+          className='border-2 bg-foreground/[.02] text-foreground text-sm flex flex-col gap-4 rounded-2xl shadow overflow-hidden'>
           <AnimatePresence mode='popLayout'>
             {!open ? (
               <MotionButton
@@ -105,7 +105,7 @@ export function AppSelector() {
                 layoutId='title'
                 initial={false}
                 animate={{ height: 'fit' }}
-                className='rounded-full text-sm flex gap-2'
+                className='text-sm flex gap-2 bg-background/80 text-foreground hover:bg-background '
                 onClick={() => onOpenChange(true)}
                 variant={'default'}>
                 {selectedApp} Apps
@@ -117,7 +117,7 @@ export function AppSelector() {
                     Apps
                   </motion.h1>
                   <X
-                    className='h-4 w-4 cursor-pointer hover:text-background text-background/50 transition-all duration-200'
+                    className='h-4 w-4 cursor-pointer hover:text-foreground text-foreground/50 transition-all duration-200'
                     onClick={() => onOpenChange(false)}
                   />
                 </div>

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import NavBar from '@/components/navbar'
 import { BreakToastProvider } from '@/components/drawer-blur/provider'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,10 +18,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
-      <body className={`${inter.className} min-h-screen`} suppressHydrationWarning={true}>
-        <NavBar />
-        <main className='p-4 md:p-16 lg:p-24'>{children}</main>
+    <html lang='en' suppressHydrationWarning>
+      <body
+        className={`${inter.className} min-h-screen`}
+        suppressHydrationWarning={true}>
+        <ThemeProvider>
+          <NavBar />
+          <main className='p-4 md:p-16 lg:p-24'>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   )

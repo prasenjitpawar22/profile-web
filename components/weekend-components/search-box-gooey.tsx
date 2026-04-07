@@ -51,10 +51,10 @@ export function SearchBoxGooey() {
   ]
 
   return (
-    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-full items-center justify-center'>
+    <div className='relative flex p-2 border bg-foreground/[.02] rounded-md h-[200px] w-full items-center justify-center'>
       <svg width='0' height='0'>
         <filter id='goo'>
-          <feGaussianBlur in='SourceGraphic' stdDeviation='10' result='blur' />
+          <feGaussianBlur in='SourceGraphic' stdDeviation='5' result='blur' />
           <feColorMatrix
             in='blur'
             mode='matrix'
@@ -62,7 +62,7 @@ export function SearchBoxGooey() {
               1 0 0 0 0
               0 1 0 0 0
               0 0 1 0 0
-              0 0 0 40 -20
+              0 0 0 10 -5
             '
             result='goo'
           />

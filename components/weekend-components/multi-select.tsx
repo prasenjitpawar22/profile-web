@@ -236,8 +236,8 @@ export const MultiSelectExample = () => {
   ]
 
   return (
-    <div className='bg-slate-50 py-6 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
-      <p className='text-sm text-stone-700 tracking-wide'>
+    <div className='bg-foreground/[.02] py-6 w-full relative h-fit gap-4 items-center flex-col px-4 flex rounded-md shadow border'>
+      <p className='text-sm tracking-wide'>
         This component demonstrates a multi-select dropdown menu, allowing users
         to select multiple options with smooth animations and responsive design.
         It is commonly used in applications to let users pick multiple items,
@@ -252,7 +252,7 @@ export const MultiSelectExample = () => {
           </span>
         </Link>
       </p>
-      <h2 className='text-sm text-stone-700 tracking-wide'>Select Your Apps</h2>
+      <h2 className='text-sm tracking-wide'>Select Your Apps</h2>
       <MultiSelect
         options={options}
         onValueChange={(values) => null}

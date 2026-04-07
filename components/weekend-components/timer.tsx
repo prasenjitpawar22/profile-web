@@ -34,7 +34,7 @@ export default function Timer() {
   // aababbab
   return (
     <>
-      <div className='relative flex p-2 border rounded-md h-[200px] bg-slate-100 w-full items-center justify-center'>
+      <div className='relative flex p-2 border rounded-md h-[200px] bg-foreground/[.02] w-full items-center justify-center'>
         <svg width='0' height='0'>
           <filter id='gooey-counter'>
             <feGaussianBlur in='SourceGraphic' stdDeviation='6' result='blur' />
@@ -52,7 +52,7 @@ export default function Timer() {
             <feBlend in='SourceGraphic' in2='gooey-counter' />
           </filter>
         </svg>
-        <div className='relative bg-foreground shadow shadow-black flex p-2 border rounded-full px-3 items-center justify-center'>
+        <div className='relative bg-background shadow shadow-black flex p-2 border rounded-full px-3 items-center justify-center'>
           <Counter value={minutes} />
           <span className='text-white/80 mx-1'>:</span>
           <Counter value={seconds} />

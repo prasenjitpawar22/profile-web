@@ -19,7 +19,7 @@ export function GlideRadioButton() {
   const [selected, setSelected] = useState<string | null>('Creator')
 
   return (
-    <div className='bg-slate-50 w-full relative h-[150px] gap-4 items-center flex-col justify-center flex rounded-md shadow border p-2'>
+    <div className='bg-foreground/[.02] w-full relative h-[150px] gap-4 items-center flex-col justify-center flex rounded-md shadow border p-2'>
       <div className='flex items-center justify-center gap-4'>
         {radios.map((radio) => (
           <div key={radio.id} className='flex items-center gap-2 relative'>
@@ -54,8 +54,8 @@ export function GlideRadioButton() {
         ))}
       </div>
       <div className='flex items-center flex-col justify-center gap-1'>
-        <p className='text-sm text-stone-700 tracking-wide'>{selected}</p>
-        <p className='text-sm text-stone-700 tracking-wide'>
+        <p className='text-sm tracking-wide'>{selected}</p>
+        <p className='text-sm tracking-wide'>
           A simple radio button made with simple animations.
         </p>
       </div>

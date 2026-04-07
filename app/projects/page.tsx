@@ -100,10 +100,10 @@ const projectList: {
 export default async function Page() {
   return (
     <div className='flex flex-col gap-4'>
-      <h1 className='text-2xl md:text-4xl font-bold text-stone-800'>
+      <h1 className='text-2xl md:text-4xl font-bold'>
         My collections of half baked projects in one place.
       </h1>
-      <p className='text-base text-stone-700'>
+      <p className='text-base'>
         A curated showcase of my projects—some complete, others a work in
         progress—all gathered in one place to highlight my journey of
         exploration and development.
@@ -116,17 +116,15 @@ export default async function Page() {
               target='_blank'
               rel='noopener noreferrer'
               key={i}
-              className='w-full flex items-center justify-between gap-4 transition-all duration-400 hover:bg-stone-100 p-4 rounded-md group'>
+              className='w-full flex items-center justify-between gap-4 hover:bg-foreground/[0.05] transition-all duration-400 p-4 rounded-md group'>
               <div className='flex justify-center gap-4'>
                 <span>{project.logo}</span>
                 <div className='flex flex-col'>
-                  <h2 className='text-2xl font-medium flex-wrap text-stone-800 inline-flex items-center gap-2'>
+                  <h2 className='text-2xl font-medium flex-wrap inline-flex items-center gap-2'>
                     {project.name}{' '}
                     <SquareArrowOutUpRight className='h-4 w-4 opacity-0 group-hover:opacity-100 duration-400 group-hover:translate-x-1 transition-all ' />
                   </h2>
-                  <p className='text-sm text-stone-700 tracking-wide'>
-                    {project.description}
-                  </p>
+                  <p className='text-sm tracking-wide'>{project.description}</p>
                 </div>
               </div>
               <div className='flex items-end gap-2 flex-col'>
@@ -135,9 +133,8 @@ export default async function Page() {
                     className={`${project.status === 'Inprogress' ? 'bg-green-200 animate-pulse' : project.status === 'down' ? 'bg-red-500' : 'bg-green-500'} rounded-full h-3 w-3`}></span>
                   {project.status}
                 </p>
-                <p className='text-stone-700 tracking-wide text-sm'>
-                  TechStack:{' '}
-                  <span className='text-stone-400 '>{project.techStack}</span>
+                <p className='tracking-wide text-sm'>
+                  TechStack: <span className=''>{project.techStack}</span>
                 </p>
               </div>
             </Link>

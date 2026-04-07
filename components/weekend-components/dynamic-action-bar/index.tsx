@@ -29,12 +29,12 @@ export const DynamicActionBar = () => {
   }>({ isOpen: false, state: null })
 
   return (
-    <motion.div className='flex w-full bg-slate-50 h-[200px] items-end justify-center border p-3 rounded-md'>
+    <motion.div className='flex w-full h-[200px] bg-foreground/[.02] items-end justify-center border p-3 rounded-md'>
       <CollapsibleRoot
         initial={{ width: 280 }}
         animate={{ width: state.isOpen ? 300 : 280 }}
         className={cn(
-          'border backdrop-blur-md bg-white shadow items-center justify-center rounded-xl px-[15px] flex flex-col',
+          'border backdrop-blur-md shadow items-center justify-center rounded-xl px-[15px] flex flex-col',
         )}
         open={state.isOpen}
         onOpenChange={(e) => setState({ isOpen: e, state: null })}>
@@ -53,7 +53,7 @@ export const DynamicActionBar = () => {
               className={cn(
                 `flex w-full items-center mt-4 justify-center overflow-hidden h-full flex-col gap-2 rounded-md`,
               )}>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <svg
                     className='bg-slate-700 fill-white border rounded-lg p-1'
@@ -76,19 +76,16 @@ export const DynamicActionBar = () => {
                   <div className='flex flex-col items-start '>
                     <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
                       Twitch
-                      <SquareArrowOutUpRight
-                        className='text-black/[0.7]'
-                        size={10}
-                      />
+                      <SquareArrowOutUpRight className='' size={10} />
                     </h1>
-                    <p className='text-xs text-black/[0.7]'>Streams</p>
+                    <p className='text-xs '>Streams</p>
                   </div>
                 </div>
-                <span className='text-xs hidden group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>
+                <span className='text-xs hidden group-hover:block px-2 py-1 border rounded-md'>
                   Web
                 </span>
               </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <svg
                     className='bg-slate-700 fill-white border rounded-lg p-1'
@@ -103,22 +100,19 @@ export const DynamicActionBar = () => {
                       strokeLinecap='round'
                       strokeLinejoin='round'></g>
                     <g id='SVGRepo_iconCarrier'>
-                      <title>slack</title>{' '}
+                      <title>slack</title>
                       <path d='M19.955 23.108c-1.74 0-3.151-1.411-3.151-3.151s1.411-3.151 3.151-3.151h7.889c1.74 0 3.151 1.411 3.151 3.151s-1.411 3.151-3.151 3.151v0zM19.955 24.693c1.739 0 3.149 1.41 3.149 3.149s-1.41 3.149-3.149 3.149c-1.738 0-3.148-1.408-3.149-3.146v-3.152zM23.108 12.044c0 1.74-1.411 3.151-3.151 3.151s-3.151-1.411-3.151-3.151v0-7.888c0-1.74 1.411-3.151 3.151-3.151s3.151 1.411 3.151 3.151v0zM24.693 12.044c0.001-1.738 1.41-3.147 3.148-3.147s3.148 1.41 3.148 3.149c0 1.738-1.408 3.147-3.145 3.149h-3.152zM12.044 8.893c1.736 0.005 3.142 1.413 3.142 3.15s-1.406 3.146-3.142 3.15h-7.888c-1.736-0.005-3.142-1.413-3.142-3.15s1.406-3.146 3.142-3.15h0zM12.044 7.305c-1.736-0.002-3.143-1.41-3.143-3.147 0-1.738 1.409-3.147 3.147-3.147s3.145 1.408 3.147 3.144v3.149zM8.893 19.955c0.005-1.736 1.413-3.142 3.15-3.142s3.146 1.406 3.15 3.142v7.889c-0.005 1.736-1.413 3.142-3.15 3.142s-3.146-1.406-3.15-3.142v-0zM7.305 19.955c-0.001 1.737-1.41 3.145-3.147 3.145s-3.147-1.409-3.147-3.147c0-1.738 1.408-3.146 3.145-3.147h3.149z'></path>{' '}
                     </g>
                   </svg>
                   <div className='flex flex-col items-start '>
                     <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
                       Slack
-                      <SquareArrowOutUpRight
-                        className='text-black/[0.7]'
-                        size={10}
-                      />
+                      <SquareArrowOutUpRight className='' size={10} />
                     </h1>
-                    <p className='text-xs text-black/[0.7]'>Streams</p>
+                    <p className='text-xs '>Streams</p>
                   </div>
                 </div>
-                <span className='text-xs hidden group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>
+                <span className='text-xs hidden group-hover:block px-2 py-1 border rounded-md'>
                   Web
                 </span>
               </div>
@@ -136,7 +130,7 @@ export const DynamicActionBar = () => {
               transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
               forceMount
               className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <LucideCodeIcon size={14} />
                   <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
@@ -144,13 +138,13 @@ export const DynamicActionBar = () => {
                   </h1>
                 </div>
                 <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span className='group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>
+                  <span className='group-hover:block px-2 py-1 border rounded-md'>
                     Dynamic
                   </span>
                   <span> 07 - 24 </span>
                 </div>
               </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <LucideCodeIcon size={14} />
                   <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
@@ -158,7 +152,7 @@ export const DynamicActionBar = () => {
                   </h1>
                 </div>
                 <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span className='group-hover:block text-black/[.4] px-2 py-1 border rounded-md'>
+                  <span className='group-hover:block px-2 py-1 border rounded-md'>
                     Dynamic
                   </span>
                   <span> 07 - 24 </span>
@@ -181,7 +175,7 @@ export const DynamicActionBar = () => {
               }}
               forceMount
               className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <Paperclip size={14} />
                   <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
@@ -192,7 +186,7 @@ export const DynamicActionBar = () => {
                   <span> May, 2024</span>
                 </div>
               </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <Paperclip size={14} />
                   <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
@@ -203,7 +197,7 @@ export const DynamicActionBar = () => {
                   <span> Apr, 2024 </span>
                 </div>
               </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-slate-50 rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
+              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
                 <div className='flex gap-2 items-center justify-start'>
                   <Paperclip size={14} />
                   <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>

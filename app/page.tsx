@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <div className="w-20 h-20 relative ">
+      <div className="w-20 h-20 relative">
         <Image
           src={"/avatar.png"}
           alt="Prasenjit Pawar"
@@ -16,10 +16,10 @@ export default function Home() {
           className="w-full h-full top-0 left-0 object-cover rounded-2xl"
         />
       </div>
-      <h1 className="mt-6 text-4xl font-bold text-stone-900 tracking-tighter">
+      <h1 className="mt-6 text-4xl font-bold tracking-tighter">
         Software Engineer. Writer.
       </h1>
-      <p className="mt-2 text-base text-stone-700">
+      <p className="mt-2 text-base">
         {`Hi, I'm Prasenjit. I'm a software engineer @Capgemini.`}
       </p>
       <div className="mt-6 flex gap-3 items-center">

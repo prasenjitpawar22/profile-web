@@ -27,7 +27,7 @@ export function NavbarClipPath() {
   }, [active, container, activeEl])
 
   return (
-    <div className='relative flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px]  text-sm w-full items-center justify-center'>
+    <div className='relative flex p-2 border bg-foreground/[.02]  rounded-md h-[200px]  text-sm w-full items-center justify-center'>
       {/* <svg width='0' height='0'>
         <filter id='gooey-nav'>
           <feGaussianBlur in='SourceGraphic' stdDeviation='1' result='blur' />
@@ -47,7 +47,7 @@ export function NavbarClipPath() {
       </svg> */}
 
       <div className='relative w-full h-full flex items-center justify-center'>
-        <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 py-2 bg-black shadow shadow-black rounded-full text-white w-max'>
+        <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 py-2 bg-black shadow-xl shadow-black rounded-full text-white w-max'>
           <ul className='flex gap-2 px-4'>
             {nav.map((l, i) => (
               <React.Fragment key={i}>
@@ -60,7 +60,7 @@ export function NavbarClipPath() {
                   {l === active ? (
                     <motion.div
                       layoutId='gooey'
-                      className='absolute bg-white shadow shadow-white blur w-full h-full top-0 left-0 rounded-full'></motion.div>
+                      className='absolute bg-white shadow shadow-white blur-[4px] w-full h-full top-0 left-0 rounded-full'></motion.div>
                   ) : null}
                 </li>
               </React.Fragment>
