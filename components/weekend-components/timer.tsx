@@ -76,7 +76,7 @@ function Counter({ value }: { value: number }) {
     <div
       style={{ fontSize, filter: 'url(#gooey-counter)' }}
       // style={{  }}
-      className='flex space-x-3 overflow-hidden rounded px-2 leading-none text-gray-900'>
+      className='flex gap-[13px] overflow-hidden rounded px-2 leading-none text-gray-900'>
       <Digit place={10} value={value} />
       <Digit place={1} value={value} />
     </div>
