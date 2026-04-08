@@ -46,11 +46,11 @@ export default function NavBar() {
     const { offsetLeft, offsetWidth } = activeEl
     const containerWidth = container.offsetWidth
 
-    const leftPercent = (offsetLeft / containerWidth) * 100
+    const leftPercent = (offsetLeft / containerWidth) * 99
     const rightPercent =
-      100 - ((offsetLeft + offsetWidth) / containerWidth) * 100
+      99 - ((offsetLeft + offsetWidth) / containerWidth) * 100
 
-    container.style.clipPath = `inset(0 ${rightPercent}% 0 ${leftPercent}% round 9999px)`
+    container.style.clipPath = `inset(0 ${Math.round(rightPercent)}% 0 ${Math.round(leftPercent)}% round 9999px)`
   }, [active, hoveredItem])
 
   async function handleThemChange() {
@@ -84,12 +84,14 @@ export default function NavBar() {
   }
 
   return (
-    <nav className='flex gap-2 justify-center relative mb-12'>
+    <nav className='flex gap-2 justify-center relative mb-20'>
       {mounted ? (
-        <div
-          className='right-10 top-4 absolute'
-          onClick={handleThemChange}>
-          <Button className='w-fit p-2 rounded-full dark:shadow-red-600 shadow-inner dark:[box-shadow:inset_0px_2px_12px_#000]' variant={'ghost'}>{theme === 'light' ? <MoonIcon /> : <SunDim />}</Button>
+        <div className='right-10 top-4 absolute hidden sm:block' onClick={handleThemChange}>
+          <Button
+            className='w-fit p-2 rounded-full shadow-inner dark:[box-shadow:inset_0px_2px_12px_#000]'
+            variant={'ghost'}>
+            {theme === 'light' ? <MoonIcon /> : <SunDim />}
+          </Button>
         </div>
       ) : null}
       <ul className='absolute flex shadow-inner gap-1 shadow-foreground/10 border mt-3 rounded-full p-2 items-center'>

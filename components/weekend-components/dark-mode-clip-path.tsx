@@ -73,10 +73,10 @@ export function DarkModeClipPath() {
   }
 
   return (
-    <div className='relative flex p-2 border bg-foreground/[0.02] rounded-md h-[200px]  text-sm w-full items-center justify-center'>
+    <div className='relative flex p-2 border bg-foreground/[0.02] rounded-md min-h-[200px]  text-sm w-full items-center justify-center'>
       {mounted ? (
         <div className='p-12 flex flex-col w-fit items-center justify-center gap-12'>
-          <div className='grid grid-cols-4 gap-2'>
+          <div className='grid lg:grid-cols-4 gap-2 sm:grid-cols-2 grid-cols-1'>
             <Button
               variant={side === 'Top Left' ? 'default' : 'secondary'}
               onClick={() => setSide('Top Left')}>
