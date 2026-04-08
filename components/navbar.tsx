@@ -1,8 +1,12 @@
 'use client'
 import { motion } from 'framer-motion'
+import { MoonIcon, SunDim } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
+import { Button } from './ui/button'
 
 type NavItems = { name: string; path: string }
 
@@ -16,10 +20,12 @@ const navItems: NavItems[] = [
 ]
 export default function NavBar() {
   const pathname = usePathname()
+  const { setTheme, theme } = useTheme()
   const [active, setActive] = useState(pathname)
   const [hoveredItem, setHoveredItem] = useState<string | null>(pathname)
   const containerRef = useRef<HTMLUListElement>(null)
   const activeElementRef = useRef<HTMLAnchorElement>(null)
+  const [mounted, setMounted] = useState(false)
 
   const highlightTarget = hoveredItem || active
 
@@ -27,6 +33,10 @@ export default function NavBar() {
     setHoveredItem(null)
     setActive(pathname)
   }, [pathname])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useLayoutEffect(() => {
     const container = containerRef.current
@@ -43,8 +53,45 @@ export default function NavBar() {
     container.style.clipPath = `inset(0 ${rightPercent}% 0 ${leftPercent}% round 9999px)`
   }, [active, hoveredItem])
 
+  async function handleThemChange() {
+    await document.startViewTransition(() => {
+      if (theme === 'light') {
+        flushSync(() => setTheme('dark'))
+      } else {
+        flushSync(() => setTheme('light'))
+      }
+    }).ready
+
+    // Calculate the radius for a circle that covers the entire viewport
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    const radius = Math.sqrt(viewportWidth ** 2 + viewportHeight ** 2)
+    console.log(radius)
+
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at 100% 0%)`, // Start as tiny circle at top-right
+          `circle(${radius}px at 100% 0%)`, // Expand to cover entire viewport
+        ],
+      },
+      {
+        duration: 600,
+        easing: 'ease-out',
+        pseudoElement: '::view-transition-new(root)',
+      },
+    )
+  }
+
   return (
     <nav className='flex gap-2 justify-center relative mb-12'>
+      {mounted ? (
+        <div
+          className='right-10 top-4 absolute'
+          onClick={handleThemChange}>
+          <Button className='w-fit p-2 rounded-full dark:shadow-red-600 shadow-inner dark:[box-shadow:inset_0px_2px_12px_#000]' variant={'ghost'}>{theme === 'light' ? <MoonIcon /> : <SunDim />}</Button>
+        </div>
+      ) : null}
       <ul className='absolute flex shadow-inner gap-1 shadow-foreground/10 border mt-3 rounded-full p-2 items-center'>
         {navItems.map((nav) => (
           <motion.div
