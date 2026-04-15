@@ -34,7 +34,7 @@ export default function Page() {
         <DynamicActionBar />
         <Timer />
         <GlideRadioButton />
-        <AppSelector />
+        {/* <AppSelector /> */}
         <MultiSelectExample />
         <div className='relative flex p-2 border bg-foreground/[.02]  rounded-md h-[200px] w-full items-center justify-center'>
           <DrawerComp />
