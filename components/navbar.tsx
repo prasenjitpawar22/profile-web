@@ -102,7 +102,7 @@ export default function NavBar() {
             onHoverEnd={() => setHoveredItem(null)}>
             <Link
               href={nav.path}
-              ref={highlightTarget === nav.path ? activeElementRef : null}
+              ref={highlightTarget === nav.path ? activeElementRef : null }
               className='rounded-full focus-visible:outline-1'>
               <motion.li className='relative px-2 py-1 text-sm inline-flex items-center focus-visible:outline-0 rounded-full tracking-tight cursor-pointer'>
                 {nav.name}
