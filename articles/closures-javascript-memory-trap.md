@@ -2,7 +2,7 @@
 title: "Closures: JavaScript's Memory Trap"
 description: "A fun and honest look at JavaScript closures, why interviewers love them, and how they quietly eat your RAM."
 category: "technical"
-date: "14-06-26"
+date: "06-14-26"
 read: "5 min read"
 ---
 
