@@ -15,8 +15,8 @@ const LinkMotion = motion.create(Link)
 const navItems: NavItems[] = [
   { name: 'Home', path: '/' },
   { name: 'Blog', path: '/blog' },
-  { name: 'Components', path: '/components' },
-  { name: 'Projects', path: '/projects' },
+  { name: 'Components', path: '/components' }
+  // { name: 'Projects', path: '/projects' },
 ]
 export default function NavBar() {
   const pathname = usePathname()
