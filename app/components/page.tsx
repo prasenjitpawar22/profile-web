@@ -1,19 +1,15 @@
 'use client'
 
 import { DrawerComp } from '@/components/drawer'
-import { TodoCheckboxExample } from '@/components/weekend-components/todo-checkbox'
-import { AppSelector } from '@/components/weekend-components/dynamic-action-bar/app-selector'
+import { DarkModeClipPath } from '@/components/weekend-components/dark-mode-clip-path'
 import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar/index'
 import { GlideRadioButton } from '@/components/weekend-components/glide-radio-button'
 import { MultiSelectExample } from '@/components/weekend-components/multi-select'
-import SlideUpButton from '@/components/weekend-components/slide-up-button'
-import { SearchBoxGooey } from '@/components/weekend-components/search-box-gooey'
-import Timer from '@/components/weekend-components/timer'
 import { NavbarClipPath } from '@/components/weekend-components/nav-bar-clip-path'
-import { DarkModeClipPath } from '@/components/weekend-components/dark-mode-clip-path'
-import InlinePopup from '@/components/weekend-components/inline-popup'
-import DiscoButton from '@/components/weekend-components/disco-button'
-import { SliderThrow } from '@/components/weekend-components/dynamic-action-bar/slider-throw'
+import { SearchBoxGooey } from '@/components/weekend-components/search-box-gooey'
+import SlideUpButton from '@/components/weekend-components/slide-up-button'
+import Timer from '@/components/weekend-components/timer'
+import { TodoCheckboxExample } from '@/components/weekend-components/todo-checkbox'
 // import Timer from '@/components/weekend-components/timer'
 
 export default function Page() {
@@ -45,6 +41,7 @@ export default function Page() {
         <SearchBoxGooey />
         <NavbarClipPath />
         <DarkModeClipPath />
+        {/* <ColorMixLab /> */}
       </div>
     </>
   )

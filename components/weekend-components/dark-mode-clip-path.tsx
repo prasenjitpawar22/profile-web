@@ -1,8 +1,8 @@
-import { useTheme } from 'next-themes'
-import { Button } from '../ui/button'
 import { Moon, SunDim } from 'lucide-react'
-import { flushSync } from 'react-dom'
+import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
+import { Button } from '../ui/button'
 
 export function DarkModeClipPath() {
   const [mounted, setMounted] = useState(false)
