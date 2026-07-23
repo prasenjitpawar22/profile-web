@@ -1,48 +1,48 @@
-import fs from "fs";
-import { remark } from "remark";
-import html from "remark-html";
-import matter from "gray-matter";
-import moment from "moment";
-import path from "path";
-import type { ArticleItem } from "@/types/index";
+import type { ArticleItem } from '@/types/index'
+import fs from 'fs'
+import matter from 'gray-matter'
+import moment from 'moment'
+import path from 'path'
+import { remark } from 'remark'
+import html from 'remark-html'
 
-const articleDir = path.join(process.cwd(), "articles");
+const articleDir = path.join(process.cwd(), 'articles')
 
 export const getSortedArticles = async (): Promise<ArticleItem[]> => {
-  const fileNames = fs.readdirSync(articleDir);
+  const fileNames = fs.readdirSync(articleDir)
   const allArticlesData: ArticleItem[] = fileNames.map((fileName) => {
-    const id = fileName.replace(/\.md$/, "");
+    const id = fileName.replace(/\.md$/, '')
 
-    const fullPath = path.join(articleDir, fileName);
-    const fileContents = fs.readFileSync(fullPath, "utf-8");
+    const fullPath = path.join(articleDir, fileName)
+    const fileContents = fs.readFileSync(fullPath, 'utf-8')
 
-    const matterResult = matter(fileContents);
+    const matterResult = matter(fileContents)
 
     return {
       id,
       title: matterResult.data.title,
-      date: moment(matterResult.data.date).format("MMM DD, YY"),
+      date: moment(matterResult.data.date).format('MMM DD, YY'),
       description: matterResult.data.description,
       category: matterResult.data.category,
-    };
-  });
+    }
+  })
 
   return allArticlesData.sort((a, b) => {
-    return moment(b.date).diff(moment(a.date));
-  });
-};
+    return moment(b.date).diff(moment(a.date))
+  })
+}
 
 export const getArticleData = async (id: string) => {
-  const fileName = path.join(articleDir, `${id}.md`);
-  const fileContents = fs.readFileSync(fileName, "utf-8");
+  const fileName = path.join(articleDir, `${id}.md`)
+  const fileContents = fs.readFileSync(fileName, 'utf-8')
 
-  const matterResult = matter(fileContents);
+  const matterResult = matter(fileContents)
 
   const processedContent = await remark()
     .use(html)
-    .process(matterResult.content);
+    .process(matterResult.content)
 
-  const contentHtml = processedContent.toString();
+  const contentHtml = processedContent.toString()
 
   return {
     id,
@@ -51,7 +51,7 @@ export const getArticleData = async (id: string) => {
     title: matterResult.data.title,
     description: matterResult.data.description,
     category: matterResult.data.category,
-    date: moment(matterResult.data.date).format("MMM DD, YY"),
+    date: moment(matterResult.data.date).format('MMM DD, YY'),
     read: matterResult.data.read,
-  };
-};
+  }
+}
