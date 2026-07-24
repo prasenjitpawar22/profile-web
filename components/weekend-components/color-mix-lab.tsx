@@ -16,19 +16,11 @@ export function ColorMixLab() {
       <motion.div
         animate={{ '--color': color } as any}
         initial={{ '--color': '#6366f1' }}
-        className='min-w-[400px] border border-white/10 backdrop-blur-md p-6 rounded-2xl relative overflow-hidden shadow-2xl transition-shadow duration-300'
+        className='min-w-[400px] border border-white/10 overflow-hidden backdrop-blur-md p-6 rounded-2xl relative  shadow-2xl transition-shadow duration-300'
         style={{
           // Deep dark base mixed slightly with the custom color for an ultra-premium glass look
           backgroundColor: 'color-mix(in srgb, var(--color) 8%, #0f172a)',
         }}>
-        {/* Modern Ambient Mesh Glow (Replaces the rigid absolute div) */}
-        <div
-          className='absolute -top-12 -right-12 h-40 w-40 opacity-80 rounded-full blur-xl pointer-events-none transition-transform duration-500 hover:scale-125'
-          style={{
-            backgroundColor: 'var(--color)',
-          }}
-        />
-
         <div className='relative z-10 flex flex-col gap-6'>
           <div className='flex items-center justify-between'>
             <div>
@@ -82,6 +74,25 @@ export function ColorMixLab() {
             className='sr-only'
           />
         </div>
+
+        {/* Modern Ambient Mesh Glow (Replaces the rigid absolute div) */}
+        <motion.div
+          animate={{
+            // 1. Move X: Left (0) -> Right (100) -> Hold -> Left (0) -> Hold
+            left: ['-22%', '90%', '90%', '-22%', '-22%'],
+            // 2. Move Y: Hold -> Bottom (90) -> Hold -> Top (0) -> Hold
+            top: ['-40%', '-40%', '80%', '80%', '-40%'],
+          }}
+          transition={{
+            duration: 12,
+            ease: 'anticipate',
+            repeat: Infinity,
+          }}
+          className='absolute left-[-22%] top-[-40%] h-40 w-40 opacity-80 rounded-full blur-xl pointer-events-none transition-transform duration-500 hover:scale-125'
+          style={{
+            backgroundColor: 'var(--color)',
+          }}
+        />
       </motion.div>
     </div>
   )

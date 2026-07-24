@@ -1,8 +1,9 @@
 'use client'
 
 import { DrawerComp } from '@/components/drawer'
+import { ColorMixLab } from '@/components/weekend-components/color-mix-lab'
 import { DarkModeClipPath } from '@/components/weekend-components/dark-mode-clip-path'
-import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar/index'
+import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar'
 import { GlideRadioButton } from '@/components/weekend-components/glide-radio-button'
 import { MultiSelectExample } from '@/components/weekend-components/multi-select'
 import { NavbarClipPath } from '@/components/weekend-components/nav-bar-clip-path'
@@ -30,7 +31,6 @@ export default function Page() {
         <DynamicActionBar />
         <Timer />
         <GlideRadioButton />
-        {/* <AppSelector /> */}
         <MultiSelectExample />
         <div className='relative flex p-2 border bg-foreground/[.02]  rounded-md h-[200px] w-full items-center justify-center'>
           <DrawerComp />
@@ -41,7 +41,7 @@ export default function Page() {
         <SearchBoxGooey />
         <NavbarClipPath />
         <DarkModeClipPath />
-        {/* <ColorMixLab /> */}
+        <ColorMixLab />
       </div>
     </>
   )
