@@ -56,7 +56,7 @@ export function ColorMixLab() {
 
           {/* Demonstration Block showing off the CSS color-mix() output */}
           <div
-            className='h-24 w-full rounded-xl border border-white/5 flex items-center justify-center font-medium shadow-inner transition-all'
+            className='h-24 w-full backdrop-blur-3xl rounded-xl border border-white/5 flex items-center justify-center font-medium shadow-inner transition-all'
             style={{
               backgroundColor: 'color-mix(in srgb, var(--color) 25%, #0f172a)',
               color:

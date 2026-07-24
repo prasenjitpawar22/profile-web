@@ -1,7 +1,6 @@
 'use client'
 
 import { DrawerComp } from '@/components/drawer'
-import { ColorMixLab } from '@/components/weekend-components/color-mix-lab'
 import { DarkModeClipPath } from '@/components/weekend-components/dark-mode-clip-path'
 import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar'
 import { GlideRadioButton } from '@/components/weekend-components/glide-radio-button'
@@ -41,7 +40,6 @@ export default function Page() {
         <SearchBoxGooey />
         <NavbarClipPath />
         <DarkModeClipPath />
-        <ColorMixLab />
       </div>
     </>
   )
