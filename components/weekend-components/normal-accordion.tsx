@@ -2,7 +2,7 @@
 
 import * as Accordion from '@radix-ui/react-accordion'
 import clsx from 'clsx'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import { ChevronDownIcon } from 'lucide-react'
 import React, { ComponentPropsWithoutRef, ElementRef, useState } from 'react'
 
@@ -33,7 +33,7 @@ export const NormalAccordion = () => {
     },
   ]
 
-  const AccordionContent = motion(AccordionContentPremitive)
+  const AccordionContent = motion.create(AccordionContentPremitive)
   return (
     <div className='flex p-2 border bg-slate-50 text-slate-700 rounded-md h-[200px] w-[500px] items-center justify-center'>
       <Accordion.Root

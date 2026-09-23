@@ -1,5 +1,5 @@
 'use client'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 

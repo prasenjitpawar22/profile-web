@@ -1,5 +1,5 @@
 'use client'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import {
   BathIcon,
   ChefHat,
@@ -12,7 +12,7 @@ export const CardsShuffle = () => {
   const [cur, setCur] = useState(0)
 
   const transition = {
-    type: 'spring',
+    type: 'spring' as const,
     bounce: 0.5,
     duration: 1.73,
   }

@@ -1,22 +1,25 @@
 import { ChevronsRight } from 'lucide-react'
+
 export default function SlideUpButton() {
   return (
-    <div className='relative flex p-2 border bg-foreground/[.02] rounded-md h-[200px] w-full items-center justify-center'>
-      <button
-        className='relative w-52 h-12 inline-flex items-center justify-center
-    px-4 py-3 group rounded-full ring-none border overflow-hidden'>
-        <span
-          className='absolute rounded-full -inset-[160%] animate-spin-slow
-        bg-[conic-gradient(var(--tw-gradient-stops))]
-       from-purple-600 from-20% via-pink-600 via-50% to-red-600 blur-md'></span>
-        <span className='absolute w-[95%] h-[80%] rounded-full bg-black group-hover:bg-white transition-all duration-300'></span>
-        <span className='relative group-hover:absolute text-white text-sm font-medium group-hover:text-black transition-all duration-300 group-hover:-translate-y-14'>
-          Get started for free
+    <button
+      type='button'
+      className='group relative inline-flex h-12 w-52 items-center justify-center overflow-hidden rounded-full p-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'>
+      {/* Spinning conic gradient, clipped to a thin ring by the surface above it */}
+      <span className='absolute -inset-[160%] animate-spin-slow bg-[conic-gradient(var(--tw-gradient-stops))] from-purple-600 from-20% via-pink-600 via-50% to-red-600 blur-md motion-reduce:animate-none' />
+      <span className='absolute inset-[2px] rounded-full bg-foreground transition-colors duration-300 group-hover:bg-background group-focus-visible:bg-background' />
+
+      {/* Two stacked labels; hovering slides the second one up into view */}
+      <span className='relative h-5 overflow-hidden text-sm font-medium'>
+        <span className='flex flex-col transition-transform duration-300 ease-out group-hover:-translate-y-1/2 group-focus-visible:-translate-y-1/2 motion-reduce:transition-none'>
+          <span className='flex h-5 items-center justify-center text-background'>
+            Get started for free
+          </span>
+          <span className='flex h-5 items-center justify-center gap-1 text-foreground'>
+            Get started for free <ChevronsRight size={16} />
+          </span>
         </span>
-        <span className='inline-flex items-center justify-center group-hover:relative absolute text-sm font-medium text-black transition-all duration-300 translate-y-14 group-hover:translate-y-0 '>
-          Get started for free <ChevronsRight size={18} />
-        </span>
-      </button>
-    </div>
+      </span>
+    </button>
   )
 }

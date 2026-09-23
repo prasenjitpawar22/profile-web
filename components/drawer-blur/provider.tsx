@@ -15,7 +15,7 @@ import {
   useDragControls,
   useMotionValue,
   useTransform,
-} from 'framer-motion'
+} from 'motion/react'
 import useMeasure from 'react-use-measure'
 
 const BreakToastContext = createContext<{

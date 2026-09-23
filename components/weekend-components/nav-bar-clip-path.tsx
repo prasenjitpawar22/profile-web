@@ -1,91 +1,64 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+'use client'
 import { motion } from 'motion/react'
+import { useLayoutEffect, useRef, useState } from 'react'
+
+const nav = ['home', 'about', 'contact', 'login']
 
 export function NavbarClipPath() {
   const [active, setActive] = useState('home')
-  const container = useRef<HTMLDivElement>(null)
-  const activeEl = useRef<HTMLLIElement>(null)
+  const listRef = useRef<HTMLUListElement>(null)
+  const highlightRef = useRef<HTMLUListElement>(null)
 
-  const nav = ['home', 'about', 'contact', 'login']
-
+  // Clip the inverted copy down to the active item
   useLayoutEffect(() => {
-    const containerRef = container.current
-    const activeRef = activeEl.current
-    if (!containerRef || !activeRef) return
+    const list = listRef.current
+    const highlight = highlightRef.current
+    const target = list?.querySelector<HTMLElement>(`[data-item="${active}"]`)
+    if (!list || !highlight || !target) return
 
-    const { offsetLeft, offsetWidth } = activeRef
-    const containerWidth = containerRef.offsetWidth
+    const width = list.offsetWidth
+    const left = (target.offsetLeft / width) * 100
+    const right = 100 - ((target.offsetLeft + target.offsetWidth) / width) * 100
 
-    const right = offsetLeft + offsetWidth
-    const left = offsetLeft
-
-    const leftPercent = Number((left / containerWidth) * 100).toFixed()
-
-    const rightPercent = Number(100 - (right / containerWidth) * 100).toFixed()
-
-    containerRef.style.clipPath = `inset(0 ${rightPercent}% 0 ${leftPercent}% round 9999px)`
-  }, [active, container, activeEl])
+    highlight.style.clipPath = `inset(0 ${right.toFixed(2)}% 0 ${left.toFixed(2)}% round 9999px)`
+  }, [active])
 
   return (
-    <div className='relative flex p-2 border bg-foreground/[.02]  rounded-md h-[200px]  text-sm w-full items-center justify-center'>
-      {/* <svg width='0' height='0'>
-        <filter id='gooey-nav'>
-          <feGaussianBlur in='SourceGraphic' stdDeviation='1' result='blur' />
-          <feColorMatrix
-            in='blur'
-            mode='matrix'
-            values='
-              1 0 0 0 0
-              0 1 0 0 0
-              0 0 1 0 0
-              0 0 0 20 -10
-            '
-            result='gooey-nav'
-          />
-          <feBlend in='SourceGraphic' in2='gooey-nav' />
-        </filter>
-      </svg> */}
+    <div className='relative text-sm'>
+      <ul
+        ref={listRef}
+        className='relative flex gap-2 rounded-full bg-foreground px-4 py-2 text-background shadow-lg'>
+        {nav.map((item) => (
+          <li key={item} data-item={item} className='relative'>
+            <button
+              type='button'
+              aria-current={active === item ? 'page' : undefined}
+              onClick={() => setActive(item)}
+              className='rounded-full px-2 py-2 capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+              {item}
+            </button>
+            {item === active ? (
+              // A soft glow that follows the active item and bleeds past the clip edge
+              <motion.span
+                layoutId='clip-nav-glow'
+                className='absolute inset-0 rounded-full bg-background blur-[4px]'
+              />
+            ) : null}
+          </li>
+        ))}
+      </ul>
 
-      <div className='relative w-full h-full flex items-center justify-center'>
-        <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 py-2 bg-black shadow-xl shadow-black rounded-full text-white w-max'>
-          <ul className='flex gap-2 px-4'>
-            {nav.map((l, i) => (
-              <React.Fragment key={i}>
-                <li
-                  key={l}
-                  className='p-2 cursor-pointer py-2 px-2 relative'
-                  onClick={() => setActive(l)}
-                  ref={active === l ? activeEl : null}>
-                  {l}
-                  {l === active ? (
-                    <motion.div
-                      layoutId='gooey'
-                      className='absolute bg-white shadow shadow-white blur-[4px] w-full h-full top-0 left-0 rounded-full'></motion.div>
-                  ) : null}
-                </li>
-              </React.Fragment>
-            ))}
-          </ul>
-        </div>
-
-        <div
-          ref={container}
-          className='z-10 transition-[clip-path] [clip-path:inset(0_75%_0_6%_round_9999px)] overflow-hidden duration-300 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white shadow shadow-white rounded-full text-black w-max'>
-          <ul className='flex gap-2 px-4'>
-            {nav.map((l, i) => (
-              <React.Fragment key={i}>
-                <div className=' bg-red-500 absolute rounded-full -z-10'></div>
-                <motion.li
-                  layoutId={l}
-                  key={l}
-                  className='py-2 px-2 cursor-default'>
-                  {l}
-                </motion.li>
-              </React.Fragment>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <ul
+        ref={highlightRef}
+        aria-hidden
+        style={{ clipPath: 'inset(0 75% 0 6% round 9999px)' }}
+        className='pointer-events-none absolute inset-0 flex gap-2 rounded-full bg-background px-4 py-2 text-foreground transition-[clip-path] duration-300 ease-out'>
+        {nav.map((item) => (
+          <li key={item} className='px-2 py-2 capitalize'>
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

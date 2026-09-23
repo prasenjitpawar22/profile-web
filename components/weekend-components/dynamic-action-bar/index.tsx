@@ -1,295 +1,171 @@
 'use client'
-import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
-
-import { AnimatePresence, motion } from 'framer-motion'
+import {
+  Code,
+  Paperclip,
+  Slack,
+  SquareArrowOutUpRight,
+  Twitch,
+} from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { MouseEvent, useId, useRef, useState } from 'react'
+import useMeasure from 'react-use-measure'
 import { AppWindowMacIcon } from './app-window-mac-icon'
 import { CodeIcon } from './code-icon'
 import { NotePadIcon } from './notepad-icon'
-import {
-  SquareArrowOutUpRight,
-  CodeIcon as LucideCodeIcon,
-  Paperclip,
-} from 'lucide-react'
 
-const CollapsibleContent = motion(CollapsiblePrimitive.Content)
-const CollapsibleRoot = motion(CollapsiblePrimitive.Root)
+type TabId = 'apps' | 'components' | 'notes'
 
-enum BarButtons {
-  'App' = 'Apps',
-  'Notes' = 'Notes',
-  'components' = 'components',
+type Row = {
+  title: string
+  meta: string
+  icon: React.ReactNode
+  external?: boolean
 }
 
+const TABS: {
+  id: TabId
+  label: string
+  Icon: () => JSX.Element
+  rows: Row[]
+}[] = [
+  {
+    id: 'apps',
+    label: 'Apps',
+    Icon: AppWindowMacIcon,
+    rows: [
+      { title: 'Twitch', meta: 'Streams', icon: <Twitch />, external: true },
+      { title: 'Slack', meta: 'Messaging', icon: <Slack />, external: true },
+    ],
+  },
+  {
+    id: 'components',
+    label: 'Components',
+    Icon: CodeIcon,
+    rows: [
+      { title: 'Dynamic action bar', meta: 'Jul 2024', icon: <Code /> },
+      { title: 'App switcher', meta: 'Jul 2024', icon: <Code /> },
+    ],
+  },
+  {
+    id: 'notes',
+    label: 'Notes',
+    Icon: NotePadIcon,
+    rows: [
+      { title: 'Dapper split-on', meta: 'May 2024', icon: <Paperclip /> },
+      { title: 'Feedback component', meta: 'Apr 2024', icon: <Paperclip /> },
+      { title: 'Rolling back a database', meta: 'Dec 2025', icon: <Paperclip /> },
+    ],
+  },
+]
+
+const SPRING = { type: 'spring', bounce: 0.3, duration: 0.5 } as const
+
 export const DynamicActionBar = () => {
-  const [state, setState] = useState<{
-    isOpen: boolean
-    state?: null | BarButtons
-  }>({ isOpen: false, state: null })
+  const [active, setActive] = useState<TabId | null>(null)
+  const pointerType = useRef('mouse')
+  const panelId = useId()
+  const reduceMotion = useReducedMotion()
+  // Animate to the measured height so switching tabs resizes smoothly too
+  const [contentRef, { height }] = useMeasure()
+
+  const tab = TABS.find((t) => t.id === active)
+  const transition = reduceMotion ? { duration: 0 } : SPRING
+
+  // Mouse users get hover-to-open; a click just keeps it open. Touch and
+  // keyboard (detail === 0) toggle instead, since they have no hover.
+  function onTabClick(e: MouseEvent, id: TabId) {
+    if (e.detail !== 0 && pointerType.current === 'mouse') setActive(id)
+    else setActive((prev) => (prev === id ? null : id))
+  }
 
   return (
-    <motion.div className='flex w-full h-[200px] bg-foreground/[.02] items-end justify-center border p-3 rounded-md'>
-      <CollapsibleRoot
-        initial={{ width: 280 }}
-        animate={{ width: state.isOpen ? 300 : 280 }}
-        className={cn(
-          'border backdrop-blur-md shadow items-center justify-center rounded-xl px-[15px] flex flex-col',
-        )}
-        open={state.isOpen}
-        onOpenChange={(e) => setState({ isOpen: e, state: null })}>
-        <AnimatePresence>
-          {state.isOpen && state.state === BarButtons.App && (
-            <CollapsibleContent
-              layout='position'
-              onMouseEnter={() =>
-                setState({ isOpen: true, state: BarButtons.App })
-              }
-              onMouseLeave={() => setState({ isOpen: false })}
-              initial={{ display: 'flex', height: 0 }}
-              animate={{ display: 'flex', height: 'auto' }}
-              transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
-              forceMount
-              className={cn(
-                `flex w-full items-center mt-4 justify-center overflow-hidden h-full flex-col gap-2 rounded-md`,
-              )}>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <svg
-                    className='bg-slate-700 fill-white border rounded-lg p-1'
-                    width='34'
-                    height='34'
-                    viewBox='0 0 512 512'
-                    xmlns='http://www.w3.org/2000/svg'>
-                    <g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
-                    <g
-                      id='SVGRepo_tracerCarrier'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'></g>
-                    <g id='SVGRepo_iconCarrier'>
-                      <title>ionicons-v5_logos</title>
-                      <path d='M80,32,48,112V416h96v64h64l64-64h80L464,304V32ZM416,288l-64,64H256l-64,64V352H112V80H416Z'></path>
-                      <rect x='320' y='143' width='48' height='129'></rect>
-                      <rect x='208' y='143' width='48' height='129'></rect>
-                    </g>
-                  </svg>
-                  <div className='flex flex-col items-start '>
-                    <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                      Twitch
-                      <SquareArrowOutUpRight className='' size={10} />
-                    </h1>
-                    <p className='text-xs '>Streams</p>
-                  </div>
-                </div>
-                <span className='text-xs hidden group-hover:block px-2 py-1 border rounded-md'>
-                  Web
-                </span>
+    <div className='flex h-[260px] w-full items-end justify-center'>
+      <div
+        onMouseLeave={() => setActive(null)}
+        onKeyDown={(e) => e.key === 'Escape' && setActive(null)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) setActive(null)
+        }}
+        className='w-[300px] rounded-2xl border bg-background/80 p-1.5 shadow-sm backdrop-blur-md'>
+        <AnimatePresence initial={false}>
+          {tab && (
+            <motion.div
+              key='panel'
+              id={panelId}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height, opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={transition}
+              className='overflow-hidden'>
+              <div ref={contentRef} className='relative'>
+                <AnimatePresence mode='popLayout' initial={false}>
+                  <motion.ul
+                    key={tab.id}
+                    initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.18 }}
+                    className='flex w-full flex-col gap-0.5 p-1 pb-2'>
+                    {tab.rows.map((row) => (
+                      <li key={row.title}>
+                        <a
+                          href='#'
+                          onClick={(e) => e.preventDefault()}
+                          className='group flex items-center justify-between gap-2 rounded-lg p-1.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                          <span className='flex items-center gap-2.5'>
+                            <span className='grid h-7 w-7 place-items-center rounded-md bg-foreground text-background [&>svg]:h-3.5 [&>svg]:w-3.5'>
+                              {row.icon}
+                            </span>
+                            <span className='flex items-center gap-1 text-xs font-medium'>
+                              {row.title}
+                              {row.external ? (
+                                <SquareArrowOutUpRight className='h-2.5 w-2.5 text-muted-foreground' />
+                              ) : null}
+                            </span>
+                          </span>
+                          <span className='text-xs text-muted-foreground'>
+                            {row.meta}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </motion.ul>
+                </AnimatePresence>
+                <div className='hairline mb-1.5' />
               </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <svg
-                    className='bg-slate-700 fill-white border rounded-lg p-1'
-                    width='34'
-                    height='34'
-                    viewBox='0 0 32 32'
-                    version='1.1'
-                    xmlns='http://www.w3.org/2000/svg'>
-                    <g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
-                    <g
-                      id='SVGRepo_tracerCarrier'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'></g>
-                    <g id='SVGRepo_iconCarrier'>
-                      <title>slack</title>
-                      <path d='M19.955 23.108c-1.74 0-3.151-1.411-3.151-3.151s1.411-3.151 3.151-3.151h7.889c1.74 0 3.151 1.411 3.151 3.151s-1.411 3.151-3.151 3.151v0zM19.955 24.693c1.739 0 3.149 1.41 3.149 3.149s-1.41 3.149-3.149 3.149c-1.738 0-3.148-1.408-3.149-3.146v-3.152zM23.108 12.044c0 1.74-1.411 3.151-3.151 3.151s-3.151-1.411-3.151-3.151v0-7.888c0-1.74 1.411-3.151 3.151-3.151s3.151 1.411 3.151 3.151v0zM24.693 12.044c0.001-1.738 1.41-3.147 3.148-3.147s3.148 1.41 3.148 3.149c0 1.738-1.408 3.147-3.145 3.149h-3.152zM12.044 8.893c1.736 0.005 3.142 1.413 3.142 3.15s-1.406 3.146-3.142 3.15h-7.888c-1.736-0.005-3.142-1.413-3.142-3.15s1.406-3.146 3.142-3.15h0zM12.044 7.305c-1.736-0.002-3.143-1.41-3.143-3.147 0-1.738 1.409-3.147 3.147-3.147s3.145 1.408 3.147 3.144v3.149zM8.893 19.955c0.005-1.736 1.413-3.142 3.15-3.142s3.146 1.406 3.15 3.142v7.889c-0.005 1.736-1.413 3.142-3.15 3.142s-3.146-1.406-3.15-3.142v-0zM7.305 19.955c-0.001 1.737-1.41 3.145-3.147 3.145s-3.147-1.409-3.147-3.147c0-1.738 1.408-3.146 3.145-3.147h3.149z'></path>{' '}
-                    </g>
-                  </svg>
-                  <div className='flex flex-col items-start '>
-                    <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                      Slack
-                      <SquareArrowOutUpRight className='' size={10} />
-                    </h1>
-                    <p className='text-xs '>Streams</p>
-                  </div>
-                </div>
-                <span className='text-xs hidden group-hover:block px-2 py-1 border rounded-md'>
-                  Web
-                </span>
-              </div>
-              <span className='w-full h-[1px] border my-2'></span>
-            </CollapsibleContent>
-          )}
-          {state.isOpen && state.state === BarButtons.components && (
-            <CollapsibleContent
-              onMouseEnter={() =>
-                setState({ isOpen: true, state: BarButtons.components })
-              }
-              onMouseLeave={() => setState({ isOpen: false })}
-              initial={{ display: 'flex', height: 0 }}
-              animate={{ display: 'flex', height: 'auto' }}
-              transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
-              forceMount
-              className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <LucideCodeIcon size={14} />
-                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                    Dynamic Action Bar
-                  </h1>
-                </div>
-                <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span className='group-hover:block px-2 py-1 border rounded-md'>
-                    Dynamic
-                  </span>
-                  <span> 07 - 24 </span>
-                </div>
-              </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <LucideCodeIcon size={14} />
-                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                    Slack
-                  </h1>
-                </div>
-                <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span className='group-hover:block px-2 py-1 border rounded-md'>
-                    Dynamic
-                  </span>
-                  <span> 07 - 24 </span>
-                </div>
-              </div>
-              <span className='w-full h-[1px] border my-2'></span>
-            </CollapsibleContent>
-          )}
-          {state.isOpen && state.state === BarButtons.Notes && (
-            <CollapsibleContent
-              onMouseEnter={() =>
-                setState({ isOpen: true, state: BarButtons.Notes })
-              }
-              onMouseLeave={() => setState({ isOpen: false })}
-              initial={{ display: 'flex', height: 0 }}
-              animate={{ display: 'flex', height: 'auto' }}
-              transition={{ type: 'spring', bounce: 0.5, duration: 0.73 }}
-              exit={{
-                transition: { duration: 0.5, type: 'tween' },
-              }}
-              forceMount
-              className='flex w-full mt-4 items-center rounded-b-none justify-center overflow-hidden h-full flex-col gap-2 rounded-md'>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <Paperclip size={14} />
-                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                    Dappper split-on
-                  </h1>
-                </div>
-                <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span> May, 2024</span>
-                </div>
-              </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <Paperclip size={14} />
-                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                    Feedback component
-                  </h1>
-                </div>
-                <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span> Apr, 2024 </span>
-                </div>
-              </div>
-              <div className='group justify-between gap-2 items-center w-full flex hover:bg-foreground/[.05] rounded-md hover:p-2 cursor-pointer transition-all duration-300'>
-                <div className='flex gap-2 items-center justify-start'>
-                  <Paperclip size={14} />
-                  <h1 className='text-xs inline-flex gap-1 items-center font-bold tracking-tight'>
-                    Rolling back database
-                  </h1>
-                </div>
-                <div className='flex text-xs gap-1 justify-between items-center'>
-                  <span> Dec, 2025 </span>
-                </div>
-              </div>
-              <span className='w-full h-[1px] border my-2'></span>
-            </CollapsibleContent>
+            </motion.div>
           )}
         </AnimatePresence>
 
-        <motion.div
-          initial={{
-            paddingTop: state.isOpen ? '0px' : '4px',
-            paddingBottom: '4px',
-          }}
-          animate={{
-            paddingTop: state.isOpen ? '0px' : '4px',
-            paddingBottom: '4px',
-          }}
-          className={cn('flex gap-2 justify-center items-center rounded-xl')}>
-          <CollapsiblePrimitive.Trigger asChild>
+        <div className='flex gap-1'>
+          {TABS.map((t) => (
             <motion.button
-              onMouseEnter={() =>
-                setState({ isOpen: true, state: BarButtons.App })
-              }
-              onMouseLeave={() => setState({ isOpen: false })}
-              onClick={(e) => e.preventDefault()}
-              className={cn(
-                'inline-flex items-center cursor-default justify-center gap-1 w-full px-2 hover:text-white hover:bg-slate-700 transition-all duration-300 py-1 rounded-md text-xs',
-                state.isOpen && state.state === BarButtons.App
-                  ? 'bg-slate-700 text-white'
-                  : null,
-              )}
-              variants={{ default: { opacity: 1 }, hover: { opacity: 1 } }}
+              key={t.id}
+              type='button'
+              aria-expanded={active === t.id}
+              aria-controls={active === t.id ? panelId : undefined}
               initial='default'
               animate='default'
-              whileHover={'hover'}>
-              <AppWindowMacIcon />
-              {BarButtons.App}
-            </motion.button>
-          </CollapsiblePrimitive.Trigger>
-          <CollapsiblePrimitive.Trigger asChild>
-            <motion.button
-              onMouseEnter={() =>
-                setState({ isOpen: true, state: BarButtons.components })
-              }
-              onMouseLeave={() => setState({ isOpen: false })}
-              onClick={(e) => {
-                e.preventDefault()
+              whileHover='hover'
+              onPointerDown={(e) => (pointerType.current = e.pointerType)}
+              onPointerEnter={(e) => {
+                pointerType.current = e.pointerType
+                if (e.pointerType === 'mouse') setActive(t.id)
               }}
+              onClick={(e) => onTabClick(e, t.id)}
               className={cn(
-                'inline-flex items-center cursor-default gap-1 justify-center w-full hover:text-white hover:bg-slate-700 px-2 transition-all duration-300 py-1 rounded-md text-sm',
-                state.isOpen && state.state === BarButtons.components
-                  ? 'bg-slate-700 text-white '
-                  : null,
-              )}
-              variants={{ default: { opacity: 1 }, hover: { opacity: 1 } }}
-              initial='default'
-              animate='default'
-              whileHover={'hover'}>
-              <CodeIcon />
-              {BarButtons.components}
+                'flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                active === t.id
+                  ? 'bg-foreground text-background'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}>
+              <t.Icon />
+              {t.label}
             </motion.button>
-          </CollapsiblePrimitive.Trigger>
-          <CollapsiblePrimitive.Trigger asChild>
-            <motion.button
-              onMouseEnter={() =>
-                setState({ isOpen: true, state: BarButtons.Notes })
-              }
-              onMouseLeave={() => setState({ isOpen: false })}
-              onClick={(e) => e.preventDefault()}
-              className={cn(
-                'inline-flex items-center cursor-default group gap-1 justify-center w-full hover:text-white hover:bg-slate-700 px-2 transition-all duration-300 py-1 rounded-md text-sm',
-                state.isOpen && state.state === BarButtons.Notes
-                  ? 'bg-slate-700 text-white'
-                  : null,
-              )}
-              variants={{ default: { opacity: 1 }, hover: { opacity: 1 } }}
-              initial='default'
-              animate='default'
-              whileHover={'hover'}>
-              <NotePadIcon />
-              {BarButtons.Notes}
-            </motion.button>
-          </CollapsiblePrimitive.Trigger>
-        </motion.div>
-      </CollapsibleRoot>
-    </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }

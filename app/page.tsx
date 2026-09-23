@@ -1,38 +1,93 @@
-import GitHubIcon from "@/components/github-icon";
-import LinkedInIcon from "@/components/linkedIn-icon";
-import XIcon from "@/components/x-icon";
-import Image from "next/image";
-import Link from "next/link";
+import { Grass } from '@/components/grass'
+import { SiteFooter } from '@/components/site-footer'
+import { getSortedArticles } from '@/lib/article'
+import { craftItems } from '@/lib/craft'
+import Link from 'next/link'
 
-export default function Home() {
+// Fade each block in a beat after the one above it
+const enter =
+  'animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-700 motion-reduce:animate-none'
+
+export default async function Home() {
+  const articles = await getSortedArticles()
+  const featured = craftItems.filter((item) => item.featured)
+
   return (
-    <>
-      <div className="w-20 h-20 relative">
-        <Image
-          src={"/avatar.png"}
-          alt="Prasenjit Pawar"
-          objectFit="cover"
-          fill
-          className="w-full h-full top-0 left-0 object-cover rounded-2xl"
-        />
+    <div className='flex flex-1 flex-col'>
+      <div className='page pt-20 md:pt-28'>
+        <header className={enter}>
+          <h1 className='font-medium'>Prasenjit Pawar</h1>
+          <p className='text-muted-foreground'>Design Engineer</p>
+        </header>
+
+        <Section
+          title='Craft'
+          className={`${enter} delay-100`}
+          action={
+            <Link href='/craft' className='link text-sm'>
+              All experiments
+            </Link>
+          }>
+          <ul className='-mx-3'>
+            {featured.map((item) => (
+              <li key={item.slug}>
+                <Link
+                  href={`/craft#${item.slug}`}
+                  className='block rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                  <span className='block'>{item.title}</span>
+                  <span className='block text-muted-foreground'>
+                    {item.description}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        <Section title='Writing' className={`${enter} delay-200`}>
+          <ul className='-mx-3'>
+            {articles.map((article) => (
+              <li key={article.id}>
+                <Link
+                  href={`/writing/${article.id}`}
+                  className='flex items-baseline justify-between gap-6 rounded-lg px-3 py-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                  <span>{article.title}</span>
+                  <span className='shrink-0 text-sm tabular-nums text-muted-foreground'>
+                    {article.date}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
       </div>
-      <h1 className="mt-6 text-4xl font-bold tracking-tighter">
-        Software Engineer. Writer.
-      </h1>
-      <p className="mt-2 text-base">
-        {`Hi, I'm Prasenjit. I'm a software engineer @Capgemini.`}
-      </p>
-      <div className="mt-6 flex gap-3 items-center">
-        <Link href={"https://twitter.com/PrasenjitPawar"}>
-          <XIcon />
-        </Link>
-        <Link href={"https://github.com/prasenjitpawar22"}>
-          <GitHubIcon />
-        </Link>
-        <Link href={"https://www.linkedin.com/in/prasenjit-pawar-2b378b77/"}>
-          <LinkedInIcon />
-        </Link>
+
+      <div className='mt-auto pt-20'>
+        <SiteFooter />
+        <Grass />
       </div>
-    </>
-  );
+    </div>
+  )
+}
+
+function Section({
+  title,
+  action,
+  className,
+  children,
+}: {
+  title: string
+  action?: React.ReactNode
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className={`mt-14 ${className ?? ''}`}>
+      <div className='flex items-baseline justify-between'>
+        <h2 className='text-sm text-muted-foreground'>{title}</h2>
+        {action}
+      </div>
+      <div className='mt-3'>{children}</div>
+    </section>
+  )
 }

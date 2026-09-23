@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import { ChevronRightCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 
@@ -10,7 +10,7 @@ export const SliderThrow = () => {
   const [next, setNext] = useState('3')
 
   const transition = {
-    type: 'easeOut',
+    ease: 'easeOut' as const,
     duration: 0.2,
   }
 

@@ -6,7 +6,14 @@ import rehypeHighlight from "rehype-highlight";
 const nextConfig = {
   // Configure `pageExtensions` to include MDX files
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
-  // Optionally, add any other Next.js config below
+  // Old routes, kept alive for links already shared
+  async redirects() {
+    return [
+      { source: "/blog", destination: "/writing", permanent: true },
+      { source: "/blog/:id", destination: "/writing/:id", permanent: true },
+      { source: "/components", destination: "/craft", permanent: true },
+    ];
+  },
 };
 
 const withMDX = createMDX({

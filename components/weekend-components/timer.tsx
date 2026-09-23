@@ -1,81 +1,72 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MotionValue, motion, useSpring, useTransform } from 'framer-motion'
-import Link from 'next/link'
-import { ExternalLink } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  MotionValue,
+  motion,
+  useInView,
+  useSpring,
+  useTransform,
+} from 'motion/react'
 
 const fontSize = 30
 const padding = 15
 const height = fontSize + padding
 
 export default function Timer() {
-  const [totalSeconds, setTotalSeconds] = useState(600) // initial total seconds
-  const [seconds, setSeconds] = useState(0)
-  const [minutes, setMinutes] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref)
+  const [totalSeconds, setTotalSeconds] = useState(600)
 
-  useEffect(() => {
-    const min = Math.floor(totalSeconds / 60)
-    const sec = totalSeconds % 60
-    setMinutes(min)
-    setSeconds(sec)
-  }, [totalSeconds])
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
 
+  // Only tick while the counter is on screen
   useEffect(() => {
+    if (!inView) return
     const id = setInterval(() => {
-      setTotalSeconds((prev) => {
-        if (prev <= 1) return 600
-        return prev - 1
-      })
+      setTotalSeconds((prev) => (prev <= 1 ? 600 : prev - 1))
     }, 1000)
-
     return () => clearInterval(id)
-  }, [])
-  // aababbab
+  }, [inView])
+
   return (
-    <>
-      <div className='relative flex p-2 border rounded-md h-[200px] bg-foreground/[.02] w-full items-center justify-center'>
-        <svg width='0' height='0'>
-          <filter id='gooey-counter'>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='6' result='blur' />
-            <feColorMatrix
-              in='blur'
-              mode='matrix'
-              values='
+    <div ref={ref}>
+      <svg width='0' height='0' className='absolute'>
+        <filter id='gooey-counter'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+          <feColorMatrix
+            in='blur'
+            mode='matrix'
+            values='
               1 0 0 0 0
               0 1 0 0 0
               0 0 1 0 0
-              0 0 0 35 -8
+              0 0 0 16 -6
             '
-              result='gooey-counter'
-            />
-            <feBlend in='SourceGraphic' in2='gooey-counter' />
-          </filter>
-        </svg>
-        <div className='relative bg-background shadow shadow-black flex p-2 border rounded-full px-3 items-center justify-center'>
-          <Counter value={minutes} />
-          <span className='text-white/80 mx-1'>:</span>
-          <Counter value={seconds} />
-        </div>
-        <Link
-          href={'https://buildui.com/recipes/animated-counter'}
-          target='_blank'
-          className='absolute flex cursor-pointer bottom-0 right-0 text-xs'>
-          <p className='w-full flex items-center gap-1 rounded-md px-2 mb-2'>
-            Reference from
-            <ExternalLink size={12} className='mb-[1px]' />
-          </p>
-        </Link>
+            result='gooey-counter'
+          />
+          <feBlend in='SourceGraphic' in2='gooey-counter' />
+        </filter>
+      </svg>
+      <div
+        role='timer'
+        aria-label={`${minutes} minutes ${seconds} seconds`}
+        className='flex items-center justify-center rounded-full border bg-background p-2 px-3 shadow-sm'>
+        <Counter value={minutes} />
+        <span className='mx-1 text-muted-foreground'>:</span>
+        <Counter value={seconds} />
       </div>
-    </>
+    </div>
   )
 }
 
 function Counter({ value }: { value: number }) {
   return (
     <div
+      aria-hidden
       style={{ fontSize, filter: 'url(#gooey-counter)' }}
-      className='flex gap-[13px] overflow-hidden rounded px-2 leading-none text-gray-900'>
+      className='flex gap-[13px] overflow-hidden rounded px-2 font-medium leading-none text-foreground'>
       <Digit place={10} value={value} />
       <Digit place={1} value={value} />
     </div>
@@ -83,8 +74,8 @@ function Counter({ value }: { value: number }) {
 }
 
 function Digit({ place, value }: { place: number; value: number }) {
-  let valueRoundedToPlace = Math.floor(value / place)
-  let animatedValue = useSpring(valueRoundedToPlace, { bounce: 0.2 })
+  const valueRoundedToPlace = Math.floor(value / place)
+  const animatedValue = useSpring(valueRoundedToPlace, { bounce: 0.2 })
 
   useEffect(() => {
     animatedValue.set(valueRoundedToPlace)
@@ -93,23 +84,21 @@ function Digit({ place, value }: { place: number; value: number }) {
   return (
     <div style={{ height }} className='relative w-[1ch] tabular-nums'>
       {Array.from({ length: 10 }, (_, i) => (
-        <Number key={i} mv={animatedValue} number={i} />
+        <DigitSlot key={i} mv={animatedValue} number={i} />
       ))}
     </div>
   )
 }
 
-function Number({ mv, number }: { mv: MotionValue; number: number }) {
-  let y = useTransform(mv, (latest) => {
-    let placeValue = latest % 10
-    let offset = (10 + number - placeValue) % 10
+function DigitSlot({ mv, number }: { mv: MotionValue<number>; number: number }) {
+  const y = useTransform(mv, (latest) => {
+    const placeValue = latest % 10
+    const offset = (10 + number - placeValue) % 10
 
     let memo = offset * height
-
     if (offset > 5) {
       memo -= 10 * height
     }
-
     return memo
   })
 
@@ -117,9 +106,7 @@ function Number({ mv, number }: { mv: MotionValue; number: number }) {
     <motion.span
       style={{ y }}
       className='absolute inset-0 flex items-center justify-center'>
-      <span className='bg-gradient-to-t from-red-500 to-blue-500 text-md'>
-        {number}
-      </span>
+      {number}
     </motion.span>
   )
 }

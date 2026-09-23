@@ -8,6 +8,10 @@ import html from 'remark-html'
 
 const articleDir = path.join(process.cwd(), 'articles')
 
+// Front matter dates are written as MM-DD-YY
+const parseDate = (date: string) => moment(date, 'MM-DD-YY')
+const formatDate = (date: string) => parseDate(date).format('MMM D, YYYY')
+
 export const getSortedArticles = async (): Promise<ArticleItem[]> => {
   const fileNames = fs.readdirSync(articleDir)
   const allArticlesData: ArticleItem[] = fileNames.map((fileName) => {
@@ -21,14 +25,14 @@ export const getSortedArticles = async (): Promise<ArticleItem[]> => {
     return {
       id,
       title: matterResult.data.title,
-      date: moment(matterResult.data.date).format('MMM DD, YY'),
+      date: formatDate(matterResult.data.date),
       description: matterResult.data.description,
       category: matterResult.data.category,
     }
   })
 
   return allArticlesData.sort((a, b) => {
-    return moment(b.date).diff(moment(a.date))
+    return moment(b.date, 'MMM D, YYYY').diff(moment(a.date, 'MMM D, YYYY'))
   })
 }
 
@@ -51,7 +55,7 @@ export const getArticleData = async (id: string) => {
     title: matterResult.data.title,
     description: matterResult.data.description,
     category: matterResult.data.category,
-    date: moment(matterResult.data.date).format('MMM DD, YY'),
+    date: formatDate(matterResult.data.date),
     read: matterResult.data.read,
   }
 }

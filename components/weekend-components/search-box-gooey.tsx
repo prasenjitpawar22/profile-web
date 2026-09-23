@@ -1,59 +1,35 @@
-import {
-  AnimatePresence,
-  delay,
-  LayoutGroup,
-  motion,
-  stagger,
-  Variant,
-  Variants,
-} from 'framer-motion'
-import { Layout, SearchIcon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+'use client'
+import { motion, Variants } from 'motion/react'
+import { SearchIcon } from 'lucide-react'
+import { useState } from 'react'
 
-const MotionSearchIcon = motion.create(SearchIcon)
+const inputVariants: Variants = {
+  open: { width: 150, scale: 1 },
+  close: { width: 100, scale: 0.8 },
+}
+
+const searchIconVariants: Variants = {
+  open: {
+    x: 10,
+    scale: 1,
+    transition: { type: 'spring', duration: 1.2 },
+  },
+  close: {
+    // Tucked behind the input, where the goo filter melts the two together
+    x: -40,
+    scale: 0.7,
+    transition: { type: 'spring', damping: 20, duration: 1.2 },
+  },
+}
 
 export function SearchBoxGooey() {
   const [isOpen, setIsOpen] = useState(false)
   const [text, setText] = useState('')
-  const ref = useRef<HTMLInputElement>(null)
-
-  const inputVariants: Variants = {
-    open: {
-      width: 150,
-      scale: 1,
-    },
-    close: {
-      width: 100,
-      scale: 0.8,
-    },
-  }
-
-  const searchIconVariant: Variants = {
-    open: {
-      x: 10,
-      opacity: 1,
-      scale: 1,
-      color: 'white',
-      transition: { type: 'spring', duration: 1.2 },
-    },
-    close: {
-      x: -40,
-      scale: 0.7,
-      color: 'black',
-      transition: { type: 'spring', damping: 20, duration: 1.2},
-    },
-  }
-
-  const list = [
-    'listing thsi is',
-    'this aisa another one listing',
-    'no its not a listing',
-  ]
 
   return (
-    <div className='relative flex p-2 border bg-foreground/[.02] rounded-md h-[200px] w-full items-center justify-center'>
-      <svg width='0' height='0'>
-        <filter id='goo'>
+    <div>
+      <svg width='0' height='0' className='absolute'>
+        <filter id='gooey-search'>
           <feGaussianBlur in='SourceGraphic' stdDeviation='5' result='blur' />
           <feColorMatrix
             in='blur'
@@ -64,39 +40,35 @@ export function SearchBoxGooey() {
               0 0 1 0 0
               0 0 0 10 -5
             '
-            result='goo'
+            result='gooey-search'
           />
-          <feBlend in='SourceGraphic' in2='goo' />
+          <feBlend in='SourceGraphic' in2='gooey-search' />
         </filter>
       </svg>
 
-      <div className="h-full justify-center flex flex-col [filter:url('#goo')] ">
-        <LayoutGroup>
-          <div className='flex'>
-            <motion.input
-              ref={ref}
-              layout
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder='search'
-              variants={inputVariants}
-              animate={isOpen ? 'open' : 'close'}
-              initial={'close'}
-              // whileHover={!isOpen ? { scale: 1 } : {}}
-              onFocus={() => setIsOpen(true)}
-              onBlur={() => setIsOpen(false)}
-              transition={{ delayChildren: 2 }}
-              className='h-8 w-[200px] text-white bg-black rounded-3xl shadow shadow-black focus-visible:outline-none pl-4'
-            />
-            <motion.div
-              className='p-2 bg-black rounded-full flex items-center justify-center shadow shadow-black'
-              variants={searchIconVariant}
-              animate={isOpen ? 'open' : 'close'}
-              initial={'close'}>
-              <MotionSearchIcon className='h-4 w-4' />
-            </motion.div>
-          </div>
-        </LayoutGroup>
+      <div className="flex [filter:url('#gooey-search')]">
+        <motion.input
+          layout
+          type='search'
+          aria-label='Search'
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder='Search'
+          variants={inputVariants}
+          animate={isOpen ? 'open' : 'close'}
+          initial='close'
+          onFocus={() => setIsOpen(true)}
+          onBlur={() => setIsOpen(false)}
+          className='h-8 rounded-3xl bg-foreground pl-4 text-sm text-background placeholder:text-background/60 focus-visible:outline-none'
+        />
+        <motion.div
+          aria-hidden
+          className='flex items-center justify-center rounded-full bg-foreground p-2 text-background'
+          variants={searchIconVariants}
+          animate={isOpen ? 'open' : 'close'}
+          initial='close'>
+          <SearchIcon className='h-4 w-4' />
+        </motion.div>
       </div>
     </div>
   )

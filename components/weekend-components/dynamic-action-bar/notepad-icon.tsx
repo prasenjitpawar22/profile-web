@@ -1,5 +1,4 @@
-import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 export const NotePadIcon = () => {
   return (
@@ -14,7 +13,7 @@ export const NotePadIcon = () => {
       strokeWidth='2'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className={cn('lucide lucide-notepad-text', 'group-hover:text-white')}>
+      className='lucide lucide-notepad-text'>
       <path d='M8 2v4' />
       <path d='M12 2v4' />
       <path className='w-0' d='M16 2v4' />

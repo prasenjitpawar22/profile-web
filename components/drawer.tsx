@@ -1,3 +1,5 @@
+'use client'
+
 import {
   ComponentPropsWithoutRef,
   createContext,
@@ -26,7 +28,7 @@ import {
   motionValue,
   animate as framerAnimate,
   HTMLMotionProps,
-} from 'framer-motion'
+} from 'motion/react'
 import useMeasure from 'react-use-measure'
 import { Button } from './ui/button'
 import { Slot } from '@radix-ui/react-slot'
@@ -101,7 +103,7 @@ export const Drawer = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 
 Drawer.displayName = 'Drawer'
 
-const MotionOverlay = motion(Root)
+const MotionOverlay = motion.create(Root)
 interface DrawerOverlayProps extends ComponentPropsWithoutRef<
   typeof MotionOverlay
 > {
@@ -132,7 +134,7 @@ export const DrawerOverlay = forwardRef<HTMLDivElement, DrawerOverlayProps>(
       const element = document.querySelector(transformElement)
       if (!element || !(element instanceof HTMLElement)) return
 
-      const unsubscribe = transformPage.onChange((value) => {
+      const unsubscribe = transformPage.on('change', (value) => {
         element.style.transform = value
       })
 
@@ -198,7 +200,7 @@ export const DrawerTigger = forwardRef<ElementRef<'button'>, DrawerTiggerProps>(
 
 DrawerTigger.displayName = 'DrawerTigger'
 
-const MotionPortal = motion(Root)
+const MotionPortal = motion.create(Root)
 interface DrawerPortalProps extends ComponentPropsWithoutRef<
   typeof MotionPortal
 > {
@@ -209,35 +211,38 @@ const DrawerPortalContext = createContext<{ handleClose: () => Promise<void> }>(
   { handleClose: () => Promise.resolve() },
 )
 
+// The sheet is h-[75vh], so this offset hides it fully below the viewport
+const offscreenY = () => window.innerHeight * 0.75
+
 export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
   ({ children, ...props }, ref) => {
-    const { drawerRef, height, setOpen, y, open, scope } = useDrawer()
+    const { drawerRef, setOpen, y, open, scope } = useDrawer()
     const dragControls = useDragControls()
 
+    // Slide in by animating the shared y value itself. The portal attaches its
+    // element a frame late, so initial/animate props on it never get to run.
+    useEffect(() => {
+      if (!open) return
+      y.jump(offscreenY())
+      const controls = framerAnimate(y, 0, transition)
+      return () => controls.stop()
+    }, [open, y])
+
+    // Animate the value, not a '#drawer' selector: ids are global and the
+    // craft page already uses 'drawer' as an anchor for its demo card.
     const handleClose = useCallback(async () => {
-      framerAnimate(scope?.current, { opacity: [1, 0] })
-
-      const yStart = typeof y.get() === 'number' ? y.get() : 0
-
-      await framerAnimate('#drawer', {
-        y: [yStart, height],
-      })
-
-      y.set(height)
+      if (scope?.current) framerAnimate(scope.current, { opacity: [1, 0] })
+      await framerAnimate(y, offscreenY(), transition)
       setOpen(false)
-    }, [height, scope])
+    }, [scope, setOpen, y])
 
     return (
       open && (
         <MotionPortal
-          id='drawer'
           ref={drawerRef}
           onClick={(e) => e.stopPropagation()}
-          initial={{ y: 500 }}
-          animate={{ y: 0 }}
           drag='y'
           dragControls={dragControls}
-          transition={transition}
           onPointerDown={(e) => dragControls?.start(e)}
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={{ top: 0.2, bottom: 1 }}
@@ -294,14 +299,14 @@ export const DrawerComp = () => {
   return (
     <Drawer>
       <DrawerTigger asChild>
-        <Button className='bg-foreground/[.01] border-2 shadow-sm shadow-black text-foreground hover:bg-background rounded-full'>Open Drawer</Button>
+        <Button variant='outline' className='rounded-full'>Open drawer</Button>
       </DrawerTigger>
       <DrawerPortal>
         <DrawerOverlay transformElement='main' />
         <DrawerContent className='w-full items-center flex-col flex justify-center overflow-y-auto h-full'>
           <div className='md:max-w-[600px] max-w-80'>
-            <p className='text-md mb-2'>React Drawer.</p>
-            <p className='text-md'>
+            <p className='mb-2 font-medium'>React drawer</p>
+            <p className='text-muted-foreground'>
               This drawer component provides a smooth and interactive way to
               display hidden content or settings. It slides in when triggered,
               offering a clean and modern UI for managing additional options
