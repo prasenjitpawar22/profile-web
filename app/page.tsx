@@ -33,6 +33,9 @@ export default async function Home() {
               <li key={item.slug}>
                 <Link
                   href={`/craft#${item.slug}`}
+                  data-track='component_clicked'
+                  data-track-slug={item.slug}
+                  data-track-source='home'
                   className='block rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
                   <span className='block'>{item.title}</span>
                   <span className='block text-muted-foreground'>
@@ -50,6 +53,9 @@ export default async function Home() {
               <li key={article.id}>
                 <Link
                   href={`/writing/${article.id}`}
+                  data-track='article_clicked'
+                  data-track-article={article.id}
+                  data-track-source='home'
                   className='flex items-baseline justify-between gap-6 rounded-lg px-3 py-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
                   <span>{article.title}</span>
                   <span className='shrink-0 text-sm tabular-nums text-muted-foreground'>

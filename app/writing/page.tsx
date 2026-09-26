@@ -27,6 +27,9 @@ export default async function Page() {
             <li key={article.id}>
               <Link
                 href={`/writing/${article.id}`}
+                data-track='article_clicked'
+                data-track-article={article.id}
+                data-track-source='writing'
                 className='block rounded-lg px-3 py-3 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
                 <span className='flex items-baseline justify-between gap-6'>
                   <span>{article.title}</span>

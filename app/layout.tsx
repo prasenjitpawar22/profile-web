@@ -3,6 +3,7 @@ import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
+import { PostHogProvider } from '@/components/posthog-provider'
 
 export const metadata: Metadata = {
   title: {
@@ -25,16 +26,20 @@ export default function RootLayout({
     <html
       lang='en'
       className={`${GeistSans.variable} ${GeistMono.variable}`}
-      suppressHydrationWarning>
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: nightTheme }} />
       </head>
       <body
         className='flex min-h-svh flex-col font-sans'
-        suppressHydrationWarning={true}>
-        <ThemeProvider>
-          <main className='flex flex-1 flex-col'>{children}</main>
-        </ThemeProvider>
+        suppressHydrationWarning={true}
+      >
+        <PostHogProvider>
+          <ThemeProvider>
+            <main className='flex flex-1 flex-col'>{children}</main>
+          </ThemeProvider>
+        </PostHogProvider>
       </body>
     </html>
   )

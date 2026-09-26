@@ -11,7 +11,9 @@ export function CraftCard({
   return (
     <section id={item.slug} className='scroll-mt-12'>
       {/* A quiet dotted stage, so every demo sits on the same surface */}
-      <div className='relative flex min-h-[240px] items-center justify-center overflow-hidden rounded-xl border bg-muted/40 p-6 [background-image:radial-gradient(hsl(var(--foreground)/0.07)_1px,transparent_1px)] [background-size:16px_16px]'>
+      <div
+        data-track-demo={item.slug}
+        className='relative flex min-h-[240px] items-center justify-center overflow-hidden rounded-xl border bg-muted/40 p-6 [background-image:radial-gradient(hsl(var(--foreground)/0.07)_1px,transparent_1px)] [background-size:16px_16px]'>
         {children}
       </div>
 
@@ -19,16 +21,20 @@ export function CraftCard({
         <h2>
           <a
             href={`#${item.slug}`}
-            className='rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+            className='rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+          >
             {item.title}
           </a>
         </h2>
         {item.credit ? (
           <a
             href={item.credit.href}
+            data-track='component_credit_clicked'
+            data-track-slug={item.slug}
             target='_blank'
             rel='noopener noreferrer'
-            className='group inline-flex shrink-0 items-center gap-0.5 rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+            className='group inline-flex shrink-0 items-center gap-0.5 rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+          >
             Inspired by {item.credit.label}
             <ArrowUpRight className='h-3.5 w-3.5 transition-transform group-hover:-translate-y-px group-hover:translate-x-px' />
           </a>
