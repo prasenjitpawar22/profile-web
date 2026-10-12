@@ -28,6 +28,7 @@ import {
   motionValue,
   animate as framerAnimate,
   HTMLMotionProps,
+  useReducedMotion,
 } from 'motion/react'
 import useMeasure from 'react-use-measure'
 import { Button } from './ui/button'
@@ -75,9 +76,14 @@ export const DrawerProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const transition: Transition = {
-  duration: 0.4,
-  ease: 'easeIn',
+// Opening is the deliberate move, closing is the response: it snaps
+const openTransition: Transition = {
+  duration: 0.45,
+  ease: [0.32, 0.72, 0, 1],
+}
+const closeTransition: Transition = {
+  duration: 0.25,
+  ease: [0.23, 1, 0.32, 1],
 }
 
 export const Drawer = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
@@ -115,6 +121,7 @@ export const DrawerOverlay = forwardRef<HTMLDivElement, DrawerOverlayProps>(
   ({ transformElement, ...props }, ref) => {
     const { handleClose } = useContext(DrawerPortalContext)
     const { scope, y, height } = useDrawer()
+    const reduceMotion = useReducedMotion()
 
     const transformPage = useTransform(
       y,
@@ -122,14 +129,12 @@ export const DrawerOverlay = forwardRef<HTMLDivElement, DrawerOverlayProps>(
       ['scale(0.9)', 'scale(1)'],
     )
 
-    const backdropBlur = useTransform(
-      y,
-      [0, height],
-      ['blur(3px)', 'blur(0px)'],
-    )
+    // The blur stays fixed and only its opacity tracks the sheet:
+    // re-blurring the whole viewport every frame is far more expensive
+    const overlayOpacity = useTransform(y, [0, height], [1, 0])
 
     useEffect(() => {
-      if (!transformElement) return // Exit if no element is provided
+      if (!transformElement || reduceMotion) return // No page scale under reduced motion
 
       const element = document.querySelector(transformElement)
       if (!element || !(element instanceof HTMLElement)) return
@@ -142,18 +147,15 @@ export const DrawerOverlay = forwardRef<HTMLDivElement, DrawerOverlayProps>(
         unsubscribe()
         element.style.transform = '' // Reset transform when unmounted
       }
-    }, [transformPage, transformElement]) // Added transformElement as a dependency
+    }, [transformPage, transformElement, reduceMotion])
 
     return (
       <MotionOverlay
         ref={scope}
-        className='fixed inset-0'
+        className='fixed inset-0 backdrop-blur-[3px]'
         onPointerDown={(e) => e.stopPropagation()}
         onClick={handleClose}
-        style={{
-          backdropFilter: backdropBlur,
-          WebkitBackdropFilter: backdropBlur,
-        }}
+        style={{ opacity: overlayOpacity }}
         {...props}
       />
     )
@@ -216,25 +218,30 @@ const offscreenY = () => window.innerHeight * 0.75
 
 export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
   ({ children, ...props }, ref) => {
-    const { drawerRef, setOpen, y, open, scope } = useDrawer()
+    const { drawerRef, setOpen, y, open } = useDrawer()
     const dragControls = useDragControls()
+    const reduceMotion = useReducedMotion()
 
     // Slide in by animating the shared y value itself. The portal attaches its
     // element a frame late, so initial/animate props on it never get to run.
     useEffect(() => {
       if (!open) return
+      if (reduceMotion) {
+        y.jump(0)
+        return
+      }
       y.jump(offscreenY())
-      const controls = framerAnimate(y, 0, transition)
+      const controls = framerAnimate(y, 0, openTransition)
       return () => controls.stop()
-    }, [open, y])
+    }, [open, y, reduceMotion])
 
     // Animate the value, not a '#drawer' selector: ids are global and the
     // craft page already uses 'drawer' as an anchor for its demo card.
+    // The overlay fades off the same value, so the two can't drift apart.
     const handleClose = useCallback(async () => {
-      if (scope?.current) framerAnimate(scope.current, { opacity: [1, 0] })
-      await framerAnimate(y, offscreenY(), transition)
+      if (!reduceMotion) await framerAnimate(y, offscreenY(), closeTransition)
       setOpen(false)
-    }, [scope, setOpen, y])
+    }, [setOpen, y, reduceMotion])
 
     return (
       open && (
@@ -247,8 +254,9 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={{ top: 0.2, bottom: 1 }}
           style={{ y, touchAction: 'none' }}
-          onDragEnd={() => {
-            if (y.get() >= 150) {
+          onDragEnd={(_, info) => {
+            // A quick flick dismisses as well as a long drag
+            if (y.get() >= 150 || info.velocity.y > 500) {
               handleClose()
             }
           }}

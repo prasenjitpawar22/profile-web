@@ -1,6 +1,6 @@
 'use client'
 
-import { MotionProps, motion } from 'motion/react'
+import { MotionProps, motion, useReducedMotion } from 'motion/react'
 import { useState } from 'react'
 
 interface ColorMixLabProps extends MotionProps {
@@ -10,6 +10,7 @@ interface ColorMixLabProps extends MotionProps {
 
 export function ColorMixLab() {
   const [color, setColor] = useState('#6366f1') // Starting with a vibrant purple-blue for better initial impact
+  const reduceMotion = useReducedMotion()
 
   return (
     <div className='relative flex p-2 border bg-foreground/[0.02] rounded-md min-h-[200px] text-sm w-full items-center justify-center'>
@@ -43,7 +44,7 @@ export function ColorMixLab() {
             {/* Interactive Styled Swatch Preview */}
             <label
               htmlFor='color-picker'
-              className='group flex items-center gap-2 bg-white/5 border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-full cursor-pointer transition-all active:scale-95'>
+              className='group flex items-center gap-2 bg-white/5 border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-full cursor-pointer transition-[border-color,transform] active:scale-95'>
               <div
                 className='w-4 h-4 rounded-full border border-white/20 shadow-inner'
                 style={{ backgroundColor: 'var(--color)' }}
@@ -56,7 +57,7 @@ export function ColorMixLab() {
 
           {/* Demonstration Block showing off the CSS color-mix() output */}
           <div
-            className='h-24 w-full backdrop-blur-3xl rounded-xl border border-white/5 flex items-center justify-center font-medium shadow-inner transition-all'
+            className='h-24 w-full backdrop-blur-3xl rounded-xl border border-white/5 flex items-center justify-center font-medium shadow-inner transition-colors'
             style={{
               backgroundColor: 'color-mix(in srgb, var(--color) 25%, #0f172a)',
               color:
@@ -75,24 +76,37 @@ export function ColorMixLab() {
           />
         </div>
 
-        {/* Modern Ambient Mesh Glow (Replaces the rigid absolute div) */}
+        {/* Ambient glow. The wrapper is card-sized, so its translate percentages
+            match the old left/top values while staying on the compositor */}
         <motion.div
-          animate={{
-            // 1. Move X: Left (0) -> Right (100) -> Hold -> Left (0) -> Hold
-            left: ['-22%', '90%', '90%', '-22%', '-22%'],
-            // 2. Move Y: Hold -> Bottom (90) -> Hold -> Top (0) -> Hold
-            top: ['-40%', '-40%', '80%', '80%', '-40%'],
-          }}
+          aria-hidden
+          initial={false}
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  // Right along the top, down, back along the bottom, up
+                  transform: [
+                    'translate(-22%, -40%)',
+                    'translate(90%, -40%)',
+                    'translate(90%, 80%)',
+                    'translate(-22%, 80%)',
+                    'translate(-22%, -40%)',
+                  ],
+                }
+          }
           transition={{
             duration: 12,
-            ease: 'anticipate',
+            ease: 'easeInOut',
             repeat: Infinity,
           }}
-          className='absolute left-[-22%] top-[-40%] h-40 w-40 opacity-80 rounded-full blur-xl pointer-events-none transition-transform duration-500 hover:scale-125'
-          style={{
-            backgroundColor: 'var(--color)',
-          }}
-        />
+          style={{ transform: 'translate(-22%, -40%)' }}
+          className='pointer-events-none absolute inset-0'>
+          <div
+            className='h-40 w-40 rounded-full opacity-80 blur-xl'
+            style={{ backgroundColor: 'var(--color)' }}
+          />
+        </motion.div>
       </motion.div>
     </div>
   )

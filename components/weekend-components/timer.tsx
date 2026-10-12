@@ -6,6 +6,7 @@ import {
   motion,
   useInView,
   useSpring,
+  useReducedMotion,
   useTransform,
 } from 'motion/react'
 
@@ -76,10 +77,13 @@ function Counter({ value }: { value: number }) {
 function Digit({ place, value }: { place: number; value: number }) {
   const valueRoundedToPlace = Math.floor(value / place)
   const animatedValue = useSpring(valueRoundedToPlace, { bounce: 0.2 })
+  const reduceMotion = useReducedMotion()
 
+  // Under reduced motion the digits swap in place instead of rolling every second
   useEffect(() => {
-    animatedValue.set(valueRoundedToPlace)
-  }, [animatedValue, valueRoundedToPlace])
+    if (reduceMotion) animatedValue.jump(valueRoundedToPlace)
+    else animatedValue.set(valueRoundedToPlace)
+  }, [animatedValue, valueRoundedToPlace, reduceMotion])
 
   return (
     <div style={{ height }} className='relative w-[1ch] tabular-nums'>

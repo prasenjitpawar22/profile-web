@@ -1,7 +1,9 @@
 'use client'
 
-import { motion, useAnimate } from 'motion/react'
-import { useRef, useState } from 'react'
+import { motion, useAnimate, useReducedMotion } from 'motion/react'
+import { useState } from 'react'
+
+const ease = [0.23, 1, 0.32, 1] as const
 
 const todos = [
   'This is a todo list',
@@ -23,31 +25,29 @@ export function TodoCheckboxExample() {
 export const TodoCheckbox = ({ text }: { text: string }) => {
   const [checked, setChecked] = useState(false)
   const [scope, animate] = useAnimate()
-  const isAnimating = useRef(false)
+  const reduceMotion = useReducedMotion()
 
   // Selectors are resolved inside `scope`, so every row can reuse the same part names
   const part = (name: string) => `[data-part="${name}"]`
 
-  async function handleCheck() {
-    if (isAnimating.current) return
-    isAnimating.current = true
-    if (checked) {
-      animate(part('line'), { width: '0%', opacity: 1 })
-      await animate(part('text'), { opacity: 1, x: [3, 2, 0, -1, 0] })
-      animate(part('tick'), { pathLength: 0.2 })
-      await animate(part('tick'), { opacity: 0 })
-      await animate(part('background'), { opacity: 0, scale: [1, 0] })
-      await animate(part('border'), { pathLength: 1 })
-    } else {
-      await animate(part('border'), { pathLength: 0 })
-      await animate(part('background'), { opacity: 1, scale: [0, 1] })
-      animate(part('tick'), { opacity: 1 })
-      await animate(part('tick'), { pathLength: [0, 1] })
-      animate(part('line'), { width: '100%', opacity: 0.4 })
-      await animate(part('text'), { opacity: 0.4, x: [3, 2, 0, -1, 0] })
-    }
-    setChecked((prev) => !prev)
-    isAnimating.current = false
+  // State flips first and every part animates at once from wherever it is,
+  // so a fast double-click simply reverses mid-flight instead of being dropped
+  function handleCheck() {
+    const next = !checked
+    setChecked(next)
+
+    const t = (delay = 0) =>
+      reduceMotion ? { duration: 0 } : { duration: 0.2, ease, delay }
+
+    animate(part('border'), { pathLength: next ? 0 : 1 }, t())
+    animate(
+      part('background'),
+      { opacity: next ? 1 : 0, scale: next ? 1 : 0.9 },
+      t(),
+    )
+    animate(part('tick'), { opacity: next ? 1 : 0, pathLength: next ? 1 : 0 }, t(next ? 0.05 : 0))
+    animate(part('line'), { scaleX: next ? 1 : 0 }, t(next ? 0.05 : 0))
+    animate(part('text'), { opacity: next ? 0.4 : 1 }, t())
   }
 
   return (
@@ -62,7 +62,7 @@ export const TodoCheckbox = ({ text }: { text: string }) => {
         <svg className='h-4 w-4' viewBox='0 0 30 30' fill='none' aria-hidden>
           <motion.path
             data-part='background'
-            initial={{ opacity: 0, scale: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             d='M3 22V8C3 5.23858 5.23858 3 8 3H22C24.7614 3 27 5.23858 27 8V22C27 24.7614 24.7614 27 22 27H8C5.23858 27 3 24.7614 3 22Z'
             className='fill-grass stroke-grass'
             strokeWidth='5'
@@ -97,8 +97,8 @@ export const TodoCheckbox = ({ text }: { text: string }) => {
         {text}
         <motion.span
           data-part='line'
-          initial={{ width: '0%' }}
-          className='absolute left-0 top-1/2 h-px bg-foreground'
+          initial={{ scaleX: 0 }}
+          className='absolute left-0 top-1/2 h-px w-full origin-left bg-foreground'
         />
       </motion.span>
     </button>

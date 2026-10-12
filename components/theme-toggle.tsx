@@ -44,8 +44,8 @@ export function ThemeToggle() {
         ],
       },
       {
-        duration: 600,
-        easing: 'ease-out',
+        duration: 400,
+        easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
         pseudoElement: '::view-transition-new(root)',
       },
     )

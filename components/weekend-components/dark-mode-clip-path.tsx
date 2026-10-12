@@ -52,7 +52,7 @@ export function DarkModeClipPath() {
       },
       {
         duration: 600,
-        easing: 'ease-out',
+        easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
         pseudoElement: '::view-transition-new(root)',
       },
     )

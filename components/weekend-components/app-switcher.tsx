@@ -224,7 +224,7 @@ export function AppSwitcher() {
                         duration: reduceMotion ? 0 : 0.16,
                         delay: reduceMotion ? 0 : 0.05 + i * 0.025,
                       }}
-                      whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+                      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
                       className='grid h-9 cursor-pointer place-items-center rounded-md text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm'>
                       <Icon
                         layoutId={isSelected ? `app-${id}` : undefined}

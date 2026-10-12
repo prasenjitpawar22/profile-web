@@ -59,7 +59,9 @@ const TABS: {
   },
 ]
 
-const SPRING = { type: 'spring', bounce: 0.3, duration: 0.5 } as const
+const SPRING = { type: 'spring', bounce: 0.1, duration: 0.3 } as const
+// Closing is the response to the pointer leaving, so it snaps
+const CLOSE = { duration: 0.18, ease: [0.23, 1, 0.32, 1] } as const
 
 export const DynamicActionBar = () => {
   const [active, setActive] = useState<TabId | null>(null)
@@ -95,7 +97,11 @@ export const DynamicActionBar = () => {
               id={panelId}
               initial={{ height: 0, opacity: 0 }}
               animate={{ height, opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                transition: reduceMotion ? { duration: 0 } : CLOSE,
+              }}
               transition={transition}
               className='overflow-hidden'>
               <div ref={contentRef} className='relative'>

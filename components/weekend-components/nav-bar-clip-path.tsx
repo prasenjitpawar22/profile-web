@@ -1,11 +1,16 @@
 'use client'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { useLayoutEffect, useRef, useState } from 'react'
 
 const nav = ['home', 'about', 'contact', 'login']
 
+// The glow and the clip are one movement, so they share one timing
+// (keep in sync with the clip-path transition classes below)
+const glowTransition = { duration: 0.2, ease: [0.77, 0, 0.175, 1] } as const
+
 export function NavbarClipPath() {
   const [active, setActive] = useState('home')
+  const reduceMotion = useReducedMotion()
   const listRef = useRef<HTMLUListElement>(null)
   const highlightRef = useRef<HTMLUListElement>(null)
 
@@ -41,6 +46,7 @@ export function NavbarClipPath() {
               // A soft glow that follows the active item and bleeds past the clip edge
               <motion.span
                 layoutId='clip-nav-glow'
+                transition={reduceMotion ? { duration: 0 } : glowTransition}
                 className='absolute inset-0 rounded-full bg-background blur-[4px]'
               />
             ) : null}
@@ -52,7 +58,7 @@ export function NavbarClipPath() {
         ref={highlightRef}
         aria-hidden
         style={{ clipPath: 'inset(0 75% 0 6% round 9999px)' }}
-        className='pointer-events-none absolute inset-0 flex gap-2 rounded-full bg-background px-4 py-2 text-foreground transition-[clip-path] duration-300 ease-out'>
+        className='pointer-events-none absolute inset-0 flex gap-2 rounded-full bg-background px-4 py-2 text-foreground transition-[clip-path] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none'>
         {nav.map((item) => (
           <li key={item} className='px-2 py-2 capitalize'>
             {item}

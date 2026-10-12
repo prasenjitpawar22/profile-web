@@ -4,6 +4,11 @@ import plugin from "tailwindcss/plugin";
 
 const config = {
   darkMode: ["class"],
+  // hover: only applies on devices that can really hover, so a tap on touch
+  // screens doesn't leave hover states stuck on
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
