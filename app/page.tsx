@@ -1,4 +1,6 @@
 import { Grass } from '@/components/grass'
+import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
+import { projects } from '@/lib/projects'
 import { SiteFooter } from '@/components/site-footer'
 import { getSortedArticles } from '@/lib/article'
 import { craftItems } from '@/lib/craft'
@@ -11,6 +13,7 @@ const enter =
 export default async function Home() {
   const articles = await getSortedArticles()
   const featured = craftItems.filter((item) => item.featured)
+  const featuredProjects = projects.filter((project) => project.featured)
 
   return (
     <div className='flex flex-1 flex-col'>
@@ -21,8 +24,44 @@ export default async function Home() {
         </header>
 
         <Section
-          title='Craft'
+          title='Projects'
           className={`${enter} delay-100`}
+          action={
+            <Link href='/projects' className='link text-sm'>
+              All projects
+            </Link>
+          }>
+          <ul className='-mx-3'>
+            {featuredProjects.map((project) => (
+              <li key={project.slug}>
+                <Link
+                  href={project.caseStudy ? `/projects/${project.slug}` : project.url}
+                  data-track='project_clicked'
+                  data-track-slug={project.slug}
+                  data-track-source='home'
+                  className='flex gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                  <ProjectIcon project={project} className='mt-0.5' />
+                  <span className='min-w-0 flex-1'>
+                    <span className='flex items-baseline justify-between gap-4'>
+                      <span>
+                        {project.name}
+                        <span className='text-muted-foreground'> · {project.tagline}</span>
+                      </span>
+                      <ProjectStatusBadge status={project.status} />
+                    </span>
+                    <span className='block text-muted-foreground'>
+                      {project.description}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        <Section
+          title='Craft'
+          className={`${enter} delay-200`}
           action={
             <Link href='/craft' className='link text-sm'>
               All experiments
@@ -47,7 +86,7 @@ export default async function Home() {
           </ul>
         </Section>
 
-        <Section title='Writing' className={`${enter} delay-200`}>
+        <Section title='Writing' className={`${enter} delay-300`}>
           <ul className='-mx-3'>
             {articles.map((article) => (
               <li key={article.id}>
