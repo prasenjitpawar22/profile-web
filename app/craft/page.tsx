@@ -2,6 +2,12 @@ import { BackLink } from '@/components/back-link'
 import { CraftCard } from '@/components/craft-card'
 import { DrawerComp } from '@/components/drawer'
 import { SiteFooter } from '@/components/site-footer'
+import { AiEditReview } from '@/components/weekend-components/ai-edit-review'
+import { AiThinking } from '@/components/weekend-components/ai-thinking'
+import { NaturalDateInput } from '@/components/weekend-components/natural-date-input'
+import { OptimisticRollback } from '@/components/weekend-components/optimistic-rollback'
+import { ShortcutRecorder } from '@/components/weekend-components/shortcut-recorder'
+import { SmartPaste } from '@/components/weekend-components/smart-paste'
 import { AppSwitcher } from '@/components/weekend-components/app-switcher'
 import { DarkModeClipPath } from '@/components/weekend-components/dark-mode-clip-path'
 import { DynamicActionBar } from '@/components/weekend-components/dynamic-action-bar'
@@ -21,6 +27,12 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
+  'thinking-indicator': <AiThinking />,
+  'smart-paste': <SmartPaste />,
+  'ai-edit-review': <AiEditReview />,
+  'optimistic-rollback': <OptimisticRollback />,
+  'shortcut-recorder': <ShortcutRecorder />,
+  'natural-date': <NaturalDateInput />,
   'app-switcher': <AppSwitcher />,
   'dynamic-action-bar': <DynamicActionBar />,
   drawer: <DrawerComp />,

@@ -11,6 +11,42 @@ export type CraftItem = {
 
 export const craftItems: CraftItem[] = [
   {
+    slug: 'thinking-indicator',
+    title: 'Thinking indicator',
+    description:
+      'An AI reasoning trace that searches, opens its sources and ticks off each step, then folds away while the answer streams in, burst by burst.',
+  },
+  {
+    slug: 'smart-paste',
+    title: 'Smart paste',
+    description:
+      'Paste a messy email signature and each detail lifts out of the text and flies into its own field. Guesses are flagged for a second look, never silently trusted.',
+  },
+  {
+    slug: 'ai-edit-review',
+    title: 'AI edit review',
+    description:
+      'Review an AI rewrite change by change, inline and from the keyboard, instead of letting it replace your words wholesale.',
+  },
+  {
+    slug: 'optimistic-rollback',
+    title: 'Optimistic rollback',
+    description:
+      'Changes apply instantly. When the server refuses, the change visibly rewinds and says why, while a request log shows what really happened.',
+  },
+  {
+    slug: 'shortcut-recorder',
+    title: 'Shortcut recorder',
+    description:
+      'Records key combinations as live keycaps, catches clashes and browser-reserved shortcuts, and speaks Mac or Windows.',
+  },
+  {
+    slug: 'natural-date',
+    title: 'Natural-language date',
+    description:
+      'Type “next fri 3pm” or “in 2 weeks”. The words it understood light up in the field, and a live preview says exactly when that is.',
+  },
+  {
     slug: 'app-switcher',
     title: 'App switcher',
     description:
