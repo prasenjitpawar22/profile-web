@@ -70,28 +70,22 @@ export default function Page() {
           <ul className='-mx-3 mt-3'>
             {rest.map((project) => (
               <li key={project.slug}>
-                <a
-                  href={project.url}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-track='project_site_clicked'
-                  data-track-slug={project.slug}
-                  className='group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-                  <ProjectIcon project={project} />
-                  <span className='min-w-0 flex-1'>
-                    <span className='flex items-center gap-1'>
-                      {project.name}
-                      <ArrowUpRight
-                        aria-hidden
-                        className='h-3.5 w-3.5 text-muted-foreground opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-px group-hover:opacity-100 motion-reduce:transition-none'
-                      />
-                    </span>
-                    <span className='block truncate text-sm text-muted-foreground'>
-                      {project.tagline} · {project.stack.join(', ')}
-                    </span>
-                  </span>
-                  <ProjectStatusBadge status={project.status} />
-                </a>
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-track='project_site_clicked'
+                    data-track-slug={project.slug}
+                    className='group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                    <ProjectRow project={project} linked />
+                  </a>
+                ) : (
+                  // Nothing public to open yet, so it's a plain row
+                  <div className='flex items-center gap-3 px-3 py-2.5'>
+                    <ProjectRow project={project} />
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -100,6 +94,29 @@ export default function Page() {
 
       <SiteFooter className='mt-auto pt-20' />
     </div>
+  )
+}
+
+function ProjectRow({ project, linked = false }: { project: Project; linked?: boolean }) {
+  return (
+    <>
+      <ProjectIcon project={project} />
+      <span className='min-w-0 flex-1'>
+        <span className='flex items-center gap-1'>
+          {project.name}
+          {linked ? (
+            <ArrowUpRight
+              aria-hidden
+              className='h-3.5 w-3.5 text-muted-foreground opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-px group-hover:opacity-100 motion-reduce:transition-none'
+            />
+          ) : null}
+        </span>
+        <span className='block truncate text-sm text-muted-foreground'>
+          {project.tagline} · {project.stack.join(', ')}
+        </span>
+      </span>
+      <ProjectStatusBadge status={project.status} />
+    </>
   )
 }
 

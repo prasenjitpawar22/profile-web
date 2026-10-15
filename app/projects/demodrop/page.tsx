@@ -2,6 +2,7 @@ import { BackLink } from '@/components/back-link'
 import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
 import { SiteFooter } from '@/components/site-footer'
 import { getProject } from '@/lib/projects'
+import { ArrowUpRight } from 'lucide-react'
 import { Metadata } from 'next'
 import Image from 'next/image'
 
@@ -19,7 +20,7 @@ const enter =
   'animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-700 motion-reduce:animate-none'
 
 const facts = [
-  { value: '3 days', label: 'first commit to v0.1' },
+  { value: '3 days', label: 'first commit to the store' },
   { value: '0', label: 'servers or uploads' },
   { value: '60 fps', label: '1080p MP4 export' },
   { value: '4', label: 'permissions, no host access' },
@@ -29,7 +30,7 @@ const screens = [
   { src: 'editor.png', caption: 'Edit', alt: 'The editor: a framed preview zoomed in on a dialog, with a zoom block on the timeline' },
   { src: 'square-and-cut.png', caption: '1:1 and cuts', alt: 'The editor at 1:1 with a purple background and a cut at the end of the timeline' },
   { src: 'blur.png', caption: 'Blur before recording', alt: 'Picking elements to blur on a dashboard, with email addresses already frosted' },
-  { src: 'exporting.png', caption: 'Export', alt: 'The export dialog rendering a 1080×1080 MP4' },
+  { src: 'exporting.png', caption: 'Export', alt: 'The export dialog rendering a 1920×1080 MP4 at 60 fps' },
   { src: 'exported.png', caption: 'Saved', alt: 'The export dialog after saving the MP4' },
 ]
 
@@ -102,9 +103,9 @@ const stack = [
 ]
 
 const next = [
-  'Publish on the Chrome Web Store',
   'Record Demodrop’s own launch demo with Demodrop',
   'Keep logging the pointer when the recorded tab navigates to a new page',
+  'Follow the pointer inside cross-origin iframes',
 ]
 
 export default function Page() {
@@ -138,9 +139,19 @@ export default function Page() {
             </Meta>
           </dl>
 
-          <p className='mt-6 text-sm text-muted-foreground'>
-            Coming soon to the Chrome Web Store.
-          </p>
+          <div className='mt-6 flex flex-wrap items-center gap-2'>
+            <a
+              href={project.url}
+              target='_blank'
+              rel='noopener noreferrer'
+              data-track='project_site_clicked'
+              data-track-slug={project.slug}
+              data-track-source='case_study'
+              className='inline-flex h-9 items-center gap-1 rounded-full bg-foreground px-4 text-sm font-medium text-background transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97] motion-reduce:transition-none'>
+              Add to Chrome
+              <ArrowUpRight className='h-4 w-4' />
+            </a>
+          </div>
         </header>
 
         {/* The whole flow at a glance, scrolled sideways. The negative margin
@@ -226,6 +237,27 @@ export default function Page() {
             ))}
           </ul>
         </Section>
+
+        <div className='mt-14 flex flex-wrap items-center justify-between gap-4 rounded-xl border px-4 py-4'>
+          <div className='flex items-center gap-3'>
+            <ProjectIcon project={project} />
+            <div>
+              <p className='text-sm font-medium'>Shipping something?</p>
+              <p className='text-sm text-muted-foreground'>Turn a tab into a demo worth posting.</p>
+            </div>
+          </div>
+          <a
+            href={project.url}
+            target='_blank'
+            rel='noopener noreferrer'
+            data-track='project_site_clicked'
+            data-track-slug={project.slug}
+            data-track-source='case_study_footer'
+            className='inline-flex items-center gap-0.5 rounded-sm text-sm transition-colors hover:text-grass focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+            {project.domain}
+            <ArrowUpRight className='h-3.5 w-3.5' />
+          </a>
+        </div>
       </div>
 
       <SiteFooter className='mt-auto pt-20' />
