@@ -1,6 +1,6 @@
 import { Grass } from '@/components/grass'
 import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
-import { projects } from '@/lib/projects'
+import { projectHref, projects } from '@/lib/projects'
 import { SiteFooter } from '@/components/site-footer'
 import { getSortedArticles } from '@/lib/article'
 import { craftItems } from '@/lib/craft'
@@ -35,7 +35,7 @@ export default async function Home() {
             {featuredProjects.map((project) => (
               <li key={project.slug}>
                 <Link
-                  href={project.caseStudy ? `/projects/${project.slug}` : project.url}
+                  href={projectHref(project)}
                   data-track='project_clicked'
                   data-track-slug={project.slug}
                   data-track-source='home'

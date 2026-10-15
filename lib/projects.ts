@@ -6,9 +6,10 @@ export type Project = {
   /** One line, shown next to the name */
   tagline: string
   description?: string
-  url: string
+  /** Live site or store page; leave out until there is a public one */
+  url?: string
   /** Shown as the link text, e.g. "kholi.in" */
-  domain: string
+  domain?: string
   status: ProjectStatus
   year?: string
   stack: string[]
@@ -34,6 +35,19 @@ export const projects: Project[] = [
     year: '2026',
     stack: ['Next.js 15', 'Supabase', 'Tailwind CSS v4', 'WhatsApp Cloud API', 'Remotion'],
     icon: '/projects/kholi/icon.svg',
+    caseStudy: true,
+    featured: true,
+  },
+  {
+    slug: 'demodrop',
+    name: 'Demodrop',
+    tagline: 'Polished demo videos from any tab',
+    description:
+      'A Chrome extension that records a browser tab and turns it into a demo video made for posting on X: auto-zoom that follows the pointer, a framed window, cuts, and MP4 export. Nothing leaves your device.',
+    status: 'In progress',
+    year: '2026',
+    stack: ['Chrome MV3', 'WXT', 'React 19', 'WebCodecs', 'Mediabunny', 'Canvas'],
+    icon: '/projects/demodrop/icon.png',
     caseStudy: true,
     featured: true,
   },
@@ -70,3 +84,7 @@ export const projects: Project[] = [
 ]
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug)
+
+/** Where a project's card goes: its case study, else its live site */
+export const projectHref = (project: Project) =>
+  project.caseStudy ? `/projects/${project.slug}` : (project.url ?? '/projects')
