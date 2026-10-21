@@ -3,6 +3,7 @@ import { CraftCard } from '@/components/craft-card'
 import { DrawerComp } from '@/components/drawer'
 import { SiteFooter } from '@/components/site-footer'
 import { AiEditReview } from '@/components/weekend-components/ai-edit-review'
+import { BranchingChat } from '@/components/weekend-components/branching-chat'
 import { AiThinking } from '@/components/weekend-components/ai-thinking'
 import { NaturalDateInput } from '@/components/weekend-components/natural-date-input'
 import { OptimisticRollback } from '@/components/weekend-components/optimistic-rollback'
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
+  'branching-chat': <BranchingChat />,
   'thinking-indicator': <AiThinking />,
   'smart-paste': <SmartPaste />,
   'ai-edit-review': <AiEditReview />,

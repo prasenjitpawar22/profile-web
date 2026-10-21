@@ -11,6 +11,12 @@ export type CraftItem = {
 
 export const craftItems: CraftItem[] = [
   {
+    slug: 'branching-chat',
+    title: 'Branching chat',
+    description:
+      'Edit an earlier message and the conversation forks instead of being overwritten. Step between versions, and everything below the fork slides over to match.',
+  },
+  {
     slug: 'thinking-indicator',
     title: 'Thinking indicator',
     description:
