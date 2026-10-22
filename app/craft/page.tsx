@@ -21,6 +21,7 @@ import Timer from '@/components/weekend-components/timer'
 import { TodoCheckboxExample } from '@/components/weekend-components/todo-checkbox'
 import { craftItems } from '@/lib/craft'
 import { Metadata } from 'next'
+import RevealCalendar from '@/components/weekend-components/reveal-calender'
 
 export const metadata: Metadata = {
   title: 'Craft',
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
+  'reveal-calendar': <RevealCalendar />,
   'branching-chat': <BranchingChat />,
   'thinking-indicator': <AiThinking />,
   'smart-paste': <SmartPaste />,

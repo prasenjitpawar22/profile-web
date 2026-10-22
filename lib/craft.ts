@@ -11,6 +11,12 @@ export type CraftItem = {
 
 export const craftItems: CraftItem[] = [
   {
+    slug: 'reveal-calendar',
+    title: 'Reveal calendar',
+    description:
+      'A calendar that reveals the selected date through a circular mask, with a smooth transition between months.',
+  },
+  {
     slug: 'branching-chat',
     title: 'Branching chat',
     description:
