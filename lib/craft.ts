@@ -11,6 +11,12 @@ export type CraftItem = {
 
 export const craftItems: CraftItem[] = [
   {
+    slug: 'moving-orbs',
+    title: 'Moving orbs',
+    description:
+      'A canvas-based animation of floating orbs that respond to cursor movement.',
+  },
+  {
     slug: 'reveal-calendar',
     title: 'Reveal calendar',
     description:
