@@ -22,7 +22,7 @@ import { TodoCheckboxExample } from '@/components/weekend-components/todo-checkb
 import { craftItems } from '@/lib/craft'
 import { Metadata } from 'next'
 import RevealCalendar from '@/components/weekend-components/reveal-calender'
-import {MovingOrbs} from '@/components/weekend-components/moving-orbs'
+import { ParticleOrb } from '@/components/weekend-components/particle-orb'
 
 export const metadata: Metadata = {
   title: 'Craft',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
-  'moving-orbs': <MovingOrbs />,
+  'particle-orb': <ParticleOrb />,
   'reveal-calendar': <RevealCalendar />,
   'branching-chat': <BranchingChat />,
   'thinking-indicator': <AiThinking />,
