@@ -39,8 +39,9 @@ export function ParticleOrb({
     const params = { reach, strength }
     const pointer: Pointer = { x: 0, y: 0, active: false, presence: 0 }
     const styles: string[] = new Array(BUCKETS)
-    const sizes = Array.from({ length: DEPTH_STEPS }, (_, d) => 0.8 + (d + 0.5) / DEPTH_STEPS)
+    const radii = new Float32Array(DEPTH_STEPS)
     let size = 0
+    let unwatchDpr = () => {}
     let raf = 0
     let last = 0
     let running = false
@@ -76,12 +77,16 @@ export function ParticleOrb({
         const from = orb.start[b]
         const to = orb.start[b + 1]
         if (from === to) continue
+        // one path and one fill per bucket; round dots stay crisp at any zoom
+        const s = radii[(b / COLOR_STEPS) | 0]
         ctx.fillStyle = styles[b]
-        const s = sizes[(b / COLOR_STEPS) | 0]
+        ctx.beginPath()
         for (let k = from; k < to; k++) {
           const i = orb.order[k]
-          ctx.fillRect(orb.x[i] - s / 2, orb.y[i] - s / 2, s, s)
+          ctx.moveTo(orb.x[i] + s, orb.y[i])
+          ctx.arc(orb.x[i], orb.y[i], s, 0, Math.PI * 2)
         }
+        ctx.fill()
       }
     }
 
@@ -106,11 +111,31 @@ export function ParticleOrb({
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, 3)
       size = wrap.getBoundingClientRect().width
       canvas.width = canvas.height = Math.round(size * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+      // dots, reach and push are tuned at 300px and scale with the orb
+      const scale = size / 300
+      params.reach = reach * scale
+      params.strength = strength * scale
+      const r = Math.max(scale, 0.75)
+      for (let d = 0; d < DEPTH_STEPS; d++) radii[d] = (0.4 + (0.5 * (d + 0.5)) / DEPTH_STEPS) * r
+
       if (!running) render(0)
+    }
+
+    // browser zoom changes devicePixelRatio without resizing the element,
+    // so ResizeObserver never fires; watch the resolution directly
+    const watchDpr = () => {
+      const mq = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`)
+      const onChange = () => {
+        resize()
+        watchDpr()
+      }
+      mq.addEventListener("change", onChange, { once: true })
+      unwatchDpr = () => mq.removeEventListener("change", onChange)
     }
 
     const onMove = (e: PointerEvent) => {
@@ -125,6 +150,7 @@ export function ParticleOrb({
 
     readColors()
     resize()
+    watchDpr()
 
     const ro = new ResizeObserver(resize)
     ro.observe(wrap)
@@ -149,6 +175,7 @@ export function ParticleOrb({
 
     return () => {
       cancelAnimationFrame(raf)
+      unwatchDpr()
       ro.disconnect()
       io.disconnect()
       mo.disconnect()
