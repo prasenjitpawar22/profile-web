@@ -19,6 +19,8 @@ export async function GET(req: NextRequest) {
   url.searchParams.set('latitude', Number(lat).toFixed(1))
   url.searchParams.set('longitude', Number(lon).toFixed(1))
   url.searchParams.set('current', 'temperature_2m,weather_code,wind_speed_10m,is_day')
+  url.searchParams.set('daily', 'sunrise,sunset')
+  url.searchParams.set('forecast_days', '1')
   url.searchParams.set('wind_speed_unit', 'kmh')
   url.searchParams.set('timezone', 'auto')
 
@@ -26,7 +28,7 @@ export async function GET(req: NextRequest) {
     const res = await fetch(url, { next: { revalidate: 900 } })
     if (!res.ok) return NextResponse.json(null, noStore)
 
-    const { current } = await res.json()
+    const { current, daily } = await res.json()
     const celsius: number = current.temperature_2m
 
     const weather: Weather = {
@@ -36,6 +38,8 @@ export async function GET(req: NextRequest) {
       temperature: Math.round(useFahrenheit ? (celsius * 9) / 5 + 32 : celsius),
       unit: useFahrenheit ? 'F' : 'C',
       city,
+      sunrise: minutesOf(daily?.sunrise?.[0]),
+      sunset: minutesOf(daily?.sunset?.[0]),
     }
 
     return NextResponse.json(weather, {
@@ -44,4 +48,11 @@ export async function GET(req: NextRequest) {
   } catch {
     return NextResponse.json(null, noStore)
   }
+}
+
+/** "2026-10-25T06:31" (already in local time, thanks to timezone=auto) → 391 */
+function minutesOf(iso: unknown) {
+  if (typeof iso !== 'string') return undefined
+  const m = iso.match(/T(\d{2}):(\d{2})/)
+  return m ? Number(m[1]) * 60 + Number(m[2]) : undefined
 }

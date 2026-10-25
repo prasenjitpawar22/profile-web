@@ -12,8 +12,16 @@ export type Weather = {
   temperature?: number
   unit?: 'C' | 'F'
   city?: string
+  /** Minutes after local midnight */
+  sunrise?: number
+  sunset?: number
+  /** Pins the scene's clock (minutes after midnight) instead of following the real one */
+  clock?: number
   preview?: boolean
 }
+
+export const DEFAULT_SUNRISE = 6 * 60 + 15
+export const DEFAULT_SUNSET = 18 * 60 + 30
 
 export const CONDITIONS: Condition[] = ['clear', 'cloudy', 'rain', 'snow', 'storm']
 
@@ -70,12 +78,29 @@ const PREVIEW_LABELS: Record<Condition, string> = {
   storm: 'Thunderstorm',
 }
 
-/** `?weather=snow&time=night` lets anyone preview a state without waiting for it */
+// Named moments for previews, relative to the default sunrise and sunset
+const PREVIEW_TIMES: Record<string, number> = {
+  dawn: DEFAULT_SUNRISE + 5,
+  day: 13 * 60,
+  golden: DEFAULT_SUNSET - 30,
+  dusk: DEFAULT_SUNSET + 12,
+  night: 23 * 60,
+}
+
+/** "dawn", "golden", … or "HH:MM" → minutes after midnight */
+function parsePreviewTime(time: string | null) {
+  if (!time) return undefined
+  if (time in PREVIEW_TIMES) return PREVIEW_TIMES[time]
+  const m = time.match(/^(\d{1,2}):(\d{2})$/)
+  return m ? (Number(m[1]) % 24) * 60 + Math.min(Number(m[2]), 59) : undefined
+}
+
+/** `?weather=snow&time=dusk` (or `time=17:40`) previews a state without waiting for it */
 export function weatherFromPreview(params: URLSearchParams): Weather | null {
   const condition = params.get('weather') as Condition | null
-  const time = params.get('time')
+  const clock = parsePreviewTime(params.get('time'))
   const valid = condition && CONDITIONS.includes(condition)
-  if (!valid && time !== 'night' && time !== 'day') return null
+  if (!valid && clock === undefined) return null
 
   const c: Condition = valid ? condition : 'clear'
   return {
@@ -83,7 +108,8 @@ export function weatherFromPreview(params: URLSearchParams): Weather | null {
     condition: c,
     label: PREVIEW_LABELS[c],
     windSpeed: c === 'storm' ? 35 : c === 'rain' ? 16 : 8,
-    isDay: time !== 'night',
+    isDay: clock === undefined || (clock >= DEFAULT_SUNRISE && clock < DEFAULT_SUNSET),
+    clock,
     preview: true,
   }
 }

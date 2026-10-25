@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useRef, useState } from 'react'
-import { createGrassScene, SKY, type GrassScene } from './scene'
+import { createGrassScene, type GrassScene } from './scene'
 
 const HINT_KEY = 'grass-touched'
 
@@ -55,13 +55,10 @@ export function Grass({ className }: { className?: string }) {
     sceneRef.current?.setTheme(resolvedTheme === 'dark' ? 'dark' : 'light')
   }, [resolvedTheme])
 
-  // Without real weather (local dev, or the lookup failed) still honour the
-  // visitor's own clock, so night — and the fireflies — show up after dark
+  // The scene follows the visitor's own clock, so even without real weather
+  // (local dev, or the lookup failed) golden hour and night still show up
   useEffect(() => {
-    const hour = new Date().getHours()
-    sceneRef.current?.setWeather(
-      weather ?? { ...DEFAULT_WEATHER, isDay: hour >= 6 && hour < 19 },
-    )
+    sceneRef.current?.setWeather(weather ?? DEFAULT_WEATHER)
   }, [weather])
 
   return (
@@ -79,12 +76,12 @@ export function Grass({ className }: { className?: string }) {
       </div>
 
       <div className='relative h-36 touch-pan-y md:h-44'>
-        {/* Taller than the field: rain and snow fade in through the extra band on top */}
+        {/* Sized by the scene to whole device pixels, and taller than this box:
+            rain and snow fall in through the extra band on top */}
         <canvas
           ref={canvasRef}
           aria-hidden
-          className='fade-x pointer-events-none absolute inset-x-0 bottom-0 w-full'
-          style={{ height: `calc(100% + ${SKY}px)` }}
+          className='fade-x pointer-events-none absolute bottom-0 [image-rendering:pixelated]'
         />
       </div>
     </div>
