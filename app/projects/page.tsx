@@ -1,5 +1,5 @@
 import { BackLink } from '@/components/back-link'
-import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
+import { PlatformDownloads, ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
 import { SiteFooter } from '@/components/site-footer'
 import { projects, type Project } from '@/lib/projects'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
@@ -70,7 +70,12 @@ export default function Page() {
           <ul className='-mx-3 mt-3'>
             {rest.map((project) => (
               <li key={project.slug}>
-                {project.url ? (
+                {project.downloads ? (
+                  // Several downloads: links can't nest, so the row itself isn't one
+                  <div className='flex items-center gap-3 px-3 py-2.5'>
+                    <ProjectRow project={project} />
+                  </div>
+                ) : project.url ? (
                   <a
                     href={project.url}
                     target='_blank'
@@ -114,6 +119,7 @@ function ProjectRow({ project, linked = false }: { project: Project; linked?: bo
         <span className='block truncate text-sm text-muted-foreground'>
           {project.tagline} · {project.stack.join(', ')}
         </span>
+        {project.downloads ? <PlatformDownloads downloads={project.downloads} slug={project.slug} className='mt-1' /> : null}
       </span>
       <ProjectStatusBadge status={project.status} />
     </>

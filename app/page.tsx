@@ -1,6 +1,6 @@
 import { Grass } from '@/components/grass'
-import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
-import { projectHref, projects } from '@/lib/projects'
+import { PlatformDownloads, ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
+import { projectHref, projects, type Project } from '@/lib/projects'
 import { SiteFooter } from '@/components/site-footer'
 import { getSortedArticles } from '@/lib/article'
 import { craftItems } from '@/lib/craft'
@@ -34,26 +34,21 @@ export default async function Home() {
           <ul className='-mx-3'>
             {featuredProjects.map((project) => (
               <li key={project.slug}>
-                <Link
-                  href={projectHref(project)}
-                  data-track='project_clicked'
-                  data-track-slug={project.slug}
-                  data-track-source='home'
-                  className='flex gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-                  <ProjectIcon project={project} className='mt-0.5' />
-                  <span className='min-w-0 flex-1'>
-                    <span className='flex items-baseline justify-between gap-4'>
-                      <span>
-                        {project.name}
-                        <span className='text-muted-foreground'> · {project.tagline}</span>
-                      </span>
-                      <ProjectStatusBadge status={project.status} />
-                    </span>
-                    <span className='block text-muted-foreground'>
-                      {project.description}
-                    </span>
-                  </span>
-                </Link>
+                {project.downloads ? (
+                  // Several downloads: links can't nest, so the item itself isn't one
+                  <div className='flex gap-3 px-3 py-2.5'>
+                    <FeaturedProject project={project} />
+                  </div>
+                ) : (
+                  <Link
+                    href={projectHref(project)}
+                    data-track='project_clicked'
+                    data-track-slug={project.slug}
+                    data-track-source='home'
+                    className='flex gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                    <FeaturedProject project={project} />
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -134,5 +129,24 @@ function Section({
       </div>
       <div className='mt-3'>{children}</div>
     </section>
+  )
+}
+
+function FeaturedProject({ project }: { project: Project }) {
+  return (
+    <>
+      <ProjectIcon project={project} className='mt-0.5' />
+      <span className='min-w-0 flex-1'>
+        <span className='flex items-baseline justify-between gap-4'>
+          <span>
+            {project.name}
+            <span className='text-muted-foreground'> · {project.tagline}</span>
+          </span>
+          <ProjectStatusBadge status={project.status} />
+        </span>
+        <span className='block text-muted-foreground'>{project.description}</span>
+        {project.downloads ? <PlatformDownloads downloads={project.downloads} slug={project.slug} className='mt-1.5' /> : null}
+      </span>
+    </>
   )
 }

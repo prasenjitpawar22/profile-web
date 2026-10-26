@@ -1,5 +1,13 @@
 export type ProjectStatus = 'Live' | 'In progress' | 'Completed' | 'Offline'
 
+/** An app to download for one platform; no url yet means it's coming */
+export type Download = {
+  platform: 'Windows' | 'macOS' | 'Linux'
+  url?: string
+  /** Shown after the platform, e.g. "beta" */
+  note?: string
+}
+
 export type Project = {
   slug: string
   name: string
@@ -10,6 +18,8 @@ export type Project = {
   url?: string
   /** Shown as the link text, e.g. "kholi.in" */
   domain?: string
+  /** Desktop apps: one download per platform, instead of a single url */
+  downloads?: Download[]
   status: ProjectStatus
   year?: string
   stack: string[]
@@ -55,12 +65,19 @@ export const projects: Project[] = [
   },
   {
     slug: 'demodrop-desktop',
-    name: 'Demodrop for Windows',
-    tagline: 'Windows beta · polished demo videos from your screen',
+    name: 'Demodrop Desktop',
+    tagline: 'Polished demo videos from your screen',
     description:
-      'The desktop sibling of the extension: records a screen, a window or an area natively, then an editor turns it into a demo made for posting on X, with auto-zoom, a crisp drawn pointer, speed-ups, masks, and MP4 or GIF export. Beta on Windows; nothing leaves your device.',
-    url: 'https://github.com/prasenjitpawar22/demodrop-releases/releases/latest/download/Demodrop-Setup.exe',
-    domain: 'Download for Windows (beta)',
+      'The desktop sibling of the extension: records a screen, a window or an area natively, then an editor turns it into a demo made for posting on X, with auto-zoom, a crisp drawn pointer, speed-ups, masks, and MP4 or GIF export. Nothing leaves your device.',
+    downloads: [
+      {
+        platform: 'Windows',
+        url: 'https://github.com/prasenjitpawar22/demodrop-releases/releases/latest/download/Demodrop-Setup.exe',
+        note: 'beta',
+      },
+      { platform: 'macOS' },
+      { platform: 'Linux' },
+    ],
     status: 'In progress',
     year: '2026',
     stack: ['Electron', 'React 19', 'Rust', 'Windows.Graphics.Capture', 'WebCodecs'],
