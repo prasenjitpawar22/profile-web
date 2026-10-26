@@ -54,6 +54,20 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    slug: 'demodrop-desktop',
+    name: 'Demodrop for Windows',
+    tagline: 'Windows beta · polished demo videos from your screen',
+    description:
+      'The desktop sibling of the extension: records a screen, a window or an area natively, then an editor turns it into a demo made for posting on X, with auto-zoom, a crisp drawn pointer, speed-ups, masks, and MP4 or GIF export. Beta on Windows; nothing leaves your device.',
+    url: 'https://github.com/prasenjitpawar22/demodrop-releases/releases/latest/download/Demodrop-Setup.exe',
+    domain: 'Download for Windows (beta)',
+    status: 'In progress',
+    year: '2026',
+    stack: ['Electron', 'React 19', 'Rust', 'Windows.Graphics.Capture', 'WebCodecs'],
+    icon: '/projects/demodrop-desktop/icon.png',
+    featured: true,
+  },
+  {
     slug: 'abhi-and-atul',
     name: 'Abhi and Atul',
     tagline: 'Sound and lights services',
