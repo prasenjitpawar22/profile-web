@@ -23,6 +23,7 @@ import { craftItems } from '@/lib/craft'
 import { Metadata } from 'next'
 import RevealCalendar from '@/components/weekend-components/reveal-calender'
 import { ParticleOrb } from '@/components/weekend-components/particle-orb'
+import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
 
 export const metadata: Metadata = {
   title: 'Craft',
@@ -30,6 +31,7 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
+  'protein-tracker': <ProteinTracker />,
   'particle-orb': <ParticleOrb />,
   'reveal-calendar': <RevealCalendar />,
   'branching-chat': <BranchingChat />,

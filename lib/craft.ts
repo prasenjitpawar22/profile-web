@@ -11,6 +11,12 @@ export type CraftItem = {
 
 export const craftItems: CraftItem[] = [
   {
+    slug: 'protein-tracker',
+    title: 'Protein tracker',
+    description:
+      'Log Indian meals from a searchable list, from poha to paneer tikka, or type one in by hand. The ring fills as the day adds up, then zoom out to the week, month and year.',
+  },
+  {
     slug: 'particle-orb',
     title: 'Particle orb',
     description:
