@@ -13,12 +13,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Cookie,
+  Download,
   Minus,
   MoonStar,
   Plus,
   Search,
   Sun,
   Sunrise,
+  Upload,
   X,
   type LucideIcon,
 } from 'lucide-react'
@@ -422,6 +424,19 @@ export function ProteinTracker({
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {page && !sync && (
+          <BackupBar
+            store={store}
+            onRestore={(backup) =>
+              setStore((s) => {
+                const have = new Set(s.entries.map((e) => e.id))
+                const fresh = backup.entries.filter((e) => !have.has(e.id))
+                return { goal: backup.goal, entries: [...s.entries, ...fresh] }
+              })
+            }
+          />
+        )}
       </div>
 
       <AddSheet
@@ -433,6 +448,121 @@ export function ProteinTracker({
         onAdd={(es) => {
           addEntries(es)
           setSheet(null)
+        }}
+      />
+    </div>
+  )
+}
+
+/* ---------- backup ---------- */
+
+const MEAL_IDS = new Set<string>(MEALS.map((m) => m.id))
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+
+/** Accepts a file from Back up, keeping only entries that look whole */
+function parseBackup(text: string): Store | null {
+  try {
+    const raw = JSON.parse(text)
+    if (!raw || !Array.isArray(raw.entries)) return null
+    const entries: Entry[] = raw.entries
+      .filter(
+        (e: any) =>
+          e && typeof e.id === 'string' && DATE_RE.test(e.date) && MEAL_IDS.has(e.meal) &&
+          typeof e.name === 'string' && Number(e.protein) >= 0,
+      )
+      .map((e: any) => ({
+        id: e.id,
+        date: e.date,
+        meal: e.meal,
+        name: e.name,
+        serving: typeof e.serving === 'string' ? e.serving : undefined,
+        servings: Number(e.servings) > 0 ? Number(e.servings) : 1,
+        protein: Number(e.protein),
+        diet: ['veg', 'egg', 'nonveg'].includes(e.diet) ? e.diet : undefined,
+      }))
+    const goal = Math.round(Number(raw.goal))
+    return { goal: goal >= 10 && goal <= 400 ? goal : DEFAULT_GOAL, entries }
+  } catch {
+    return null
+  }
+}
+
+/* The log lives only in this browser, so the page offers a file to keep
+   elsewhere and a way to bring one back. On a phone, Back up opens the
+   share sheet, where Save to Files or Drive puts it somewhere safe. */
+function BackupBar({ store, onRestore }: { store: Store; onRestore: (s: Store) => void }) {
+  const input = useRef<HTMLInputElement>(null)
+  const [note, setNote] = useState<string | null>(null)
+
+  // Ask the browser not to clear this site's storage when space runs low
+  useEffect(() => {
+    navigator.storage?.persist?.().catch(() => {})
+  }, [])
+
+  async function backUp() {
+    const day = toKey(new Date())
+    const name = `protein-backup-${day}.json`
+    const body = JSON.stringify({ app: 'protein-tracker', version: 1, exportedAt: day, ...store }, null, 1)
+    const file = new File([body], name, { type: 'application/json' })
+    try {
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: name })
+        return setNote(`Backed up ${store.entries.length} entries`)
+      }
+    } catch (e) {
+      // Closing the share sheet isn't a failure
+      if ((e as Error)?.name === 'AbortError') return
+    }
+    const url = URL.createObjectURL(file)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = name
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    setNote(`Saved ${name}`)
+  }
+
+  async function restore(file: File) {
+    const backup = parseBackup(await file.text())
+    if (!backup) return setNote('That file isn’t a protein backup. Pick a protein-backup .json file.')
+    const have = new Set(store.entries.map((e) => e.id))
+    const added = backup.entries.filter((e) => !have.has(e.id)).length
+    onRestore(backup)
+    setNote(added ? `Restored ${added} ${added === 1 ? 'entry' : 'entries'}` : 'Everything in that file is already here')
+  }
+
+  const link =
+    'inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 font-medium text-muted-foreground transition-[color,background-color] duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+
+  return (
+    <div className='mt-10 border-t pt-4 text-xs'>
+      <div className='flex flex-wrap items-center justify-between gap-2'>
+        <p className='text-muted-foreground'>Saved on this device only</p>
+        <div className='-mr-2 flex items-center gap-1'>
+          <button onClick={backUp} className={link}>
+            <Download className='h-3.5 w-3.5' />
+            Back up
+          </button>
+          <button onClick={() => input.current?.click()} className={link}>
+            <Upload className='h-3.5 w-3.5' />
+            Restore
+          </button>
+        </div>
+      </div>
+      {note && (
+        <p role='status' className='mt-1 text-muted-foreground'>
+          {note}
+        </p>
+      )}
+      <input
+        ref={input}
+        type='file'
+        accept='application/json,.json'
+        className='hidden'
+        onChange={(e) => {
+          const f = e.target.files?.[0]
+          if (f) restore(f)
+          e.target.value = ''
         }}
       />
     </div>
