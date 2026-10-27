@@ -33,7 +33,7 @@ import { FOODS, MEALS, type Diet, type Food, type Meal } from './foods'
 
 type Period = 'day' | 'week' | 'month' | 'year'
 
-type Entry = {
+export type Entry = {
   id: string
   /** Local calendar day, YYYY-MM-DD */
   date: string
@@ -46,7 +46,16 @@ type Entry = {
   diet?: Diet
 }
 
-type Store = { goal: number; entries: Entry[] }
+export type Store = { goal: number; entries: Entry[] }
+
+/** Keeps the log somewhere other than localStorage. The tracker renders
+    whatever subscribe hands it and calls the rest when someone edits */
+export type ProteinSync = {
+  subscribe: (onChange: (store: Store) => void) => () => void
+  add: (entries: Entry[]) => void
+  remove: (id: string) => void
+  setGoal: (goal: number) => void
+}
 
 const STORAGE_KEY = 'protein-tracker:v3'
 const DEFAULT_GOAL = 100
@@ -136,7 +145,7 @@ const fmt = (n: number) => {
 }
 
 /** "1 roti" × 2 reads as "2 roti"; anything else, like "2 eggs" × 1.5, keeps the multiplier */
-function servingLabel(serving: string, servings: number) {
+export function servingLabel(serving: string, servings: number) {
   if (servings === 1) return serving
   const single = serving.match(/^1 ([^,\d]+)$/)
   return single ? `${fmt(servings)} ${single[1]}` : `${fmt(servings)} × ${serving}`
@@ -215,11 +224,14 @@ export function ProteinTracker({
   variant = 'card',
   storageKey = STORAGE_KEY,
   sample = true,
+  sync,
 }: {
   variant?: Variant
   storageKey?: string
   /** Seed a first visit with dummy history, so the demo has a shape */
   sample?: boolean
+  /** Store the log here instead of this browser's localStorage */
+  sync?: ProteinSync
 } = {}) {
   const reduceMotion = useReducedMotion() ?? false
   const page = variant === 'page'
@@ -238,13 +250,14 @@ export function ProteinTracker({
     const t = startOfToday()
     setToday(t)
     setCursor(t)
+    if (sync) return sync.subscribe(setStore)
     let saved: Store | null = null
     try {
       const raw = localStorage.getItem(storageKey)
       if (raw) saved = JSON.parse(raw)
     } catch {}
     setStore(saved ?? { goal: DEFAULT_GOAL, entries: sample ? sampleHistory(t) : [] })
-  }, [storageKey, sample])
+  }, [storageKey, sample, sync])
 
   // A phone keeps the tab alive for days: when it comes back after midnight,
   // roll today forward, and follow it if the view was sitting on the old today
@@ -262,11 +275,11 @@ export function ProteinTracker({
   }, [])
 
   useEffect(() => {
-    if (!today) return
+    if (!today || sync) return
     try {
       localStorage.setItem(storageKey, JSON.stringify(store))
     } catch {}
-  }, [store, today, storageKey])
+  }, [store, today, storageKey, sync])
 
   const totals = useMemo(() => {
     const map = new Map<string, number>()
@@ -302,11 +315,20 @@ export function ProteinTracker({
 
   function addEntries(es: Omit<Entry, 'id' | 'date'>[]) {
     const date = toKey(cursor!)
-    setStore((s) => ({ ...s, entries: [...s.entries, ...es.map((e) => ({ ...e, id: uid(), date }))] }))
+    const added = es.map((e) => ({ ...e, id: uid(), date }))
+    // Show it straight away; a synced store confirms it on its next snapshot
+    setStore((s) => ({ ...s, entries: [...s.entries, ...added] }))
+    sync?.add(added)
   }
 
   function removeEntry(id: string) {
     setStore((s) => ({ ...s, entries: s.entries.filter((e) => e.id !== id) }))
+    sync?.remove(id)
+  }
+
+  function setGoal(goal: number) {
+    setStore((s) => ({ ...s, goal }))
+    sync?.setGoal(goal)
   }
 
   const dayKey = toKey(cursor)
@@ -383,7 +405,7 @@ export function ProteinTracker({
                   stackBelow={page ? 360 : 480}
                   entries={store.entries.filter((e) => e.date === dayKey)}
                   goal={store.goal}
-                  onGoal={(goal) => setStore((s) => ({ ...s, goal }))}
+                  onGoal={setGoal}
                   onRemove={removeEntry}
                   onAdd={(meal) => setSheet({ meal })}
                 />
