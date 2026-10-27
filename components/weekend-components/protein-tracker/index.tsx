@@ -13,12 +13,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Cookie,
+  Download,
   Minus,
   MoonStar,
   Plus,
   Search,
   Sun,
   Sunrise,
+  Upload,
   X,
   type LucideIcon,
 } from 'lucide-react'
@@ -33,7 +35,7 @@ import { FOODS, MEALS, type Diet, type Food, type Meal } from './foods'
 
 type Period = 'day' | 'week' | 'month' | 'year'
 
-type Entry = {
+export type Entry = {
   id: string
   /** Local calendar day, YYYY-MM-DD */
   date: string
@@ -46,7 +48,16 @@ type Entry = {
   diet?: Diet
 }
 
-type Store = { goal: number; entries: Entry[] }
+export type Store = { goal: number; entries: Entry[] }
+
+/** Keeps the log somewhere other than localStorage. The tracker renders
+    whatever subscribe hands it and calls the rest when someone edits */
+export type ProteinSync = {
+  subscribe: (onChange: (store: Store) => void) => () => void
+  add: (entries: Entry[]) => void
+  remove: (id: string) => void
+  setGoal: (goal: number) => void
+}
 
 const STORAGE_KEY = 'protein-tracker:v3'
 const DEFAULT_GOAL = 100
@@ -136,7 +147,7 @@ const fmt = (n: number) => {
 }
 
 /** "1 roti" × 2 reads as "2 roti"; anything else, like "2 eggs" × 1.5, keeps the multiplier */
-function servingLabel(serving: string, servings: number) {
+export function servingLabel(serving: string, servings: number) {
   if (servings === 1) return serving
   const single = serving.match(/^1 ([^,\d]+)$/)
   return single ? `${fmt(servings)} ${single[1]}` : `${fmt(servings)} × ${serving}`
@@ -202,8 +213,30 @@ function sampleHistory(today: Date): Entry[] {
 
 /* ---------- the component ---------- */
 
-export function ProteinTracker() {
+const startOfToday = () => {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+}
+
+/* 'card' is the boxed demo on the Craft page; 'page' fills the screen, with a
+   sticky header and a sheet pinned to the viewport, for real daily logging */
+type Variant = 'card' | 'page'
+
+export function ProteinTracker({
+  variant = 'card',
+  storageKey = STORAGE_KEY,
+  sample = true,
+  sync,
+}: {
+  variant?: Variant
+  storageKey?: string
+  /** Seed a first visit with dummy history, so the demo has a shape */
+  sample?: boolean
+  /** Store the log here instead of this browser's localStorage */
+  sync?: ProteinSync
+} = {}) {
   const reduceMotion = useReducedMotion() ?? false
+  const page = variant === 'page'
 
   // Dates and storage only exist in the browser, so nothing renders until mount
   const [today, setToday] = useState<Date | null>(null)
@@ -212,26 +245,43 @@ export function ProteinTracker() {
   const [cursor, setCursor] = useState<Date | null>(null)
   const [direction, setDirection] = useState<1 | -1>(1)
   const [sheet, setSheet] = useState<{ meal: Meal } | null>(null)
+  const todayRef = useRef<Date | null>(null)
+  todayRef.current = today
 
   useEffect(() => {
-    const now = new Date()
-    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const t = startOfToday()
     setToday(t)
     setCursor(t)
+    if (sync) return sync.subscribe(setStore)
     let saved: Store | null = null
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
+      const raw = localStorage.getItem(storageKey)
       if (raw) saved = JSON.parse(raw)
     } catch {}
-    setStore(saved ?? { goal: DEFAULT_GOAL, entries: sampleHistory(t) })
+    setStore(saved ?? { goal: DEFAULT_GOAL, entries: sample ? sampleHistory(t) : [] })
+  }, [storageKey, sample, sync])
+
+  // A phone keeps the tab alive for days: when it comes back after midnight,
+  // roll today forward, and follow it if the view was sitting on the old today
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return
+      const prev = todayRef.current
+      const t = startOfToday()
+      if (!prev || sameDay(prev, t)) return
+      setToday(t)
+      setCursor((c) => (c && sameDay(c, prev) ? t : c))
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
   }, [])
 
   useEffect(() => {
-    if (!today) return
+    if (!today || sync) return
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(store))
+      localStorage.setItem(storageKey, JSON.stringify(store))
     } catch {}
-  }, [store, today])
+  }, [store, today, storageKey, sync])
 
   const totals = useMemo(() => {
     const map = new Map<string, number>()
@@ -249,7 +299,7 @@ export function ProteinTracker() {
     return map
   }, [store.entries])
 
-  if (!today || !cursor) return <div className='h-[600px] w-full max-w-[520px]' />
+  if (!today || !cursor) return <div className={page ? 'flex-1' : 'h-[600px] w-full max-w-[520px]'} />
 
   const canGoNext = shift(cursor, period, 1) <= today
   const atToday = periodStart(cursor, period).getTime() === periodStart(today, period).getTime()
@@ -267,28 +317,59 @@ export function ProteinTracker() {
 
   function addEntries(es: Omit<Entry, 'id' | 'date'>[]) {
     const date = toKey(cursor!)
-    setStore((s) => ({ ...s, entries: [...s.entries, ...es.map((e) => ({ ...e, id: uid(), date }))] }))
+    const added = es.map((e) => ({ ...e, id: uid(), date }))
+    // Show it straight away; a synced store confirms it on its next snapshot
+    setStore((s) => ({ ...s, entries: [...s.entries, ...added] }))
+    sync?.add(added)
   }
 
   function removeEntry(id: string) {
     setStore((s) => ({ ...s, entries: s.entries.filter((e) => e.id !== id) }))
+    sync?.remove(id)
+  }
+
+  function setGoal(goal: number) {
+    setStore((s) => ({ ...s, goal }))
+    sync?.setGoal(goal)
   }
 
   const dayKey = toKey(cursor)
   const viewKey = `${period}-${toKey(periodStart(cursor, period))}`
 
   return (
-    <div className='relative w-full max-w-[520px] overflow-hidden rounded-2xl border bg-background shadow-[0_1px_2px_hsl(var(--foreground)/0.04),0_8px_24px_-12px_hsl(var(--foreground)/0.12)]'>
-      <div className='flex min-h-[600px] flex-col p-4 sm:p-5'>
-        {/* Period switch + date navigation */}
-        <div className='flex flex-wrap items-center justify-between gap-3'>
+    <div
+      className={cn(
+        'relative w-full',
+        page
+          ? 'mx-auto flex max-w-[560px] flex-1 flex-col'
+          : 'max-w-[520px] overflow-hidden rounded-2xl border bg-background shadow-[0_1px_2px_hsl(var(--foreground)/0.04),0_8px_24px_-12px_hsl(var(--foreground)/0.12)]',
+      )}
+    >
+      <div
+        className={cn(
+          'flex flex-col',
+          page ? 'flex-1 px-4 pb-[calc(env(safe-area-inset-bottom)+32px)] sm:px-5' : 'min-h-[600px] p-4 sm:p-5',
+        )}
+      >
+        {/* Period switch + date navigation. On a phone the tabs take their own
+            full-width row; on the full page the header also sticks under the notch */}
+        <div
+          className={cn(
+            'flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3',
+            page &&
+              'sticky top-0 z-[5] -mx-4 bg-background/85 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+12px)] backdrop-blur-md sm:-mx-5 sm:px-5 sm:pt-8',
+          )}
+        >
           <PeriodTabs value={period} onChange={(p) => zoomTo(p, cursor)} />
 
           <div className='flex items-center gap-1'>
             {!atToday && (
               <button
                 onClick={() => zoomTo(period, today)}
-                className='mr-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-[color,transform] duration-150 hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+                className={cn(
+                  'rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-[color,transform] duration-150 hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [@media(pointer:coarse)]:py-2',
+                  'order-last ml-1 max-sm:-mr-2 sm:order-none sm:ml-0 sm:mr-1',
+                )}
               >
                 Today
               </button>
@@ -296,7 +377,7 @@ export function ProteinTracker() {
             <IconButton label='Previous' onClick={() => go(-1)}>
               <ChevronLeft className='h-4 w-4' />
             </IconButton>
-            <span className='min-w-[104px] text-center text-sm font-medium tabular-nums'>
+            <span className='min-w-[104px] text-center text-sm font-medium tabular-nums max-sm:flex-1'>
               {periodLabel(cursor, period, today)}
             </span>
             <IconButton label='Next' onClick={() => go(1)} disabled={!canGoNext}>
@@ -305,7 +386,7 @@ export function ProteinTracker() {
           </div>
         </div>
 
-        <div className='relative mt-5 flex flex-1 flex-col'>
+        <div className={cn('relative flex flex-1 flex-col', page ? 'mt-2' : 'mt-5')}>
           <AnimatePresence mode='wait' initial={false} custom={direction}>
             <motion.div
               key={viewKey}
@@ -323,9 +404,10 @@ export function ProteinTracker() {
             >
               {period === 'day' && (
                 <DayView
+                  stackBelow={page ? 360 : 480}
                   entries={store.entries.filter((e) => e.date === dayKey)}
                   goal={store.goal}
-                  onGoal={(goal) => setStore((s) => ({ ...s, goal }))}
+                  onGoal={setGoal}
                   onRemove={removeEntry}
                   onAdd={(meal) => setSheet({ meal })}
                 />
@@ -342,9 +424,23 @@ export function ProteinTracker() {
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {page && !sync && (
+          <BackupBar
+            store={store}
+            onRestore={(backup) =>
+              setStore((s) => {
+                const have = new Set(s.entries.map((e) => e.id))
+                const fresh = backup.entries.filter((e) => !have.has(e.id))
+                return { goal: backup.goal, entries: [...s.entries, ...fresh] }
+              })
+            }
+          />
+        )}
       </div>
 
       <AddSheet
+        variant={variant}
         open={sheet !== null}
         meal={sheet?.meal ?? 'breakfast'}
         dayLabel={periodLabel(cursor, 'day', today)}
@@ -352,6 +448,121 @@ export function ProteinTracker() {
         onAdd={(es) => {
           addEntries(es)
           setSheet(null)
+        }}
+      />
+    </div>
+  )
+}
+
+/* ---------- backup ---------- */
+
+const MEAL_IDS = new Set<string>(MEALS.map((m) => m.id))
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+
+/** Accepts a file from Back up, keeping only entries that look whole */
+function parseBackup(text: string): Store | null {
+  try {
+    const raw = JSON.parse(text)
+    if (!raw || !Array.isArray(raw.entries)) return null
+    const entries: Entry[] = raw.entries
+      .filter(
+        (e: any) =>
+          e && typeof e.id === 'string' && DATE_RE.test(e.date) && MEAL_IDS.has(e.meal) &&
+          typeof e.name === 'string' && Number(e.protein) >= 0,
+      )
+      .map((e: any) => ({
+        id: e.id,
+        date: e.date,
+        meal: e.meal,
+        name: e.name,
+        serving: typeof e.serving === 'string' ? e.serving : undefined,
+        servings: Number(e.servings) > 0 ? Number(e.servings) : 1,
+        protein: Number(e.protein),
+        diet: ['veg', 'egg', 'nonveg'].includes(e.diet) ? e.diet : undefined,
+      }))
+    const goal = Math.round(Number(raw.goal))
+    return { goal: goal >= 10 && goal <= 400 ? goal : DEFAULT_GOAL, entries }
+  } catch {
+    return null
+  }
+}
+
+/* The log lives only in this browser, so the page offers a file to keep
+   elsewhere and a way to bring one back. On a phone, Back up opens the
+   share sheet, where Save to Files or Drive puts it somewhere safe. */
+function BackupBar({ store, onRestore }: { store: Store; onRestore: (s: Store) => void }) {
+  const input = useRef<HTMLInputElement>(null)
+  const [note, setNote] = useState<string | null>(null)
+
+  // Ask the browser not to clear this site's storage when space runs low
+  useEffect(() => {
+    navigator.storage?.persist?.().catch(() => {})
+  }, [])
+
+  async function backUp() {
+    const day = toKey(new Date())
+    const name = `protein-backup-${day}.json`
+    const body = JSON.stringify({ app: 'protein-tracker', version: 1, exportedAt: day, ...store }, null, 1)
+    const file = new File([body], name, { type: 'application/json' })
+    try {
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: name })
+        return setNote(`Backed up ${store.entries.length} entries`)
+      }
+    } catch (e) {
+      // Closing the share sheet isn't a failure
+      if ((e as Error)?.name === 'AbortError') return
+    }
+    const url = URL.createObjectURL(file)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = name
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    setNote(`Saved ${name}`)
+  }
+
+  async function restore(file: File) {
+    const backup = parseBackup(await file.text())
+    if (!backup) return setNote('That file isn’t a protein backup. Pick a protein-backup .json file.')
+    const have = new Set(store.entries.map((e) => e.id))
+    const added = backup.entries.filter((e) => !have.has(e.id)).length
+    onRestore(backup)
+    setNote(added ? `Restored ${added} ${added === 1 ? 'entry' : 'entries'}` : 'Everything in that file is already here')
+  }
+
+  const link =
+    'inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 font-medium text-muted-foreground transition-[color,background-color] duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+
+  return (
+    <div className='mt-10 border-t pt-4 text-xs'>
+      <div className='flex flex-wrap items-center justify-between gap-2'>
+        <p className='text-muted-foreground'>Saved on this device only</p>
+        <div className='-mr-2 flex items-center gap-1'>
+          <button onClick={backUp} className={link}>
+            <Download className='h-3.5 w-3.5' />
+            Back up
+          </button>
+          <button onClick={() => input.current?.click()} className={link}>
+            <Upload className='h-3.5 w-3.5' />
+            Restore
+          </button>
+        </div>
+      </div>
+      {note && (
+        <p role='status' className='mt-1 text-muted-foreground'>
+          {note}
+        </p>
+      )}
+      <input
+        ref={input}
+        type='file'
+        accept='application/json,.json'
+        className='hidden'
+        onChange={(e) => {
+          const f = e.target.files?.[0]
+          if (f) restore(f)
+          e.target.value = ''
         }}
       />
     </div>
@@ -393,7 +604,8 @@ function PeriodTabs({ value, onChange }: { value: Period; onChange: (p: Period) 
     if (clip && !ready) requestAnimationFrame(() => setReady(true))
   }, [clip, ready])
 
-  const tabClass = 'rounded-md px-2.5 py-1 text-[13px] font-medium'
+  const tabClass =
+    'rounded-md px-2.5 py-1 text-center text-[13px] font-medium max-sm:flex-1 max-sm:px-1.5 [@media(pointer:coarse)]:py-1.5'
 
   return (
     <div ref={list} role='tablist' aria-label='Range' className='relative flex rounded-lg bg-muted p-0.5'>
@@ -436,12 +648,15 @@ function PeriodTabs({ value, onChange }: { value: Period; onChange: (p: Period) 
 /* ---------- day ---------- */
 
 function DayView({
+  stackBelow,
   entries,
   goal,
   onGoal,
   onRemove,
   onAdd,
 }: {
+  /** Viewport width under which the ring sits above the numbers instead of beside them */
+  stackBelow: 360 | 480
   entries: Entry[]
   goal: number
   onGoal: (g: number) => void
@@ -457,8 +672,16 @@ function DayView({
 
   return (
     <div className='flex flex-1 flex-col'>
-      <div className='flex items-center gap-5'>
-        <Ring value={total} goal={goal} />
+      <div
+        className={cn(
+          'flex items-center gap-5',
+          // Full class names, so Tailwind sees both variants
+          stackBelow === 360 ? 'max-[359px]:flex-col max-[359px]:items-stretch' : 'max-[479px]:flex-col max-[479px]:items-stretch',
+        )}
+      >
+        <div className='shrink-0 self-center'>
+          <Ring value={total} goal={goal} />
+        </div>
 
         <div className='min-w-0 flex-1'>
           <p className='text-sm text-muted-foreground'>
@@ -514,7 +737,7 @@ function DayView({
               <button
                 onClick={() => onAdd(m.id)}
                 aria-label={`Add to ${m.label}`}
-                className='-mr-1.5 inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-xs font-medium text-muted-foreground transition-[color,background-color,transform] duration-150 hover:bg-muted hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+                className='-mr-1.5 inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-xs font-medium [@media(pointer:coarse)]:-my-1 [@media(pointer:coarse)]:px-2.5 [@media(pointer:coarse)]:py-2 text-muted-foreground transition-[color,background-color,transform] duration-150 hover:bg-muted hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
               >
                 <Plus className='h-3.5 w-3.5' />
                 Add
@@ -545,7 +768,7 @@ function DayView({
                       <button
                         onClick={() => onRemove(e.id)}
                         aria-label={`Remove ${e.name}`}
-                        className='-mr-1 rounded p-0.5 text-muted-foreground opacity-0 transition-[opacity,color] duration-150 hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 [@media(hover:none)]:opacity-100'
+                        className='-mr-1 rounded p-0.5 text-muted-foreground opacity-0 transition-[opacity,color] duration-150 hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 [@media(hover:none)]:opacity-100 [@media(pointer:coarse)]:-my-1 [@media(pointer:coarse)]:-mr-2 [@media(pointer:coarse)]:p-2'
                       >
                         <X className='h-3.5 w-3.5' />
                       </button>
@@ -648,7 +871,7 @@ function GoalEditor({ goal, onGoal }: { goal: number; onGoal: (g: number) => voi
                 setEditing(false)
               }
             }}
-            className='w-10 rounded border bg-background px-1 py-0.5 text-[13px] font-medium tabular-nums text-foreground outline-none focus:ring-2 focus:ring-ring'
+            className='w-12 rounded border bg-background px-1 py-0.5 text-base font-medium tabular-nums text-foreground outline-none focus:ring-2 focus:ring-ring sm:w-10 sm:text-[13px]'
           />
           <span className='ml-0.5'>g</span>
         </span>
@@ -1224,12 +1447,14 @@ function HeatLegend() {
 /* ---------- add sheet ---------- */
 
 function AddSheet({
+  variant,
   open,
   meal: initialMeal,
   dayLabel,
   onClose,
   onAdd,
 }: {
+  variant: Variant
   open: boolean
   meal: Meal
   dayLabel: string
@@ -1273,6 +1498,16 @@ function AddSheet({
     }
   }, [open, initialMeal])
 
+  // Pinned to the viewport, the page behind shouldn't scroll under the sheet
+  useEffect(() => {
+    if (!open || variant !== 'page') return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [open, variant])
+
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -1307,7 +1542,7 @@ function AddSheet({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className='absolute inset-0 z-10 bg-foreground/10'
+            className={cn('inset-0', variant === 'page' ? 'fixed z-40 bg-foreground/20' : 'absolute z-10 bg-foreground/10')}
           />
           <motion.div
             key='sheet'
@@ -1318,7 +1553,12 @@ function AddSheet({
             animate={{ transform: 'translateY(0%)', opacity: 1 }}
             exit={{ transform: reduceMotion ? 'translateY(0%)' : 'translateY(100%)', opacity: reduceMotion ? 0 : 1, transition: { duration: 0.2, ease } }}
             transition={{ duration: 0.4, ease: easeDrawer }}
-            className='absolute inset-x-0 bottom-0 top-8 z-20 flex flex-col rounded-t-2xl border-t bg-background shadow-[0_-8px_32px_-12px_hsl(var(--foreground)/0.2)]'
+            className={cn(
+              'inset-x-0 bottom-0 flex flex-col rounded-t-2xl border-t bg-background shadow-[0_-8px_32px_-12px_hsl(var(--foreground)/0.2)]',
+              variant === 'page'
+                ? 'fixed z-50 mx-auto h-[min(88dvh,760px)] max-w-[560px] pb-[env(safe-area-inset-bottom)] sm:border-x'
+                : 'absolute top-8 z-20',
+            )}
           >
             <div className='flex items-center justify-between px-4 pb-2 pt-3'>
               <div>
@@ -1622,7 +1862,7 @@ function IconButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className={cn(small ? 'h-6 w-6' : 'h-7 w-7', 'inline-flex items-center justify-center rounded-md text-muted-foreground transition-[color,background-color,transform] duration-150 hover:bg-muted hover:text-foreground active:scale-[0.94] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-30')}
+      className={cn(small ? 'h-6 w-6 [@media(pointer:coarse)]:h-8 [@media(pointer:coarse)]:w-8' : 'h-7 w-7 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9', 'inline-flex items-center justify-center rounded-md text-muted-foreground transition-[color,background-color,transform] duration-150 hover:bg-muted hover:text-foreground active:scale-[0.94] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-30')}
     >
       {children}
     </button>
