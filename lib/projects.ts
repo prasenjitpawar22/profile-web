@@ -75,7 +75,11 @@ export const projects: Project[] = [
         url: 'https://github.com/prasenjitpawar22/demodrop-releases/releases/latest/download/Demodrop-Setup.exe',
         note: 'beta',
       },
-      { platform: 'macOS' },
+      {
+        platform: 'macOS',
+        url: 'https://github.com/prasenjitpawar22/demodrop-releases/releases/latest/download/Demodrop-mac.dmg',
+        note: 'preview',
+      },
       { platform: 'Linux' },
     ],
     status: 'In progress',
