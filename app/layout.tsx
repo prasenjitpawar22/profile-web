@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: 'Prasenjit Pawar',
     template: '%s · Prasenjit Pawar',
   },
-  description: 'Prasenjit Pawar, design engineer.',
+  description: 'Prasenjit Pawar, software/design engineer.',
 }
 
 // Runs before next-themes reads storage: a visitor's pick lasts until the next

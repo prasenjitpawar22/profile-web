@@ -20,7 +20,7 @@ export default async function Home() {
       <div className='page pt-20 md:pt-28'>
         <header className={enter}>
           <h1 className='font-medium'>Prasenjit Pawar</h1>
-          <p className='text-muted-foreground'>Design Engineer</p>
+          <p className='text-muted-foreground'>Software/Design Engineer</p>
         </header>
 
         <Section
