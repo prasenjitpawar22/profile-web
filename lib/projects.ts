@@ -2,7 +2,7 @@ export type ProjectStatus = 'Live' | 'In progress' | 'Completed' | 'Offline'
 
 /** An app to download for one platform; no url yet means it's coming */
 export type Download = {
-  platform: 'Windows' | 'macOS' | 'Linux'
+  platform: 'Chrome' | 'Windows' | 'macOS' | 'Linux'
   url?: string
   /** Shown after the platform, e.g. "beta" */
   note?: string
@@ -18,7 +18,7 @@ export type Project = {
   url?: string
   /** Shown as the link text, e.g. "kholi.in" */
   domain?: string
-  /** Desktop apps: one download per platform, instead of a single url */
+  /** Apps to get: one per platform (a browser store or a desktop installer) */
   downloads?: Download[]
   status: ProjectStatus
   year?: string
@@ -51,25 +51,16 @@ export const projects: Project[] = [
   {
     slug: 'demodrop',
     name: 'Demodrop',
-    tagline: 'Polished demo videos from any tab',
+    tagline: 'Polished demo videos from any tab or screen',
     description:
-      'A Chrome extension that records a browser tab and turns it into a demo video made for posting on X: auto-zoom that follows the pointer, a framed window, cuts, and MP4 export. Nothing leaves your device.',
+      'Records a browser tab, a screen, a window or an area and turns it into a demo video made for posting on X: auto-zoom that follows the pointer, a framed window, cuts, and MP4 export. A Chrome extension and a desktop app. Nothing leaves your device.',
     url: 'https://demodrop.prasenjitpawar.com',
     domain: 'demodrop.prasenjitpawar.com',
-    status: 'Live',
-    year: '2026',
-    stack: ['Chrome MV3', 'WXT', 'React 19', 'WebCodecs', 'Mediabunny', 'Canvas'],
-    icon: '/projects/demodrop/icon.png',
-    caseStudy: true,
-    featured: true,
-  },
-  {
-    slug: 'demodrop-desktop',
-    name: 'Demodrop Desktop',
-    tagline: 'Polished demo videos from your screen',
-    description:
-      'The desktop sibling of the extension: records a screen, a window or an area natively, then an editor turns it into a demo made for posting on X, with auto-zoom, a crisp drawn pointer, speed-ups, masks, and MP4 or GIF export. Nothing leaves your device.',
     downloads: [
+      {
+        platform: 'Chrome',
+        url: 'https://chromewebstore.google.com/detail/kobkeckelnodecamcnhmlnklhijhcgkf',
+      },
       {
         platform: 'Windows',
         url: 'https://github.com/prasenjitpawar22/demodrop-releases/releases/latest/download/Demodrop-Setup.exe',
@@ -82,10 +73,11 @@ export const projects: Project[] = [
       },
       { platform: 'Linux' },
     ],
-    status: 'In progress',
+    status: 'Live',
     year: '2026',
-    stack: ['Electron', 'React 19', 'Rust', 'Windows.Graphics.Capture', 'WebCodecs'],
-    icon: '/projects/demodrop-desktop/icon.png',
+    stack: ['Chrome MV3', 'Electron', 'React 19', 'Rust', 'WebCodecs', 'Mediabunny'],
+    icon: '/projects/demodrop/icon.png',
+    caseStudy: true,
     featured: true,
   },
   {

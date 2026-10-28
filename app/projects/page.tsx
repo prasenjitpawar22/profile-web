@@ -165,6 +165,10 @@ function CaseStudyCard({ project, priority }: { project: Project; priority: bool
             <ProjectStatusBadge status={project.status} />
           </div>
           <p className='mt-1 text-sm text-muted-foreground'>{project.description}</p>
+          {project.downloads ? (
+            // Above the card's link layer, so each download stays clickable
+            <PlatformDownloads downloads={project.downloads} slug={project.slug} className='relative z-10 mt-2' />
+          ) : null}
 
           <div className='mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm'>
             <span className='inline-flex items-center gap-1 text-foreground'>

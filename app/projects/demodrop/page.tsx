@@ -1,5 +1,5 @@
 import { BackLink } from '@/components/back-link'
-import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
+import { PlatformDownloads, ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
 import { SiteFooter } from '@/components/site-footer'
 import { getProject } from '@/lib/projects'
 import { ArrowUpRight } from 'lucide-react'
@@ -7,7 +7,8 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 
 const project = getProject('demodrop')!
-const chromeStoreUrl = 'https://chromewebstore.google.com/detail/kobkeckelnodecamcnhmlnklhijhcgkf'
+const chrome = project.downloads!.find((download) => download.platform === 'Chrome')!
+const desktop = project.downloads!.filter((download) => download.platform !== 'Chrome')
 
 export const metadata: Metadata = {
   title: 'Demodrop',
@@ -134,7 +135,7 @@ export default function Page() {
           <dl className='mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4'>
             <Meta label='Role'>Solo: product, design, engineering</Meta>
             <Meta label='Timeline'>Oct 2026</Meta>
-            <Meta label='Platform'>Chrome extension</Meta>
+            <Meta label='Platform'>Chrome, Windows, macOS</Meta>
             <Meta label='Status'>
               <ProjectStatusBadge status={project.status} className='text-sm text-foreground' />
             </Meta>
@@ -142,7 +143,7 @@ export default function Page() {
 
           <div className='mt-6 flex flex-wrap items-center gap-2'>
             <a
-              href={chromeStoreUrl}
+              href={chrome.url}
               target='_blank'
               rel='noopener noreferrer'
               data-track='project_site_clicked'
@@ -153,6 +154,10 @@ export default function Page() {
               <ArrowUpRight className='h-4 w-4' />
             </a>
           </div>
+          <p className='mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground'>
+            Desktop app
+            <PlatformDownloads downloads={desktop} slug={project.slug} />
+          </p>
         </header>
 
         {/* The whole flow at a glance, scrolled sideways. The negative margin

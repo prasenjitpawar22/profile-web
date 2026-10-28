@@ -139,7 +139,19 @@ function FeaturedProject({ project }: { project: Project }) {
       <span className='min-w-0 flex-1'>
         <span className='flex items-baseline justify-between gap-4'>
           <span>
-            {project.name}
+            {project.downloads && project.caseStudy ? (
+              // The item isn't a link when it has downloads, so the name is
+              <Link
+                href={projectHref(project)}
+                data-track='project_clicked'
+                data-track-slug={project.slug}
+                data-track-source='home'
+                className='rounded-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                {project.name}
+              </Link>
+            ) : (
+              project.name
+            )}
             <span className='text-muted-foreground'> · {project.tagline}</span>
           </span>
           <ProjectStatusBadge status={project.status} />
