@@ -7,6 +7,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 
 const project = getProject('demodrop')!
+const chromeStoreUrl = 'https://chromewebstore.google.com/detail/kobkeckelnodecamcnhmlnklhijhcgkf'
 
 export const metadata: Metadata = {
   title: 'Demodrop',
@@ -141,7 +142,7 @@ export default function Page() {
 
           <div className='mt-6 flex flex-wrap items-center gap-2'>
             <a
-              href={project.url}
+              href={chromeStoreUrl}
               target='_blank'
               rel='noopener noreferrer'
               data-track='project_site_clicked'

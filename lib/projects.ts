@@ -54,8 +54,8 @@ export const projects: Project[] = [
     tagline: 'Polished demo videos from any tab',
     description:
       'A Chrome extension that records a browser tab and turns it into a demo video made for posting on X: auto-zoom that follows the pointer, a framed window, cuts, and MP4 export. Nothing leaves your device.',
-    url: 'https://chromewebstore.google.com/detail/kobkeckelnodecamcnhmlnklhijhcgkf',
-    domain: 'Chrome Web Store',
+    url: 'https://demodrop.prasenjitpawar.com',
+    domain: 'demodrop.prasenjitpawar.com',
     status: 'Live',
     year: '2026',
     stack: ['Chrome MV3', 'WXT', 'React 19', 'WebCodecs', 'Mediabunny', 'Canvas'],
