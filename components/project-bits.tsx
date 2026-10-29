@@ -72,7 +72,7 @@ export function PlatformDownloads({
   className?: string
 }) {
   return (
-    <span className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 text-sm', className)}>
+    <span className={cn('flex flex-wrap items-center gap-x-3 gap-y-2 text-sm', className)}>
       {downloads.map((download) =>
         download.url ? (
           <a
@@ -81,14 +81,14 @@ export function PlatformDownloads({
             data-track='project_download_clicked'
             data-track-slug={slug}
             data-track-platform={download.platform}
-            className='inline-flex items-center gap-1 rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+            className='hit-area inline-flex items-center gap-1 rounded-sm text-foreground [--hit-x:6px] [--hit-y:4px] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
             <ArrowDown aria-hidden className='h-3.5 w-3.5' />
             {download.platform}
             {download.note ? <span className='text-muted-foreground'>{download.note}</span> : null}
           </a>
         ) : (
           <span key={download.platform} className='text-muted-foreground'>
-            {download.platform} <span className='text-muted-foreground/60'>soon</span>
+            {download.platform} <span className='italic'>soon</span>
           </span>
         ),
       )}

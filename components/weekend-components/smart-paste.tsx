@@ -228,12 +228,12 @@ export function SmartPaste() {
               onPaste={onPaste}
               aria-label='Text to extract contact details from'
               placeholder='Paste text here…'
-              className='block h-[184px] w-full resize-none rounded-t-xl bg-transparent p-3 text-sm leading-relaxed outline-none placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring'
+              className='block h-[184px] w-full resize-none rounded-t-xl bg-transparent p-3 text-base leading-relaxed sm:text-sm outline-none placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring'
             />
           ) : (
             <p
               aria-label='Pasted text'
-              className='h-[184px] overflow-y-auto whitespace-pre-wrap p-3 text-sm leading-relaxed text-muted-foreground'>
+              className='h-[184px] overflow-y-auto whitespace-pre-wrap p-3 text-base leading-relaxed text-muted-foreground sm:text-sm'>
               <SourceText
                 text={source}
                 detections={detections}
@@ -320,7 +320,7 @@ export function SmartPaste() {
                     }}
                     placeholder={phase === 'done' && i < 0 ? 'Not found' : undefined}
                     className={cn(
-                      'h-9 w-full rounded-lg border bg-background px-3 text-sm shadow-sm outline-none transition-[border-color] duration-200 placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring',
+                      'h-9 w-full rounded-lg border bg-background px-3 text-base shadow-sm sm:text-sm outline-none transition-[border-color] duration-200 placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring',
                       landed[key] && 'field-absorb',
                       needsCheck && 'border-amber-500/60',
                     )}
@@ -333,7 +333,7 @@ export function SmartPaste() {
                         layoutId={layoutId(key)}
                         transition={flight}
                         onLayoutAnimationComplete={() => land(detection)}
-                        className='relative z-20 -mx-0.5 whitespace-nowrap rounded bg-grass/20 px-0.5 text-sm text-foreground'>
+                        className='relative z-20 -mx-0.5 whitespace-nowrap rounded bg-grass/20 px-0.5 text-base text-foreground sm:text-sm'>
                         {detection.value}
                       </motion.span>
                     </span>

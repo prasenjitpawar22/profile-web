@@ -218,7 +218,7 @@ const startOfToday = () => {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
 
-/* 'card' is the boxed demo on the Craft page; 'page' fills the screen, with a
+/* 'card' is the boxed demo on the Lab page; 'page' fills the screen, with a
    sticky header and a sheet pinned to the viewport, for real daily logging */
 type Variant = 'card' | 'page'
 

@@ -133,7 +133,7 @@ export function SearchBoxGooey() {
           animate={{ clipPath: fieldClip, opacity: isOpen ? 1 : 0 }}
           transition={fieldTransition}
           style={{ width: openWidth, height: size }}
-          className='shrink-0 rounded-full bg-transparent px-4 text-sm text-background caret-background placeholder:text-background/60 focus-visible:outline-none [&::-webkit-search-cancel-button]:appearance-none'
+          className='shrink-0 rounded-full bg-transparent px-4 text-base text-background sm:text-sm caret-background placeholder:text-background/60 focus-visible:outline-none [&::-webkit-search-cancel-button]:appearance-none'
         />
         <motion.button
           type='button'

@@ -132,6 +132,24 @@
     }
   }
 
+  /* Grows a small control's tap target toward 44px without moving layout
+     or the focus ring. Tune per spot with --hit-x / --hit-y. */
+  .hit-area {
+    position: relative;
+  }
+  .hit-area::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--hit-y, 12px) * -1) calc(var(--hit-x, 8px) * -1);
+  }
+
+  /* Demos scrolled out of view hold their CSS loops (see DemoStage) */
+  [data-offscreen] *,
+  [data-offscreen] *::before,
+  [data-offscreen] *::after {
+    animation-play-state: paused !important;
+  }
+
   /* Quiet inline link: faint underline that turns green on hover */
   .link {
     @apply text-foreground underline decoration-border decoration-1 underline-offset-[3px] transition-colors hover:decoration-grass focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;

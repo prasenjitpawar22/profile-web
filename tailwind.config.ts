@@ -115,7 +115,6 @@ const config = {
       );
     }),
   ],
-  safelist: [{ pattern: /hljs+/ }],
 } satisfies Config;
 
 export default config;

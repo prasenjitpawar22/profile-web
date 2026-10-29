@@ -34,21 +34,32 @@ export default async function Page({ params }: { params: { id: string } }) {
             source={article.markdown}
             components={{
               ColorMixLab: ColorMixLab,
-              code({ node, inline, className, children, ...props }: any) {
-                const match = /language-(\w+)/.exec(className || '')
-                return !inline && match ? (
+              // Fenced blocks with a language become the highlighter's own
+              // block, so there's a single surface instead of one inside another
+              pre({ children, ...props }: any) {
+                const code = children?.props
+                const match = /language-(\w+)/.exec(code?.className || '')
+                if (!match) {
+                  return (
+                    <pre {...props} className='bg-muted text-foreground'>
+                      {children}
+                    </pre>
+                  )
+                }
+                return (
                   <SyntaxHighlighter
                     style={dracula}
                     language={match[1]}
-                    PreTag='div'
-                    {...props}>
-                    {String(children).replace(/\n$/, '')}
+                    customStyle={{
+                      margin: '1.5em 0',
+                      padding: '1rem 1.25rem',
+                      borderRadius: 'var(--radius)',
+                      fontSize: '13px',
+                    }}>
+                    {String(code.children).replace(/\n$/, '')}
                   </SyntaxHighlighter>
-                ) : (
-                  <code>{children}</code>
                 )
               },
-              pre: (props) => <pre {...props} className='bg-muted' />,
             }}
           />
         </article>

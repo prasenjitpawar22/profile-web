@@ -27,7 +27,7 @@ import { ParticleOrb } from '@/components/weekend-components/particle-orb'
 import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
 
 export const metadata: Metadata = {
-  title: 'Craft',
+  title: 'Lab',
   description: 'Weekend experiments in interaction and motion.',
 }
 
@@ -61,7 +61,7 @@ export default function Page() {
       <div className='page pt-20 md:pt-28'>
         <BackLink href={SITE_URL} label='Prasenjit Pawar' />
 
-        <h1 className='mt-10 font-medium'>Craft</h1>
+        <h1 className='mt-10 font-medium'>Lab</h1>
         <p className='text-muted-foreground'>
           Weekend experiments in interaction and motion. Some are rebuilt from
           work that caught my eye, credited where they came from.

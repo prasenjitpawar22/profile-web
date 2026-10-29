@@ -1,5 +1,6 @@
 import type { CraftItem } from '@/lib/craft'
 import { ArrowUpRight } from 'lucide-react'
+import { DemoStage } from './demo-stage'
 
 export function CraftCard({
   item,
@@ -11,19 +12,25 @@ export function CraftCard({
   return (
     <section id={item.slug} className='scroll-mt-12'>
       {/* A quiet dotted stage, so every demo sits on the same surface */}
-      <div
-        data-track-demo={item.slug}
+      <DemoStage
+        slug={item.slug}
         className='relative flex min-h-[240px] items-center justify-center overflow-hidden rounded-xl border bg-muted/40 p-6 [background-image:radial-gradient(hsl(var(--foreground)/0.07)_1px,transparent_1px)] [background-size:16px_16px]'>
         {children}
-      </div>
+      </DemoStage>
 
       <div className='mt-3 flex items-baseline justify-between gap-4'>
         <h2>
           <a
             href={`#${item.slug}`}
-            className='rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+            className='group/title rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
           >
             {item.title}
+            {/* Shows the title is a link to this demo */}
+            <span
+              aria-hidden
+              className='ml-1.5 text-muted-foreground opacity-0 transition-opacity duration-150 group-focus-visible/title:opacity-100 [@media(hover:hover)]:group-hover/title:opacity-100'>
+              #
+            </span>
           </a>
         </h2>
         {item.credit ? (

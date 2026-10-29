@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 // Fade each block in a beat after the one above it
 const enter =
-  'animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-700 motion-reduce:animate-none'
+  'animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-[400ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:animate-none'
 
 export default async function Home() {
   const articles = await getSortedArticles()
@@ -26,9 +26,9 @@ export default async function Home() {
 
         <Section
           title='Projects'
-          className={`${enter} delay-100`}
+          className={`${enter} delay-[60ms]`}
           action={
-            <Link href='/projects' className='link text-sm'>
+            <Link href='/projects' className='link hit-area text-sm'>
               All projects
             </Link>
           }>
@@ -56,10 +56,10 @@ export default async function Home() {
         </Section>
 
         <Section
-          title='Craft'
-          className={`${enter} delay-200`}
+          title='Lab'
+          className={`${enter} delay-[120ms]`}
           action={
-            <Link href={LAB_URL} className='link text-sm'>
+            <Link href={LAB_URL} className='link hit-area text-sm'>
               All experiments
             </Link>
           }>
@@ -82,7 +82,7 @@ export default async function Home() {
           </ul>
         </Section>
 
-        <Section title='Writing' className={`${enter} delay-300`}>
+        <Section title='Writing' className={`${enter} delay-[180ms]`}>
           <ul className='-mx-3'>
             {articles.map((article) => (
               <li key={article.id}>

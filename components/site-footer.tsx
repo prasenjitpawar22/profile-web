@@ -22,7 +22,7 @@ export function SiteFooter({ className }: { className?: string }) {
                 href={link.href}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                className='hit-area rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
                 {link.name}
               </a>
             </li>

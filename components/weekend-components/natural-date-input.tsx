@@ -309,7 +309,7 @@ export function NaturalDateInput() {
           <div
             ref={mirrorRef}
             aria-hidden
-            className='pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-pre rounded-lg border border-transparent px-3 text-sm text-transparent'>
+            className='pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-pre rounded-lg border border-transparent px-3 text-base text-transparent sm:text-sm'>
             <span>{highlighted}</span>
           </div>
           <input
@@ -326,7 +326,7 @@ export function NaturalDateInput() {
             autoComplete='off'
             spellCheck={false}
             aria-describedby={previewId}
-            className='relative h-10 w-full rounded-lg border bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring'
+            className='relative h-10 w-full rounded-lg border bg-transparent px-3 text-base outline-none placeholder:text-muted-foreground/60 sm:text-sm focus-visible:ring-2 focus-visible:ring-ring'
           />
         </div>
         <button

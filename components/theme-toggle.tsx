@@ -57,7 +57,7 @@ export function ThemeToggle() {
     <button
       type='button'
       aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
-      className='-mr-2 grid h-8 w-8 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+      className='hit-area -mr-2 grid h-8 w-8 place-items-center [--hit-x:6px] [--hit-y:6px] rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
       onClick={handleThemeChange}>
       {resolvedTheme === 'dark' ? (
         <SunDim className='h-4 w-4' />
