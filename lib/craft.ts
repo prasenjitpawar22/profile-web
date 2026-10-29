@@ -11,6 +11,12 @@ export type CraftItem = {
 
 export const craftItems: CraftItem[] = [
   {
+    slug: 'dust-text',
+    title: 'Dust text',
+    description:
+      'Run the cursor through the words and they crumble into dust and blow away. The letters re-form in place, never by playing the dust in reverse.',
+  },
+  {
     slug: 'protein-tracker',
     title: 'Protein tracker',
     description:

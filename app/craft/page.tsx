@@ -25,6 +25,7 @@ import { Metadata } from 'next'
 import RevealCalendar from '@/components/weekend-components/reveal-calender'
 import { ParticleOrb } from '@/components/weekend-components/particle-orb'
 import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
+import { DustText } from '@/components/weekend-components/dust-text'
 
 export const metadata: Metadata = {
   title: 'Lab',
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
+  'dust-text': <DustText />,
   'protein-tracker': <ProteinTracker />,
   'particle-orb': <ParticleOrb />,
   'reveal-calendar': <RevealCalendar />,
