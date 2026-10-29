@@ -2,6 +2,7 @@ import { BackLink } from '@/components/back-link'
 import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
 import { SiteFooter } from '@/components/site-footer'
 import { getProject } from '@/lib/projects'
+import { LAB_URL } from '@/lib/site'
 import { ArrowUpRight, Play } from 'lucide-react'
 import { Metadata } from 'next'
 import Image from 'next/image'
@@ -82,7 +83,7 @@ const engineeringDecisions = [
   {
     title: 'Paste a post, get a form',
     body: 'A rule-based parser in the browser reads a pasted WhatsApp or Facebook post into the listing form for free, with an optional AI pass through any OpenAI-compatible API.',
-    link: { href: '/craft#smart-paste', label: 'The idea behind Smart paste' },
+    link: { href: `${LAB_URL}/#smart-paste`, label: 'The idea behind Smart paste' },
   },
   {
     title: 'Data the browser can’t touch',

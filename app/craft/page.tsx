@@ -20,6 +20,7 @@ import SlideUpButton from '@/components/weekend-components/slide-up-button'
 import Timer from '@/components/weekend-components/timer'
 import { TodoCheckboxExample } from '@/components/weekend-components/todo-checkbox'
 import { craftItems } from '@/lib/craft'
+import { SITE_URL } from '@/lib/site'
 import { Metadata } from 'next'
 import RevealCalendar from '@/components/weekend-components/reveal-calender'
 import { ParticleOrb } from '@/components/weekend-components/particle-orb'
@@ -58,7 +59,7 @@ export default function Page() {
   return (
     <div className='flex flex-1 flex-col'>
       <div className='page pt-20 md:pt-28'>
-        <BackLink href='/' label='Prasenjit Pawar' />
+        <BackLink href={SITE_URL} label='Prasenjit Pawar' />
 
         <h1 className='mt-10 font-medium'>Craft</h1>
         <p className='text-muted-foreground'>

@@ -4,6 +4,7 @@ import { projectHref, projects, type Project } from '@/lib/projects'
 import { SiteFooter } from '@/components/site-footer'
 import { getSortedArticles } from '@/lib/article'
 import { craftItems } from '@/lib/craft'
+import { LAB_URL } from '@/lib/site'
 import Link from 'next/link'
 
 // Fade each block in a beat after the one above it
@@ -58,7 +59,7 @@ export default async function Home() {
           title='Craft'
           className={`${enter} delay-200`}
           action={
-            <Link href='/craft' className='link text-sm'>
+            <Link href={LAB_URL} className='link text-sm'>
               All experiments
             </Link>
           }>
@@ -66,7 +67,7 @@ export default async function Home() {
             {featured.map((item) => (
               <li key={item.slug}>
                 <Link
-                  href={`/craft#${item.slug}`}
+                  href={`${LAB_URL}/#${item.slug}`}
                   data-track='component_clicked'
                   data-track-slug={item.slug}
                   data-track-source='home'
