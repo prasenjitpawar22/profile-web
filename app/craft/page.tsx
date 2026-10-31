@@ -19,13 +19,14 @@ import { SearchBoxGooey } from '@/components/weekend-components/search-box-gooey
 import SlideUpButton from '@/components/weekend-components/slide-up-button'
 import Timer from '@/components/weekend-components/timer'
 import { TodoCheckboxExample } from '@/components/weekend-components/todo-checkbox'
-import { craftItems } from '@/lib/craft'
+import { craftGroups, craftItems } from '@/lib/craft'
 import { SITE_URL } from '@/lib/site'
 import { Metadata } from 'next'
 import RevealCalendar from '@/components/weekend-components/reveal-calender'
 import { ParticleOrb } from '@/components/weekend-components/particle-orb'
 import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
 import { DustText } from '@/components/weekend-components/dust-text'
+import { Logogram } from '@/components/weekend-components/logogram'
 
 export const metadata: Metadata = {
   title: 'Lab',
@@ -33,6 +34,7 @@ export const metadata: Metadata = {
 }
 
 const demos: Record<string, React.ReactNode> = {
+  logogram: <Logogram />,
   'dust-text': <DustText />,
   'protein-tracker': <ProteinTracker />,
   'particle-orb': <ParticleOrb />,
@@ -68,14 +70,26 @@ export default function Page() {
           Weekend experiments in interaction and motion. Some are rebuilt from
           work that caught my eye, credited where they came from.
         </p>
+      </div>
 
-        <div className='mt-12 flex flex-col gap-16'>
-          {craftItems.map((item) => (
-            <CraftCard key={item.slug} item={item}>
-              {demos[item.slug]}
-            </CraftCard>
-          ))}
-        </div>
+      {/* Wider than the reading column, so two demos can sit side by side */}
+      <div className='mx-auto mt-12 flex w-full max-w-[1040px] flex-col gap-20 px-6'>
+        {craftGroups.map((group) => (
+          <section key={group.id} id={group.id} aria-labelledby={`${group.id}-title`} className='scroll-mt-12'>
+            <h2 id={`${group.id}-title`} className='text-sm text-muted-foreground'>
+              {group.title}
+            </h2>
+            <div className='mt-4 grid grid-flow-row-dense gap-x-6 gap-y-14 md:grid-cols-2'>
+              {craftItems
+                .filter((item) => item.group === group.id)
+                .map((item) => (
+                  <CraftCard key={item.slug} item={item}>
+                    {demos[item.slug]}
+                  </CraftCard>
+                ))}
+            </div>
+          </section>
+        ))}
       </div>
 
       <SiteFooter className='mt-auto pt-20' />
