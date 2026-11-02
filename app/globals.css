@@ -281,3 +281,13 @@
     box-shadow: 0 0 0 2px transparent;
   }
 }
+
+/* Chrome nav (Lab): solid ink that follows the theme, black in light and white in dark */
+.chrome-nav {
+  --chrome-bead: hsl(var(--foreground));
+  --chrome-sheen: hsl(var(--foreground));
+  --chrome-ink: hsl(var(--background));
+  --chrome-ink-muted: hsl(var(--background) / 0.6);
+  --chrome-glint: hsl(var(--background) / 0.1);
+  --chrome-hover: hsl(var(--background) / 0.1);
+}

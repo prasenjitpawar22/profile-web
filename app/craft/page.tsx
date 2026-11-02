@@ -27,6 +27,8 @@ import { ParticleOrb } from '@/components/weekend-components/particle-orb'
 import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
 import { DustText } from '@/components/weekend-components/dust-text'
 import { Logogram } from '@/components/weekend-components/logogram'
+import { MorphNav } from '@/components/weekend-components/morph-nav'
+import { ChromeNav } from '@/components/weekend-components/chrome-nav'
 
 export const metadata: Metadata = {
   title: 'Lab',
@@ -36,6 +38,8 @@ export const metadata: Metadata = {
 const demos: Record<string, React.ReactNode> = {
   logogram: <Logogram />,
   'dust-text': <DustText />,
+  'chrome-nav': <ChromeNav />,
+  'morph-nav': <MorphNav />,
   'protein-tracker': <ProteinTracker />,
   'particle-orb': <ParticleOrb />,
   'reveal-calendar': <RevealCalendar />,

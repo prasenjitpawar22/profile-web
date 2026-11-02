@@ -38,6 +38,22 @@ export const craftItems: CraftItem[] = [
       'Run the cursor through the words and they crumble into dust and blow away. The letters re-form in place, never by playing the dust in reverse.',
   },
   {
+    slug: 'chrome-nav',
+    group: 'components',
+    wide: true,
+    title: 'Chrome nav',
+    description:
+      'A nav bar made of liquid metal. A bead hangs under it and follows the cursor, menus pour down out of the bar on a tendril that thins and snaps when stretched, and closing melts them back up. Crossing a link on the way down to an open menu won’t close it.',
+  },
+  {
+    slug: 'morph-nav',
+    group: 'components',
+    wide: true,
+    title: 'Morph nav',
+    description:
+      'Hover through the menu and the title rebuilds itself into the next word. Letters the two words share travel to their new spots, hopping over or ducking under each other, while the rest blur away and new ones settle in.',
+  },
+  {
     slug: 'protein-tracker',
     group: 'components',
     wide: true,
