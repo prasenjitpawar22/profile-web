@@ -56,7 +56,13 @@ const MENUS: Menu[] = [
 ]
 const LINKS = ['About', 'Contact']
 
-const PILL_H = 40
+const PILL_H = 44
+/** Even space around the menu items inside the strip */
+const PILL_PAD = 4
+const PANEL_RADIUS = 20
+const PANEL_PAD = 6
+/** Nested corners: outer radius minus the padding between them */
+const ROW_RADIUS = PANEL_RADIUS - PANEL_PAD
 const BULGE = 30
 const CLOSE_DELAY = 200
 const HOLD = 300
@@ -231,7 +237,7 @@ function useMenu() {
 
 function Rows({ menu, width, onPick, measure }: { menu: Menu; width: number; onPick?: () => void; measure?: boolean }) {
   return (
-    <div className='p-2' style={{ width }}>
+    <div style={{ width, padding: PANEL_PAD }}>
       {menu.items.map((item) => (
         <a
           key={item.title}
@@ -242,7 +248,8 @@ function Rows({ menu, width, onPick, measure }: { menu: Menu; width: number; onP
             onPick?.()
           }}
           // A hovered row lifts out of the ink
-          className='flex flex-col rounded-[12px] px-3 py-2.5 outline-none transition-colors duration-150 focus-visible:bg-[color:var(--chrome-hover)] [@media(hover:hover)]:hover:bg-[color:var(--chrome-hover)]'>
+          style={{ borderRadius: ROW_RADIUS }}
+          className='flex flex-col px-3 py-2.5 outline-none transition-colors duration-150 focus-visible:bg-[color:var(--chrome-hover)] [@media(hover:hover)]:hover:bg-[color:var(--chrome-hover)]'>
           <span className='flex items-center gap-1.5 text-sm font-medium'>
             {item.title}
             {item.external ? <ArrowUpRight aria-label='Opens another site' className='h-3.5 w-3.5 shrink-0 opacity-60' /> : null}
@@ -317,7 +324,7 @@ export function ChromeNav() {
         triggers[id] = { x: b.left - r.left, y: b.top - r.top, w: b.width, h: b.height }
       })
       const g = group.getBoundingClientRect()
-      setLayout({ width: r.width, bar: bar.offsetHeight, pill: { x: g.left - r.left - 6, w: g.width + 12 }, triggers })
+      setLayout({ width: r.width, bar: bar.offsetHeight, pill: { x: g.left - r.left - PILL_PAD, w: g.width + PILL_PAD * 2 }, triggers })
     }
     measure()
     document.fonts.ready.then(measure)
@@ -342,12 +349,21 @@ export function ChromeNav() {
   const pill = layout?.pill
   const pillY = (bar - PILL_H) / 2
   const pillBottom = pillY + PILL_H
-  const top = pillBottom + 12
+  // Far enough below the strip that only the neck joins them, not a film along the whole edge
+  const top = pillBottom + 18
   const w = menu ? widthOf(menu) : 0
   const h = menu ? heights[menu.id] ?? 0 : 0
   const t = menu ? layout?.triggers[menu.id] : undefined
-  const x = t && layout ? Math.max(0, Math.min(t.x + t.w / 2 - w / 2, layout.width - w)) : 0
+  // Under its trigger but inside the strip's span when it fits; wider panels centre on the strip
+  const x = (() => {
+    if (!t || !layout || !pill) return 0
+    const under = t.x + t.w / 2 - w / 2
+    const aligned = w <= pill.w ? Math.max(pill.x, Math.min(under, pill.x + pill.w - w)) : pill.x + pill.w / 2 - w / 2
+    return Math.max(0, Math.min(aligned, layout.width - w))
+  })()
   const cx = x + w / 2
+  // Where the neck meets the panel: straight below the open trigger, clear of the corners
+  const anchor = t ? Math.max(x + PANEL_RADIUS + 12, Math.min(x + w - PANEL_RADIUS - 12, t.x + t.w / 2)) : cx
   const ready = !!(menu && t && h)
 
   const stiff = (stiffness: number, damping: number) => (reduce ? { stiffness: 3000, damping: 200 } : { stiffness, damping })
@@ -358,11 +374,11 @@ export function ChromeNav() {
   const bulgeX = useSpring(target, stiff(260, 24))
   const bulgeY = useMotionValue(pillBottom - 2)
   const bulgeLeft = useTransform(bulgeX, (v) => v - BULGE / 2)
-  const panelCx = useSpring(cx, stiff(170, 20))
+  const panelCx = useSpring(anchor, stiff(170, 20))
   const panelTop = useMotionValue(top + 12)
   useEffect(() => {
-    if (menu) panelCx.set(cx)
-  }, [menu, cx, panelCx])
+    if (menu) panelCx.set(anchor)
+  }, [menu, anchor, panelCx])
   useEffect(() => {
     if (!onPill && t) target.set(t.x + t.w / 2)
   }, [onPill, t, target])
@@ -379,6 +395,23 @@ export function ChromeNav() {
   const glint = useMotionTemplate`radial-gradient(180px 90px at ${glintX}px 0px, var(--chrome-glint), transparent 70%)`
 
   const flow = reduce ? { duration: 0 } : { type: 'spring' as const, visualDuration: 0.5, bounce: 0.3 }
+
+  // The panel's metal: grows out of the bar, flows between menus, melts back up
+  const drop = {
+    className: 'absolute left-0 top-0',
+    style: { background: 'var(--chrome-sheen)', borderRadius: PANEL_RADIUS },
+    initial: { x: anchor - 20, y: pillBottom - 20, width: 40, height: 40 },
+    animate: { x, y: top, width: w, height: h },
+    exit: {
+      x: anchor - 30,
+      y: pillBottom - 30,
+      width: 60,
+      height: 30,
+      opacity: 0,
+      transition: { duration: reduce ? 0 : 0.28, ease: 'easeIn' as const },
+    },
+    transition: flow,
+  }
 
   return (
     // The bar sits centred, high enough that the tallest menu still fits below it
@@ -433,30 +466,33 @@ export function ChromeNav() {
               ) : null}
               {ready
                 ? [0.2, 0.4, 0.6, 0.8].map((k, i) => (
-                    <TendrilBead key={k} from={[bulgeX, bulgeY]} to={[panelCx, panelTop]} k={k} size={[26, 22, 20, 24][i]} />
+                    <TendrilBead key={k} from={[bulgeX, bulgeY]} to={[panelCx, panelTop]} k={k} size={[24, 22, 22, 24][i]} />
                   ))
                 : null}
-              {ready ? (
-                <motion.div
-                  key='drop'
-                  className='absolute left-0 top-0 rounded-[22px]'
-                  style={{ background: 'var(--chrome-sheen)' }}
-                  initial={{ x: cx - 20, y: pillBottom - 20, width: 40, height: 40 }}
-                  animate={{ x, y: top, width: w, height: h, opacity: 1 }}
-                  // Melts back up into the bar
-                  exit={{
-                    x: cx - 30,
-                    y: pillBottom - 30,
-                    width: 60,
-                    height: 30,
-                    opacity: 0,
-                    transition: { duration: reduce ? 0 : 0.28, ease: 'easeIn' },
-                  }}
-                  transition={flow}
-                />
-              ) : null}
+              {ready ? <motion.div key='drop' {...drop} /> : null}
             </AnimatePresence>
           </div>
+
+          {/* The goo rounds every corner its own way. A crisp copy on top pins the strip and
+              the settled panel to their real radii; the melting stays where the tendril joins */}
+          {pill ? (
+            <div
+              className='absolute rounded-full'
+              style={{ left: pill.x, top: pillY, width: pill.w, height: PILL_H, background: 'var(--chrome-bead)' }}
+            />
+          ) : null}
+          <AnimatePresence>
+            {ready ? (
+              <motion.div
+                key='crisp'
+                {...drop}
+                initial={{ ...drop.initial, opacity: 0 }}
+                animate={{ ...drop.animate, opacity: 1 }}
+                exit={{ ...drop.exit, opacity: 0, transition: { duration: 0.06 } }}
+                transition={{ ...flow, opacity: { duration: 0.15, delay: reduce ? 0 : 0.3 } }}
+              />
+            ) : null}
+          </AnimatePresence>
         </div>
 
         <div ref={barRef} className='relative flex h-14 items-center'>
@@ -510,8 +546,8 @@ export function ChromeNav() {
               key='content'
               ref={nav.panelRef}
               id={`chrome-nav-${menu!.id}`}
-              className='absolute left-0 z-10 overflow-hidden rounded-[22px] text-[color:var(--chrome-ink)]'
-              style={{ top }}
+              className='absolute left-0 z-10 overflow-hidden text-[color:var(--chrome-ink)]'
+              style={{ top, borderRadius: PANEL_RADIUS }}
               initial={{ x, width: w, height: h, opacity: 0 }}
               animate={{ x, width: w, height: h, opacity: 1 }}
               exit={{ opacity: 0, transition: { duration: 0.08 } }}
