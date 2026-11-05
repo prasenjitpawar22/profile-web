@@ -1,0 +1,544 @@
+/* The pane: dark, slightly recessed glass. The condensation is painted on a canvas
+   behind a transparent native input, so typing, caret, selection, paste and
+   password managers all keep working. Every colour is a token; the canvas
+   reads the --mist-* ones and repaints when the theme flips. */
+.mist-field {
+  /* Light mode: the pane sits on a pale card, so it is denser to hold contrast */
+  --mist-pane-top: rgba(18, 40, 66, 0.84);
+  --mist-pane-bottom: rgba(30, 56, 86, 0.74);
+  --mist-pane-hairline: rgba(255, 255, 255, 0.22);
+  --mist-pane-hairline-focus: rgba(255, 255, 255, 0.4);
+  --mist-pane-lip: rgba(255, 255, 255, 0.5);
+  --mist-ring: rgba(60, 130, 210, 0.42);
+
+  /* A thin icy haze over the dark pane; the crystals carry the whiteness */
+  /* Condensation: a grey haze, beads of water, the water a wipe gathers */
+  --mist-film-top: rgba(176, 188, 204, 0.38);
+  --mist-film-bottom: rgba(146, 158, 178, 0.34);
+  --mist-water: rgba(214, 226, 242, 0.22);
+  --mist-bead: rgba(246, 250, 255, 1);
+  /* The password behind the mist: lamp light, blurred past reading */
+  --mist-glow: rgba(255, 200, 140, 0.8);
+  --mist-glow-core: rgba(255, 244, 226, 1);
+  --mist-text: #f6fbff;
+  --mist-text-shadow: rgba(0, 18, 40, 0.45);
+  --mist-caret: #8cc4ff;
+  --mist-placeholder: rgba(238, 245, 255, 0.84);
+  --mist-selection: rgba(120, 180, 255, 0.38);
+
+  --mist-control-bg: rgba(255, 255, 255, 0.28);
+  --mist-control-bg-hover: rgba(255, 255, 255, 0.36);
+  --mist-control-bg-held: rgba(255, 255, 255, 0.44);
+  --mist-control-ink: #23476b;
+  --mist-control-edge: rgba(255, 255, 255, 0.6);
+  --mist-control-focus: rgba(60, 130, 210, 0.9);
+
+  position: relative;
+  isolation: isolate;
+  height: 50px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--mist-pane-top), var(--mist-pane-bottom));
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px var(--mist-pane-hairline),
+    0 1px 0 var(--mist-pane-lip);
+  transition: box-shadow 160ms ease-out;
+}
+
+/* Dark mode: a lighter pane, and ice dimmed so it doesn't glare at night */
+.dark .mist-field {
+  --mist-pane-top: rgba(8, 22, 40, 0.58);
+  --mist-pane-bottom: rgba(16, 36, 60, 0.46);
+  --mist-pane-hairline: rgba(255, 255, 255, 0.16);
+  --mist-pane-hairline-focus: rgba(255, 255, 255, 0.3);
+  --mist-pane-lip: rgba(255, 255, 255, 0.16);
+  --mist-ring: rgba(150, 200, 255, 0.42);
+
+  --mist-film-top: rgba(150, 162, 184, 0.32);
+  --mist-film-bottom: rgba(120, 132, 156, 0.28);
+  --mist-water: rgba(200, 214, 236, 0.18);
+  --mist-bead: rgba(232, 240, 252, 0.95);
+  --mist-glow: rgba(255, 190, 130, 0.72);
+  --mist-glow-core: rgba(255, 238, 214, 0.95);
+
+  --mist-control-bg: rgba(255, 255, 255, 0.24);
+  --mist-control-bg-hover: rgba(255, 255, 255, 0.32);
+  --mist-control-bg-held: rgba(255, 255, 255, 0.4);
+  --mist-control-edge: rgba(255, 255, 255, 0.55);
+  --mist-control-focus: rgba(170, 215, 255, 0.95);
+}
+
+.mist-field:focus-within {
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px var(--mist-pane-hairline-focus),
+    0 0 0 3px var(--mist-ring);
+}
+
+.mist-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.mist-input {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 52px 0 14px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  /* Monospace so every character sits exactly over its bullet */
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: transparent;
+  caret-color: var(--mist-caret);
+}
+
+.mist-input::placeholder {
+  color: var(--mist-placeholder);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.mist-input::selection {
+  background: var(--mist-selection);
+}
+
+/* Autofill would paint the real text and a coloured fill over the mist */
+.mist-input:-webkit-autofill,
+.mist-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: transparent;
+  transition: background-color 99999s;
+}
+
+.mist-reveal {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 5px;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: var(--mist-control-bg);
+  color: var(--mist-control-ink);
+  box-shadow:
+    inset 0 0 0 1px var(--mist-control-edge),
+    0 1px 2px rgba(10, 30, 60, 0.18);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 160ms ease-out;
+}
+
+.mist-reveal svg {
+  transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mist-reveal[aria-pressed='true'] {
+  transform: scale(0.92);
+  background: var(--mist-control-bg-held);
+  cursor: grabbing;
+}
+
+/* The drop squashes a little under the finger */
+.mist-reveal[aria-pressed='true'] svg {
+  transform: scale(1.08, 0.9) translateY(1px);
+}
+
+.mist-reveal:focus-visible {
+  outline: 2px solid var(--mist-control-focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mist-reveal:hover {
+    background: var(--mist-control-bg-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mist-field,
+  .mist-reveal,
+  .mist-reveal svg {
+    transition: none;
+  }
+}
+
+/* Rainy window (Lab): a rainy car window behind a card of clear liquid glass. The glass takes its
+   colour from the scene, reads as a thick slab at the rim and keeps its ink
+   readable. Every colour is a token; light mode is an overcast rainy day with
+   dark ink, dark mode a rainy city night with light ink. */
+.rainy-window {
+  /* Static fallback when WebGL is unavailable */
+  --scene-sky: linear-gradient(180deg, #aab6c6 0%, #dde2ea 100%);
+  /* The street outside (sRGB hex; the shader converts to linear light).
+     By day: an overcast street, lights faint, the glass misted pale */
+  --night-day: 1;
+  --night-sky-top: #8e9aac;
+  --night-sky-horizon: #c9cdd3;
+  --night-ground: #3e444c;
+  --night-building: #5d6672;
+  --night-warm: #ffb366;
+  --night-white: #fff0dc;
+  --night-cool: #b8d2ff;
+  --night-red: #ff3a2a;
+  --night-neon-a: #ff4f9e;
+  --night-neon-b: #3ae0cf;
+  --night-lamp: 0.22;
+  --night-windows: 0.12;
+  --night-exposure: 0.95;
+  /* Lens blur radius, in CSS px */
+  --night-blur: 10;
+  --night-drop: #ffffff;
+  --night-haze: #dfe4ea;
+
+  /* Light glass, dark ink */
+  --glass-tint: rgba(255, 255, 255, 0.2);
+  --glass-filter: blur(2px) saturate(180%) brightness(1.06);
+  --glass-edge:
+    inset 1.5px 1.5px 1px -1px rgba(255, 255, 255, 0.95),
+    inset -1.5px -1.5px 1px -1px rgba(255, 255, 255, 0.55),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.3),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    0 6px 24px rgba(0, 0, 0, 0.08);
+  --glass-inner-light: rgba(255, 255, 255, 0.3);
+  --glass-inner-glow:
+    inset 2px 3px 10px -5px rgba(255, 255, 255, 0.75),
+    inset -2px -3px 10px -5px rgba(0, 0, 0, 0.12);
+  --ink-blend: multiply;
+
+  --ink: rgba(0, 0, 0, 0.86);
+  /* Darker than the spec's rgb(60 60 67 / 70%): needed to pass 4.5:1 here */
+  --ink-2: rgba(40, 40, 48, 0.8);
+  --ink-3: rgba(40, 40, 48, 0.8);
+  --ink-link: rgba(0, 0, 0, 0.86);
+  --ink-error: #a8261c;
+
+  /* A lighter layer of the glass, never a grey wash */
+  --mark-bg: rgba(255, 255, 255, 0.42);
+  --mark-edge: rgba(255, 255, 255, 0.8);
+  --mark-ink: rgba(0, 0, 0, 0.86);
+
+  --field-top: rgba(18, 40, 66, 0.84);
+  --field-bottom: rgba(30, 56, 86, 0.74);
+  --field-hairline: rgba(255, 255, 255, 0.22);
+  --field-hairline-focus: rgba(255, 255, 255, 0.4);
+  --field-ink: #f3f8fd;
+  --field-ring: rgba(60, 110, 220, 0.42);
+
+  --submit-from: #ffffff;
+  --submit-to: #eef1fb;
+  --submit-ink: #121633;
+  --submit-edge: rgba(16, 20, 58, 0.1);
+  --submit-shadow: rgba(30, 36, 92, 0.3);
+  --focus: rgba(60, 110, 220, 0.9);
+
+  --glass-solid: #e9ecfb;
+}
+
+.dark .rainy-window {
+  --scene-sky: linear-gradient(180deg, #02040a 0%, #1a1420 60%, #07080c 100%);
+  --night-day: 0;
+  --night-sky-top: #02040a;
+  --night-sky-horizon: #3a2418;
+  --night-ground: #07080c;
+  --night-building: #0c1018;
+  --night-warm: #ffa64d;
+  --night-white: #ffe7c7;
+  --night-cool: #9cc0ff;
+  --night-red: #ff2b1c;
+  --night-neon-a: #ff3d96;
+  --night-neon-b: #22e0c8;
+  --night-lamp: 1;
+  --night-windows: 1;
+  --night-exposure: 1.1;
+  --night-blur: 13;
+  --night-drop: #cfe0ff;
+  --night-haze: #1a2132;
+
+  /* Dark glass: dims like a multiply with black instead of going muddy */
+  --glass-tint: rgba(20, 20, 24, 0.24);
+  --glass-filter: blur(2px) saturate(160%) brightness(0.8);
+  --glass-edge:
+    inset 1.5px 1.5px 1px -1px rgba(255, 255, 255, 0.34),
+    inset -1.5px -1.5px 1px -1px rgba(255, 255, 255, 0.18),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.35),
+    0 6px 24px rgba(0, 0, 0, 0.3);
+  --glass-inner-light: rgba(255, 255, 255, 0.1);
+  --glass-inner-glow:
+    inset 2px 3px 10px -5px rgba(255, 255, 255, 0.25),
+    inset -2px -3px 10px -5px rgba(0, 0, 0, 0.3);
+  --ink-blend: plus-lighter;
+
+  --ink: rgba(255, 255, 255, 0.94);
+  --ink-2: rgba(235, 235, 245, 0.7);
+  --ink-3: rgba(235, 235, 245, 0.7);
+  --ink-link: rgba(255, 255, 255, 0.94);
+  --ink-error: #ffd0c4;
+
+  --mark-bg: rgba(255, 255, 255, 0.12);
+  --mark-edge: rgba(255, 255, 255, 0.3);
+  --mark-ink: rgba(255, 255, 255, 0.94);
+
+  --field-top: rgba(8, 12, 40, 0.46);
+  --field-bottom: rgba(8, 12, 40, 0.36);
+  --field-hairline: rgba(255, 255, 255, 0.14);
+  --field-hairline-focus: rgba(255, 255, 255, 0.3);
+  --field-ring: rgba(160, 180, 255, 0.45);
+
+  --submit-to: #e6e9fb;
+  --submit-edge: rgba(20, 24, 80, 0.12);
+  --submit-shadow: rgba(2, 4, 24, 0.5);
+  --focus: rgba(180, 195, 255, 0.95);
+
+  --glass-solid: #1c1f3a;
+}
+
+.rainy-window {
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* Its size comes from whoever places it */
+  padding: 24px 16px;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--scene-sky);
+}
+
+/* The window, drawn by a shader under everything else */
+.rainy-window-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* The four declarations that make a surface glass; the rim lens is appended
+   to backdrop-filter at runtime in Chromium */
+.glass-card {
+  position: relative;
+  width: 100%;
+  max-width: 352px;
+  padding: 28px 26px 22px;
+  border-radius: 24px;
+  background: var(--glass-tint);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--glass-edge);
+  color: var(--ink);
+}
+/* Inner light: a highlight from the top left and soft glows inside the rim */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: radial-gradient(120% 90% at 0% 0%, var(--glass-inner-light), rgba(255, 255, 255, 0) 55%);
+  box-shadow: var(--glass-inner-glow);
+  pointer-events: none;
+}
+.glass-card > * {
+  position: relative;
+  z-index: 1;
+}
+/* Everything drawn on the glass blends with it */
+.glass-mark,
+.glass-title,
+.glass-sub,
+.glass-field label,
+.glass-label-row a,
+.glass-note,
+.glass-foot {
+  mix-blend-mode: var(--ink-blend);
+}
+
+.glass-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  background: var(--mark-bg);
+  box-shadow: inset 0 0 0 1px var(--mark-edge);
+  color: var(--mark-ink);
+}
+
+.glass-title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.glass-sub {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.glass-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.glass-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.glass-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.glass-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.glass-label-row a,
+.glass-foot a {
+  color: var(--ink-link);
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 150ms ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .glass-label-row a:hover,
+  .glass-foot a:hover {
+    color: var(--ink);
+  }
+}
+
+.glass-input {
+  height: 46px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  outline: 0;
+  background: linear-gradient(180deg, var(--field-top), var(--field-bottom));
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px var(--field-hairline);
+  color: var(--field-ink);
+  font: inherit;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  transition: box-shadow 160ms ease-out;
+}
+.glass-input::placeholder {
+  color: color-mix(in srgb, var(--field-ink) 55%, transparent);
+}
+.glass-input:focus-visible {
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px var(--field-hairline-focus),
+    0 0 0 3px var(--field-ring);
+}
+
+.glass-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.glass-error {
+  color: var(--ink-error);
+  /* Failures keep their red */
+  mix-blend-mode: normal;
+}
+
+.glass-submit {
+  height: 44px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--submit-from), var(--submit-to));
+  box-shadow:
+    inset 0 0 0 1px var(--submit-edge),
+    0 6px 16px -6px var(--submit-shadow);
+  color: var(--submit-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 160ms ease-out;
+}
+.glass-submit:active {
+  transform: scale(0.97);
+}
+.glass-submit:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+.glass-submit:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.glass-foot {
+  margin: 18px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 480px) {
+  .glass-card {
+    padding: 24px 18px 20px;
+    border-radius: 22px;
+  }
+}
+
+/* Reduced transparency and forced colours: a solid surface in the same tint */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-card {
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+@media (forced-colors: active) {
+  .glass-card {
+    background: Canvas;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .glass-card *,
+  .glass-card::before {
+    mix-blend-mode: normal;
+  }
+}

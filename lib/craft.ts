@@ -1,9 +1,10 @@
 export type CraftCredit = { label: string; href: string }
 
 /** Which section of the Lab an experiment sits in */
-export type CraftGroup = 'generative' | 'ai' | 'components'
+export type CraftGroup = 'pages' | 'generative' | 'ai' | 'components'
 
 export const craftGroups: { id: CraftGroup; title: string }[] = [
+  { id: 'pages', title: 'Pages' },
   { id: 'generative', title: 'Generative' },
   { id: 'ai', title: 'AI interactions' },
   { id: 'components', title: 'Components' },
@@ -22,6 +23,14 @@ export type CraftItem = {
 }
 
 export const craftItems: CraftItem[] = [
+  {
+    slug: 'rainy-window',
+    group: 'pages',
+    wide: true,
+    title: 'Rainy window',
+    description:
+      'A sign-in screen behind a car window on a rainy night. The password sits under misted glass, where it shows only as blurred lamp light. Hold the drop and wipe across to read it; the mist creeps back once you let go. Outside, drops merge and run down the glass, and the street pulls into focus while you wipe.',
+  },
   {
     slug: 'logogram',
     group: 'generative',
