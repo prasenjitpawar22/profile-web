@@ -95,8 +95,9 @@ export const craftItems: CraftItem[] = [
     slug: 'thinking-indicator',
     group: 'ai',
     title: 'Thinking indicator',
+    wide: true,
     description:
-      'An AI reasoning trace that searches, opens its sources and ticks off each step, then folds away while the answer streams in, burst by burst.',
+      'An AI agent’s work, shown as it happens: the files it read, what it searched and which lines it landed on. Any step reopens, and each sentence of the answer leads back to where it came from.',
   },
   {
     slug: 'smart-paste',
