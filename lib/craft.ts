@@ -100,6 +100,14 @@ export const craftItems: CraftItem[] = [
       'An AI agent’s work, shown as it happens: the files it read, what it searched and which lines it landed on. Any step reopens, and each sentence of the answer leads back to where it came from.',
   },
   {
+    slug: 'agent-states',
+    group: 'ai',
+    title: 'Agent states',
+    wide: true,
+    description:
+      'Thirteen things an AI agent can be doing, from thinking and planning to waiting for you, all played by one orb of dots. Pick a state and the same dots take it up, or leave it alone and it runs through a whole session.',
+  },
+  {
     slug: 'smart-paste',
     group: 'ai',
     title: 'Smart paste',
