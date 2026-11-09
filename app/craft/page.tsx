@@ -5,6 +5,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { AiEditReview } from '@/components/weekend-components/ai-edit-review'
 import { BranchingChat } from '@/components/weekend-components/branching-chat'
 import { AgentPermission } from '@/components/weekend-components/agent-permission'
+import { AgentRunMap } from '@/components/weekend-components/agent-run-map'
 import { AgentStates } from '@/components/weekend-components/agent-states'
 import { AiThinking } from '@/components/weekend-components/ai-thinking'
 import { NaturalDateInput } from '@/components/weekend-components/natural-date-input'
@@ -51,6 +52,7 @@ const demos: Record<string, React.ReactNode> = {
   'thinking-indicator': <AiThinking />,
   'agent-permission': <AgentPermission />,
   'agent-states': <AgentStates />,
+  'agent-run-map': <AgentRunMap />,
   'smart-paste': <SmartPaste />,
   'ai-edit-review': <AiEditReview />,
   'optimistic-rollback': <OptimisticRollback />,

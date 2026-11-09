@@ -117,6 +117,14 @@ export const craftItems: CraftItem[] = [
       'Thirteen things an AI agent can be doing, from thinking and planning to waiting for you, all played by one orb of dots. Pick a state and the same dots take it up, or leave it alone and it runs through a whole session.',
   },
   {
+    slug: 'agent-run-map',
+    group: 'agentic',
+    title: 'Agent run map',
+    wide: true,
+    description:
+      'An AI agent’s run, grown as a slime mould. Each tool it reaches for sprouts a flake, routes thicken with every call, and paths it gives up on wither away, leaving a map of how the work went. Drag a flake and the network reroutes.',
+  },
+  {
     slug: 'smart-paste',
     group: 'ai',
     title: 'Smart paste',
