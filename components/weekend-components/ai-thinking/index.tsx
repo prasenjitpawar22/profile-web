@@ -8,7 +8,6 @@ import {
 } from 'motion/react'
 import { Check, ChevronRight, RotateCcw } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { DotStar } from './dot-star'
 import {
   ACTIONS,
   Action,
@@ -22,8 +21,6 @@ import {
   SENTENCES,
   SettledBadge,
   ease,
-  moodOf,
-  pagesOpened,
   useRun,
 } from './shared'
 import './ai-thinking.css'
@@ -163,15 +160,6 @@ function Trace({
 
   return (
     <div className='thinking-root relative w-full'>
-      {/* Behind everything: a field of dots across the card */}
-      <DotStar
-        text={textRef}
-        step={moodOf(r.step)}
-        sources={pagesOpened(r.step)}
-        leaving={r.settled}
-        resting={complete}
-        reduce={reduce}
-      />
       <LiveStatus
         phase={r.phase}
         step={r.step}
@@ -179,14 +167,10 @@ function Trace({
         thoughtFor={r.thoughtFor}
       />
 
-      {/* One column, like a transcript. Its minimum holds the card's height through the
-          run, and the dots keep their strength anywhere the text hasn't reached */}
-      <div className='pointer-events-none relative mx-auto flex min-h-[620px] w-full max-w-[640px] flex-col gap-5 md:min-h-[486px]'>
+      {/* One column, like a transcript. Its minimum holds the card's height through the run */}
+      <div className='relative mx-auto flex min-h-[620px] w-full max-w-[640px] flex-col gap-5 md:min-h-[486px]'>
         <QuestionBubble />
-        <div
-          ref={textRef}
-          className='pointer-events-auto flex min-w-0 flex-col'
-        >
+        <div ref={textRef} className='flex min-w-0 flex-col'>
           <aside aria-label='What it did' className='min-w-0'>
             <div className='flex h-7 items-center justify-between gap-3 text-[13px] leading-[18px]'>
               <AnimatePresence mode='popLayout' initial={false}>

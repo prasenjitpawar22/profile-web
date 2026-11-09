@@ -1,5 +1,4 @@
-/* The trace sits on the card itself, with dots passing behind it. Muted text is stronger
-   here than on the page, so it holds 4.5:1 even with a dot right behind it. */
+/* Muted text is stronger here than on the page, so it holds 4.5:1 at the trace's small sizes. */
 .thinking-root {
   --muted-foreground: 0 0% 38%;
 }
