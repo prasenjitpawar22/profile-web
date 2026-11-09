@@ -8,7 +8,7 @@ import {
   Twitch,
 } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { MouseEvent, useId, useRef, useState } from 'react'
+import { MouseEvent, useEffect, useId, useRef, useState } from 'react'
 import useMeasure from 'react-use-measure'
 import { AppWindowMacIcon } from './app-window-mac-icon'
 import { CodeIcon } from './code-icon'
@@ -66,10 +66,23 @@ const CLOSE = { duration: 0.18, ease: [0.23, 1, 0.32, 1] } as const
 export const DynamicActionBar = () => {
   const [active, setActive] = useState<TabId | null>(null)
   const pointerType = useRef('mouse')
+  const barRef = useRef<HTMLDivElement>(null)
   const panelId = useId()
+  const pillId = useId()
   const reduceMotion = useReducedMotion()
   // Animate to the measured height so switching tabs resizes smoothly too
   const [contentRef, { height }] = useMeasure()
+
+  // Touch has no pointer to move away, so a tap anywhere else closes it
+  const isOpen = active !== null
+  useEffect(() => {
+    if (!isOpen) return
+    const onPointerDown = (e: PointerEvent) => {
+      if (!barRef.current?.contains(e.target as Node)) setActive(null)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => document.removeEventListener('pointerdown', onPointerDown)
+  }, [isOpen])
 
   const tab = TABS.find((t) => t.id === active)
   const transition = reduceMotion ? { duration: 0 } : SPRING
@@ -84,7 +97,10 @@ export const DynamicActionBar = () => {
   return (
     <div className='flex h-[260px] w-full items-end justify-center'>
       <div
-        onMouseLeave={() => setActive(null)}
+        ref={barRef}
+        // Mouse only. A tap ends with the touch pointer "leaving" too, which
+        // used to close the panel in the same breath that opened it.
+        onPointerLeave={(e) => e.pointerType === 'mouse' && setActive(null)}
         onKeyDown={(e) => e.key === 'Escape' && setActive(null)}
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node)) setActive(null)
@@ -161,13 +177,26 @@ export const DynamicActionBar = () => {
               }}
               onClick={(e) => onTabClick(e, t.id)}
               className={cn(
-                'flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                'relative flex flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-xs transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 active === t.id
-                  ? 'bg-foreground text-background'
-                  : 'text-muted-foreground hover:text-foreground',
+                  ? 'text-background'
+                  : 'text-muted-foreground [@media(hover:hover)]:hover:text-foreground',
               )}>
-              <t.Icon />
-              {t.label}
+              {/* One highlight for the whole bar: sweeping across the tabs
+                  it slides between them, where three separate backgrounds
+                  would blink off and on */}
+              {active === t.id ? (
+                <motion.span
+                  aria-hidden
+                  layoutId={pillId}
+                  transition={transition}
+                  className='absolute inset-0 rounded-xl bg-foreground'
+                />
+              ) : null}
+              <span className='relative flex items-center gap-1.5'>
+                <t.Icon />
+                {t.label}
+              </span>
             </motion.button>
           ))}
         </div>

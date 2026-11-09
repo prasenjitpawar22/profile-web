@@ -96,9 +96,11 @@ export function AgentStates() {
       className='flex w-full flex-col items-center justify-center gap-6 md:flex-row md:gap-16'>
       <AgentOrb state={current} className='w-[280px] max-w-full shrink-0' />
 
-      <div className='flex flex-col gap-2 md:gap-3'>
+      {/* Side by side the states sit in their four groups. Stacked, the groups
+          dissolve into one centred run, which wraps evenly at any width. */}
+      <div className='flex flex-wrap justify-center gap-1 md:flex-col md:flex-nowrap md:gap-3'>
         {GROUPS.map((group) => (
-          <div key={group[0].id} className='flex flex-wrap justify-center gap-1 md:justify-start'>
+          <div key={group[0].id} className='contents md:flex md:flex-wrap md:gap-1'>
             {group.map(({ id, label }) => (
               <button
                 key={id}
@@ -118,7 +120,7 @@ export function AgentStates() {
           </div>
         ))}
 
-        <div className='flex justify-center md:justify-start'>
+        <div className='flex w-full justify-center md:justify-start'>
           <button
             type='button'
             onClick={toggleRun}

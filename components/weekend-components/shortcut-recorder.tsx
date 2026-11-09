@@ -3,7 +3,7 @@
 import { useIsMac } from '@/hooks/use-is-mac'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react'
-import { KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, ReactNode, forwardRef, useEffect, useRef, useState } from 'react'
 
 /* ============================================================
    Shortcut recorder — the settings field for key bindings.
@@ -432,17 +432,14 @@ function ShortcutRow({
   )
 }
 
-function Keycap({
-  pressed,
-  reduceMotion,
-  children,
-}: {
-  pressed: boolean
-  reduceMotion: boolean
-  children: ReactNode
-}) {
+// popLayout measures an exiting keycap through its ref, so it must take one
+const Keycap = forwardRef<
+  HTMLElement,
+  { pressed: boolean; reduceMotion: boolean; children: ReactNode }
+>(function Keycap({ pressed, reduceMotion, children }, ref) {
   return (
     <motion.kbd
+      ref={ref}
       layout={reduceMotion ? false : 'position'}
       initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
       // Held keys sit a pixel lower and lose their edge, like a real key going down
@@ -462,7 +459,7 @@ function Keycap({
       {children}
     </motion.kbd>
   )
-}
+})
 
 function SmallButton({
   onClick,

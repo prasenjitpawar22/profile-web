@@ -12,6 +12,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { Root } from '@radix-ui/react-portal'
@@ -88,18 +89,9 @@ const closeTransition: Transition = {
 
 export const Drawer = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
   ({ children, ...props }, ref) => {
-    const { setOpen } = useDrawer()
-
     return (
       <DrawerProvider>
-        <motion.div
-          {...props}
-          className='relative'
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setOpen(false)
-            }
-          }}>
+        <motion.div ref={ref} {...props} className='relative'>
           {children}
         </motion.div>
       </DrawerProvider>
@@ -191,6 +183,8 @@ export const DrawerTigger = forwardRef<ElementRef<'button'>, DrawerTiggerProps>(
     return (
       <Comp
         ref={ref}
+        aria-haspopup='dialog'
+        aria-expanded={open}
         {...props}
         onClick={() => {
           setOpen(true)
@@ -221,6 +215,15 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
     const { drawerRef, setOpen, y, open } = useDrawer()
     const dragControls = useDragControls()
     const reduceMotion = useReducedMotion()
+    const sheetRef = useRef<HTMLElement | null>(null)
+    const closing = useRef(false)
+    const setSheet = useCallback(
+      (el: HTMLElement | null) => {
+        sheetRef.current = el
+        drawerRef(el)
+      },
+      [drawerRef],
+    )
 
     // Slide in by animating the shared y value itself. The portal attaches its
     // element a frame late, so initial/animate props on it never get to run.
@@ -239,14 +242,64 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
     // craft page already uses 'drawer' as an anchor for its demo card.
     // The overlay fades off the same value, so the two can't drift apart.
     const handleClose = useCallback(async () => {
+      // A second Escape or backdrop click mid-close would restart the slide
+      if (closing.current) return
+      closing.current = true
       if (!reduceMotion) await framerAnimate(y, offscreenY(), closeTransition)
+      closing.current = false
       setOpen(false)
     }, [setOpen, y, reduceMotion])
+
+    // It's a modal: focus moves into the sheet and stays there, Escape closes
+    // it from wherever focus is, and focus goes back to whatever opened it.
+    useEffect(() => {
+      if (!open) return
+      const opener = document.activeElement as HTMLElement | null
+      // The portal attaches a frame late, so the sheet isn't there to focus yet
+      const raf = requestAnimationFrame(() =>
+        sheetRef.current?.focus({ preventScroll: true }),
+      )
+
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          handleClose()
+          return
+        }
+        const sheet = sheetRef.current
+        if (e.key !== 'Tab' || !sheet) return
+        const stops = sheet.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        )
+        const first = stops[0]
+        const last = stops[stops.length - 1]
+        const active = document.activeElement
+        if (!first) e.preventDefault()
+        else if (e.shiftKey && (active === first || active === sheet)) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+
+      document.addEventListener('keydown', onKeyDown)
+      return () => {
+        cancelAnimationFrame(raf)
+        document.removeEventListener('keydown', onKeyDown)
+        opener?.focus({ preventScroll: true })
+      }
+    }, [open, handleClose])
 
     return (
       open && (
         <MotionPortal
-          ref={drawerRef}
+          ref={setSheet}
+          role='dialog'
+          aria-modal='true'
+          aria-label='Drawer'
+          tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
           drag='y'
           dragControls={dragControls}
@@ -260,19 +313,14 @@ export const DrawerPortal = forwardRef<ElementRef<'div'>, DrawerPortalProps>(
               handleClose()
             }
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              handleClose()
-            }
-          }}
-          className="border-t bottom-0 fixed bg-background z-50 h-[75vh] w-full after:top-[100%] rounded-t-3xl after:content-[''] after:bg-inherit after:w-full after:h-[90%] after:absolute"
+          className="border-t bottom-0 fixed bg-background z-50 h-[75vh] w-full after:top-[100%] rounded-t-3xl outline-none after:content-[''] after:bg-inherit after:w-full after:h-[90%] after:absolute"
           {...props}>
           <DrawerPortalContext.Provider value={{ handleClose }}>
             <motion.span
               style={{ touchAction: 'none' }}
               onPointerDown={(e) => dragControls?.start(e)}
-              className='w-full inline-flex items-center justify-center'>
-              <span className='h-2 w-14 rounded-full bg-muted'></span>
+              className='inline-flex w-full cursor-grab items-center justify-center py-3 active:cursor-grabbing'>
+              <span className='h-1.5 w-12 rounded-full bg-muted-foreground/30'></span>
             </motion.span>
             {children}
           </DrawerPortalContext.Provider>

@@ -211,9 +211,13 @@ export function AiEditReview() {
       const frame = text.getBoundingClientRect()
       const half = (toolbarRef.current?.offsetWidth ?? 0) / 2
       const x = box.left - frame.left + box.width / 2
+      // Kept inside the card even when the suggestion sits at an edge. The
+      // card pads the text by 16px, and the toolbar may use most of that.
+      const min = half - 12
+      const max = frame.width + 12 - half
       setAnchor({
-        // Kept inside the card even when the suggestion sits at an edge
-        x: Math.min(Math.max(x, half), frame.width - half),
+        // Wider than the card allows (a narrow phone): centre it
+        x: min > max ? frame.width / 2 : Math.min(Math.max(x, min), max),
         y: box.top - frame.top,
       })
     }
@@ -461,7 +465,10 @@ function ToolbarButton({
       )}>
       {children}
       {label}
-      <span aria-hidden className='text-[10px] text-muted-foreground/70'>
+      {/* No keyboard on a touch screen, and the room is needed there */}
+      <span
+        aria-hidden
+        className='text-[10px] text-muted-foreground/70 [@media(pointer:coarse)]:hidden'>
         {keyHint}
       </span>
     </button>
