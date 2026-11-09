@@ -4,6 +4,7 @@ import { DrawerComp } from '@/components/drawer'
 import { SiteFooter } from '@/components/site-footer'
 import { AiEditReview } from '@/components/weekend-components/ai-edit-review'
 import { BranchingChat } from '@/components/weekend-components/branching-chat'
+import { AgentPermission } from '@/components/weekend-components/agent-permission'
 import { AgentStates } from '@/components/weekend-components/agent-states'
 import { AiThinking } from '@/components/weekend-components/ai-thinking'
 import { NaturalDateInput } from '@/components/weekend-components/natural-date-input'
@@ -48,6 +49,7 @@ const demos: Record<string, React.ReactNode> = {
   'reveal-calendar': <RevealCalendar />,
   'branching-chat': <BranchingChat />,
   'thinking-indicator': <AiThinking />,
+  'agent-permission': <AgentPermission />,
   'agent-states': <AgentStates />,
   'smart-paste': <SmartPaste />,
   'ai-edit-review': <AiEditReview />,
@@ -78,6 +80,17 @@ export default function Page() {
           Weekend experiments in interaction and motion. Some are rebuilt from
           work that caught my eye, credited where they came from.
         </p>
+
+        <nav aria-label='Lab sections' className='mt-4 flex flex-wrap gap-x-4 text-sm'>
+          {craftGroups.map((group) => (
+            <a
+              key={group.id}
+              href={`#${group.id}`}
+              className='inline-flex min-h-10 touch-manipulation items-center rounded-sm text-muted-foreground transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:min-h-8 [@media(hover:hover)]:hover:text-foreground'>
+              {group.title}
+            </a>
+          ))}
+        </nav>
       </div>
 
       {/* Wider than the reading column, so two demos can sit side by side */}

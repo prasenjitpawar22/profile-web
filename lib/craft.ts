@@ -1,11 +1,12 @@
 export type CraftCredit = { label: string; href: string }
 
 /** Which section of the Lab an experiment sits in */
-export type CraftGroup = 'pages' | 'generative' | 'ai' | 'components'
+export type CraftGroup = 'pages' | 'generative' | 'agentic' | 'ai' | 'components'
 
 export const craftGroups: { id: CraftGroup; title: string }[] = [
   { id: 'pages', title: 'Pages' },
   { id: 'generative', title: 'Generative' },
+  { id: 'agentic', title: 'Agentic' },
   { id: 'ai', title: 'AI interactions' },
   { id: 'components', title: 'Components' },
 ]
@@ -93,15 +94,23 @@ export const craftItems: CraftItem[] = [
   },
   {
     slug: 'thinking-indicator',
-    group: 'ai',
+    group: 'agentic',
     title: 'Thinking indicator',
     wide: true,
     description:
       'An AI agent’s work, shown as it happens: the files it read, what it searched and which lines it landed on. Any step reopens, and each sentence of the answer leads back to where it came from.',
   },
   {
+    slug: 'agent-permission',
+    group: 'agentic',
+    title: 'Agent permission',
+    wide: true,
+    description:
+      'An AI agent fixing a bug stops before anything risky. Running the tests takes one click, but pushing to production shows what will ship and has to be held down. Either way you can type what it should do instead, and it carries on from there.',
+  },
+  {
     slug: 'agent-states',
-    group: 'ai',
+    group: 'agentic',
     title: 'Agent states',
     wide: true,
     description:
