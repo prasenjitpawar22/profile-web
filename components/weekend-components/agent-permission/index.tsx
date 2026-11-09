@@ -1,9 +1,10 @@
 'use client'
 
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Check, CheckCheck, CloudUpload, TriangleAlert, X } from 'lucide-react'
 import { AnimatePresence, motion, useInView } from 'motion/react'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { Agent, Ask, Btn, COMMITS, Command, Frame, Swap, useAgent } from './shared'
+import { ICON_STROKE } from './task-icon'
 import './agent-permission.css'
 
 /* An agent at work that stops before anything risky. A harmless ask is a click. A serious one
@@ -12,6 +13,7 @@ import './agent-permission.css'
    sentence of the answer leads back to the task behind it. */
 
 const HOLD_MS = 900
+const DONE_BEAT_MS = 260
 const allowOnlyIfLow = (ask: Ask) => ask.risk === 'low'
 const INSTEAD = 'Or tell it what to do instead'
 
@@ -19,6 +21,8 @@ function HoldButton({ label, onDone }: { label: string; onDone: () => void }) {
   const [holding, setHolding] = useState(false)
   // A quick tap does nothing by design, so it has to say why
   const [nudge, setNudge] = useState(false)
+  const [done, setDone] = useState(false)
+  const doneTimer = useRef(0)
   const timer = useRef(0)
   const nudgeTimer = useRef(0)
   const pressed = useRef(false)
@@ -34,7 +38,9 @@ function HoldButton({ label, onDone }: { label: string; onDone: () => void }) {
     setHolding(true)
     timer.current = window.setTimeout(() => {
       fired.current = true
-      onDone()
+      setDone(true)
+      // A beat for the finished state to land before the card closes
+      doneTimer.current = window.setTimeout(onDone, DONE_BEAT_MS)
     }, HOLD_MS)
   }
   const cancel = () => {
@@ -58,6 +64,7 @@ function HoldButton({ label, onDone }: { label: string; onDone: () => void }) {
       window.removeEventListener('blur', cancel)
       clearTimeout(timer.current)
       clearTimeout(nudgeTimer.current)
+      clearTimeout(doneTimer.current)
     }
   }, [])
 
@@ -66,6 +73,7 @@ function HoldButton({ label, onDone }: { label: string; onDone: () => void }) {
     <button
       type='button'
       data-holding={holding || undefined}
+      data-done={done || undefined}
       onPointerDown={(e) => {
         if (e.button === 0) start()
       }}
@@ -85,11 +93,26 @@ function HoldButton({ label, onDone }: { label: string; onDone: () => void }) {
         if (e.detail === 0 && Date.now() - lastInput.current > 500) onDone()
       }}
       aria-label={`Press and hold to ${label.toLowerCase()}`}
-      className='perm-hold relative h-11 min-w-0 flex-1 touch-manipulation select-none overflow-hidden rounded-[var(--perm-inner)] bg-foreground text-[13px] font-medium text-background [-webkit-touch-callout:none] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'>
-      {/* The sweep sits under the label, so the words never change colour mid-hold */}
-      <span aria-hidden className='perm-hold-fill absolute inset-0 bg-background/30' />
+      className='perm-hold perm-t-label relative h-11 min-w-0 flex-[999_1_176px] touch-manipulation select-none overflow-hidden rounded-[var(--perm-inner)] font-medium [-webkit-touch-callout:none] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'>
+      {/* The sweep sits under the label, and moves the green away from the text colour so the
+          words stay readable through the whole hold */}
+      <span aria-hidden className='perm-hold-fill absolute inset-0' />
       <span className='absolute inset-0 grid place-items-center'>
-        <Swap id={nudge ? 'nudge' : 'hold'}>{nudge ? 'Keep holding' : text}</Swap>
+        <Swap id={done ? 'done' : nudge ? 'nudge' : 'hold'} className='inline-flex items-center gap-1.5 whitespace-nowrap'>
+          {done ? (
+            <>
+              <Check aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
+              Pushing
+            </>
+          ) : nudge ? (
+            'Keep holding'
+          ) : (
+            <>
+              <CloudUpload aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
+              {text}
+            </>
+          )}
+        </Swap>
       </span>
     </button>
   )
@@ -113,14 +136,14 @@ function InsteadField({ agent }: { agent: Agent }) {
         autoComplete='off'
         data-1p-ignore
         data-lpignore='true'
-        className='h-11 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground [@media(hover:hover)]:text-[13px]'
+        className='h-11 min-w-0 flex-1 bg-transparent text-base leading-5 outline-none placeholder:text-muted-foreground [@media(hover:hover)]:text-[13px]'
       />
       <button
         type='submit'
         aria-label='Send this instead'
         disabled={!text.trim()}
         className='relative flex h-[calc(2.75rem-2*var(--perm-inset))] w-[calc(2.75rem-2*var(--perm-inset))] shrink-0 items-center justify-center rounded-[var(--perm-innermost)] bg-foreground text-background transition-[background-color,color,transform] duration-150 ease-out before:absolute before:-inset-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.96] disabled:bg-foreground/10 disabled:text-muted-foreground motion-reduce:active:scale-100'>
-        <ArrowUp className='h-4 w-4' aria-hidden />
+        <ArrowUp className='h-4 w-4' strokeWidth={ICON_STROKE} aria-hidden />
       </button>
     </form>
   )
@@ -130,10 +153,13 @@ function HighStakes({ agent, ask }: { agent: Agent; ask: Ask }) {
   return (
     <div className='perm-raised my-1.5 flex flex-col gap-3 rounded-[var(--perm-radius)] bg-background p-[var(--perm-pad)]'>
       <div className='flex flex-col gap-3 px-1 pt-1'>
-        <p className='text-sm font-medium leading-5 [text-wrap:pretty]'>{ask.why}</p>
+        <p className='perm-t-title flex gap-2 font-medium [text-wrap:pretty]'>
+          <TriangleAlert aria-hidden strokeWidth={ICON_STROKE} className='mt-[3px] h-3.5 w-3.5 shrink-0' />
+          {ask.why}
+        </p>
         <ul className='flex flex-col gap-1.5'>
           {COMMITS.map((c) => (
-            <li key={c.sha} className='flex gap-2.5 text-xs leading-[18px]'>
+            <li key={c.sha} className='perm-t-small flex gap-2.5'>
               <code className='shrink-0 font-mono text-muted-foreground'>{c.sha}</code>
               <span className='min-w-0 break-words'>{c.message}</span>
             </li>
@@ -141,9 +167,12 @@ function HighStakes({ agent, ask }: { agent: Agent; ask: Ask }) {
         </ul>
       </div>
       <div className='flex flex-col gap-1.5'>
-        <div className='flex items-center gap-1.5'>
+        {/* Side by side while the label fits on one line. Below that the buttons stack, each
+            full width: the growth ratio only shows once this one is alone on its row */}
+        <div className='flex flex-wrap items-center gap-1.5'>
           <HoldButton label={ask.allow} onDone={() => agent.decide('once')} />
-          <Btn hint='N' className='h-11 shrink-0 md:h-11' onClick={() => agent.decide('deny')}>
+          <Btn hint='N' className='!h-11 shrink-0 grow justify-center pl-2.5' onClick={() => agent.decide('deny')}>
+            <X aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
             {ask.deny}
           </Btn>
         </div>
@@ -155,20 +184,23 @@ function HighStakes({ agent, ask }: { agent: Agent; ask: Ask }) {
 
 function LowStakes({ agent, ask }: { agent: Agent; ask: Ask }) {
   return (
-    <div className='mb-2 ml-[2.5px] flex flex-col gap-1.5 border-l py-0.5 pl-[13px]'>
+    <div className='mb-2 ml-[6.5px] flex flex-col gap-1.5 border-l py-0.5 pl-[14.5px]'>
       {/* The row can shorten a command. What you approve is the whole thing */}
       <Command text={ask.command} />
       <div className='flex flex-wrap items-center gap-x-1 gap-y-1'>
-        <p className='w-full text-xs leading-[18px] text-muted-foreground [text-wrap:pretty] sm:w-auto sm:min-w-[180px] sm:flex-1'>
+        <p className='perm-t-small w-full text-muted-foreground [text-wrap:pretty] sm:w-auto sm:min-w-[180px] sm:flex-1'>
           {ask.why}
         </p>
-        <Btn hint='Y' onClick={() => agent.decide('once')}>
+        <Btn hint='Y' className='pl-2.5' onClick={() => agent.decide('once')}>
+          <Check aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
           Allow
         </Btn>
-        <Btn kind='text' hint='A' onClick={() => agent.decide('always')}>
+        <Btn kind='text' hint='A' className='pl-2.5' onClick={() => agent.decide('always')}>
+          <CheckCheck aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
           Always
         </Btn>
-        <Btn kind='text' hint='N' onClick={() => agent.decide('deny')}>
+        <Btn kind='text' hint='N' className='pl-2.5' onClick={() => agent.decide('deny')}>
+          <X aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
           {ask.deny}
         </Btn>
       </div>
@@ -184,11 +216,13 @@ export function AgentPermission() {
   const [run, setRun] = useState(0)
   return (
     <div ref={rootRef} tabIndex={-1} className='flex w-full justify-center outline-none'>
-      {/* A replay fades through rather than cutting to an empty card */}
-      <AnimatePresence mode='wait' initial={false}>
+      {/* A replay fades through rather than cutting to an empty card. No initial={false} here:
+          it would also block the entrance of everything mounted inside, for the whole run */}
+      <AnimatePresence mode='wait'>
         <motion.div
           key={run}
-          initial={{ opacity: 0 }}
+          // First paint is already there from the server; only a replay fades in
+          initial={run === 0 ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.12 } }}
           transition={{ duration: 0.2 }}

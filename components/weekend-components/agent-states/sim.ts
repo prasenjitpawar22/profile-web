@@ -4,7 +4,11 @@
 // now". Springs carry the dots there, so changing state never swaps anything
 // out: the same dots travel from one shape to the next.
 
-import { P } from './tuning'
+import { P as LAB_TUNING, type Tuning } from './tuning'
+
+// The settings of the orb being worked on. Orbs at different sizes are tuned differently, and
+// every entry point below sets this first; nothing here is asynchronous, so they can't overlap
+let P: Tuning = LAB_TUNING
 
 export type StateId =
   | 'idle'
@@ -467,34 +471,35 @@ const DEFS: Record<StateId, Def> = {
   // One last sweep, then the darkness drains inward from the rim until only
   // a small dark core is left in the still orb
   ended: {
-    spin: (st) => (st < 0.9 ? 0.1 : 0),
-    spinRate: 4,
+    // One sweep down the orb to say it's done, then back to resting exactly as Idle does
+    spin: (st) => (st < 0.9 ? 0.1 : P.idle.spin),
+    spinRate: 3,
     k: 120,
     ratio: 0.92,
     target(g, i, c) {
-      const { sweep, gather, final, dim } = P.ended
+      const { sweep } = P.ended
+      const { breath } = P.idle
       const st = c.st
-      shell(g, i, c.spin, 0)
-      const rho = Math.min(1, Math.hypot(X, Y))
+      shell(g, i, c.spin, c.t)
       const b = gauss(Y - (-1.3 + (st / 0.85) * 2.6), 0.26) * (1 - smooth(0.85, 1, st))
-      const leave = 0.9 + (1 - rho) * gather
-      const gone = smooth(leave, leave + 0.35, st)
-      const core = 1 - smooth(final * 0.8, final * 1.25, rho)
+      const rest = 1 - breath + breath * Math.sin(c.t * 1.05)
       tx = X
       ty = Y
-      ts = lerp(S * (1 + sweep * b), lerp(S * 0.85, S * 1.7, core), gone)
-      ta = clamp(lerp(A + sweep * 0.85 * b, lerp(A * dim, 1, core), gone))
+      ts = S * (1 + sweep * b)
+      ta = clamp(lerp(A + sweep * 0.85 * b, A * rest, smooth(0.85, 1.3, st)))
     },
   },
 }
 
 export type Sim = ReturnType<typeof createSim>
 
-export function createSim(count: number, state: StateId) {
+export function createSim(count: number, state: StateId, tuning: Tuning = LAB_TUNING) {
+  P = tuning
   const g = geometry(count)
   const sim = {
     g,
     state,
+    tuning,
     t: 0,
     st: 0,
     spin: 0,
@@ -545,6 +550,7 @@ const POSTER: Record<StateId, number> = {
 
 /** Jump straight to a still frame of the state, for reduced motion */
 export function settleSim(sim: Sim, state: StateId, size: number) {
+  P = sim.tuning
   sim.state = state
   sim.st = POSTER[state]
   sim.spin = 0
@@ -566,6 +572,7 @@ const unitsToDot = (size: number) => (size * ORB) / dotRadius(size)
 
 export function stepSim(sim: Sim, rawDt: number, size: number) {
   if (sim.state === 'paused') return
+  P = sim.tuning
   const def = DEFS[sim.state]
   const { g, x, y, vx, vy, s, a } = sim
   // Speed stretches time itself, so every curve keeps its shape
@@ -609,6 +616,7 @@ export function alphaStyles([r, g, b]: [number, number, number]) {
 }
 
 export function drawSim(ctx: CanvasRenderingContext2D, sim: Sim, size: number, styles: string[]) {
+  P = sim.tuning
   const { x, y, s, a, order, bucket, start } = sim
   const n = sim.g.n
   const c = size / 2

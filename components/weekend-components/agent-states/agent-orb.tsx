@@ -12,15 +12,25 @@ import {
   type Sim,
   type StateId,
 } from './sim'
+import { LOCKUP_P, type Tuning } from './tuning'
 
 type AgentOrbProps = {
   state: StateId
   count?: number
+  /** The orb's numbers, for a size that needs its own. Keep the reference stable */
+  tuning?: Tuning
   /** Tailwind sizing classes; the orb is always square */
   className?: string
 }
 
-export function AgentOrb({ state, count = 1600, className = 'w-[280px]' }: AgentOrbProps) {
+/**
+ * The orb beside a status line, tuned by eye in /proto/agent-indicator. The canvas keeps 12% of
+ * its width empty on each side, so the margins pull the visible orb flush with the rows below
+ * and leave 8px to the status text.
+ */
+export const ORB_LOCKUP = { count: 100, tuning: LOCKUP_P, className: '-ml-[4.32px] mr-[3.68px] w-9 shrink-0' }
+
+export function AgentOrb({ state, count = 1600, tuning, className = 'w-[280px]' }: AgentOrbProps) {
   const reduce = useReducedMotion()
   const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -35,7 +45,7 @@ export function AgentOrb({ state, count = 1600, className = 'w-[280px]' }: Agent
     const ctx = canvas?.getContext('2d')
     if (!wrap || !canvas || !ctx) return
 
-    const sim = createSim(count, stateRef.current)
+    const sim = createSim(count, stateRef.current, tuning)
     simRef.current = sim
     let styles: string[] = []
     let size = 0
@@ -116,7 +126,7 @@ export function AgentOrb({ state, count = 1600, className = 'w-[280px]' }: Agent
       mo.disconnect()
       document.removeEventListener('visibilitychange', sync)
     }
-  }, [count, reduce])
+  }, [count, tuning, reduce])
 
   useEffect(() => {
     stateRef.current = state

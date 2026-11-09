@@ -19,10 +19,12 @@ import {
   LiveStatus,
   QuestionBubble,
   SENTENCES,
-  SettledBadge,
   ease,
   useRun,
 } from './shared'
+import { TaskIcon } from '../agent-permission/task-icon'
+import { AgentOrb, ORB_LOCKUP } from '../agent-states/agent-orb'
+import type { StateId } from '../agent-states/sim'
 import './ai-thinking.css'
 
 /* The agent's work, as it happens. Each thing it does becomes a row: the file it read and
@@ -62,11 +64,13 @@ export function AiThinking() {
       tabIndex={-1}
       className='flex w-full justify-center outline-none'
     >
-      {/* A replay fades through rather than cutting to an empty card */}
-      <AnimatePresence mode='wait' initial={false}>
+      {/* A replay fades through rather than cutting to an empty card. No initial={false} here:
+          it would also block the entrance of everything mounted inside, for the whole run */}
+      <AnimatePresence mode='wait'>
         <motion.div
           key={run}
-          initial={{ opacity: 0 }}
+          // First paint is already there from the server; only a replay fades in
+          initial={run === 0 ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.12 } }}
           transition={{ duration: 0.2 }}
@@ -95,6 +99,15 @@ function Trace({
 }) {
   const reduce = useReducedMotion() ?? false
   const r = useRun(started)
+  const orb: StateId = !started
+    ? 'idle'
+    : r.phase === 'complete'
+      ? 'ended'
+      : r.phase === 'answering' || ACTIONS[r.step]?.verb === 'Write'
+        ? 'responding'
+        : r.step < 0
+          ? 'queued'
+          : 'thinking'
   const textRef = useRef<HTMLDivElement>(null)
   const complete = r.phase === 'complete'
   const answering = r.phase === 'answering' || complete
@@ -105,10 +118,6 @@ function Trace({
   const [pinned, setPinned] = useState<number | null>(null)
   const [hoverS, setHoverS] = useState<number | null>(null)
   const [hoverRow, setHoverRow] = useState<string | null>(null)
-  const badgeDrawn = useRef(false)
-  useEffect(() => {
-    if (r.settled) badgeDrawn.current = true
-  }, [r.settled])
 
   const activeId = !r.settled && r.step >= 0 ? ACTIONS[r.step].id : null
   const shownId = openId ?? activeId
@@ -168,11 +177,13 @@ function Trace({
       />
 
       {/* One column, like a transcript. Its minimum holds the card's height through the run */}
-      <div className='relative mx-auto flex min-h-[620px] w-full max-w-[640px] flex-col gap-5 md:min-h-[486px]'>
+      <div className='relative mx-auto flex min-h-[620px] w-full max-w-[640px] flex-col gap-5 md:min-h-[496px]'>
         <QuestionBubble />
         <div ref={textRef} className='flex min-w-0 flex-col'>
           <aside aria-label='What it did' className='min-w-0'>
-            <div className='flex h-7 items-center justify-between gap-3 text-[13px] leading-[18px]'>
+            <div className='flex h-[38px] items-center text-[13px] leading-5'>
+              <AgentOrb state={orb} {...ORB_LOCKUP} />
+              <div className='relative flex min-w-0 flex-col'>
               <AnimatePresence mode='popLayout' initial={false}>
                 <motion.span
                   key={r.settled ? 'done' : r.step < 0 ? 'starting' : 'working'}
@@ -180,18 +191,13 @@ function Trace({
                   animate={{ opacity: 1, y: 0 }}
                   exit={swapOut(reduce)}
                   transition={SWAP}
-                  className={`font-medium ${r.settled ? 'flex items-center gap-2' : 'text-shimmer'}`}
+                  className={`font-medium ${r.settled ? '' : 'text-shimmer'}`}
                 >
-                  {r.settled ? (
-                    <>
-                      <SettledBadge draw={!reduce && !badgeDrawn.current} />
-                      Thought for {r.thoughtFor}s
-                    </>
-                  ) : r.step < 0 ? (
-                    'Starting'
-                  ) : (
-                    'Working'
-                  )}
+                  {r.settled
+                    ? `Thought for ${r.thoughtFor}s`
+                    : r.step < 0
+                      ? 'Starting'
+                      : 'Working'}
                 </motion.span>
               </AnimatePresence>
               <AnimatePresence mode='popLayout' initial={false}>
@@ -208,6 +214,7 @@ function Trace({
                     : `${Math.floor(r.elapsed)}s`}
                 </motion.span>
               </AnimatePresence>
+              </div>
             </div>
 
             <ul className='mt-1.5 flex flex-col'>
@@ -327,9 +334,11 @@ function Row({
   const file = action.target.slice(slash)
   const face = (
     <>
-      <span
-        aria-hidden
-        className={`h-1.5 w-1.5 shrink-0 rounded-full ${active ? 'breathe bg-foreground' : 'bg-foreground/30'}`}
+      <TaskIcon
+        verb={action.verb}
+        running={active}
+        denied={false}
+        className={`h-3.5 w-3.5 shrink-0 transition-colors duration-200 ${active ? 'text-foreground' : 'text-muted-foreground'}`}
       />
       <span
         className={`w-[72px] shrink-0 text-[13px] font-medium ${active ? 'text-shimmer' : ''}`}
@@ -403,8 +412,8 @@ function Row({
               exit={reduce ? { opacity: 0 } : CONTENT_OUT}
               transition={{ duration: 0.28, ease }}
               style={{ transformOrigin: 'top left' }}
-              // A guide line down from the row's dot; nothing here is a card
-              className='mb-1.5 ml-[2.5px] border-l pl-[13px]'
+              // A guide line down from the centre of the row's icon; nothing here is a card
+              className='mb-1.5 ml-[6.5px] border-l pl-[14.5px]'
             >
               <DetailView
                 detail={action.detail}

@@ -350,26 +350,6 @@ function Caret() {
   )
 }
 
-/** The one accent moment in the run: thinking is done */
-export function SettledBadge({ draw }: { draw: boolean }) {
-  return (
-    <svg viewBox='0 0 16 16' aria-hidden className='h-4 w-4'>
-      <circle cx='8' cy='8' r='7' className='fill-grass' />
-      <motion.path
-        d='M5 8.25l2 2 4-4.5'
-        fill='none'
-        strokeWidth='1.75'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        className='stroke-background'
-        initial={{ pathLength: draw ? 0 : 1 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 0.25, ease, delay: 0.05 }}
-      />
-    </svg>
-  )
-}
-
 export function IconButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
   return (
     <button

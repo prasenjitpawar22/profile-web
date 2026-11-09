@@ -2,12 +2,16 @@
 
 import { ChevronRight, RotateCcw } from 'lucide-react'
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react'
+import { AgentOrb, ORB_LOCKUP } from '../agent-states/agent-orb'
+import { useRunOrbState } from '../agent-states/use-run-orb-state'
+import { ICON_STROKE, TaskIcon } from './task-icon'
 import {
   ButtonHTMLAttributes,
   Fragment,
   ReactNode,
   useCallback,
   useEffect,
+  useId,
   useRef,
   useState,
 } from 'react'
@@ -284,7 +288,7 @@ export function useAgent({
     return decisions[steps[n].id] === 'deny' ? 'denied' : 'done'
   }
 
-  return { rootRef, i, phase, steps, waiting, decisions, notes, elapsed, waited, decide, statusOf }
+  return { rootRef, started, i, phase, steps, waiting, decisions, notes, elapsed, waited, decide, statusOf }
 }
 
 export type Agent = ReturnType<typeof useAgent>
@@ -341,7 +345,7 @@ function TracedAnswer({
 }) {
   return (
     <div className='mt-4 flex flex-col gap-3 border-t pt-4'>
-      <p className='break-words text-sm leading-6'>
+      <p className='perm-t-body break-words [text-wrap:pretty]'>
         {sentences.map((sentence, s) => (
           <Fragment key={s}>
             {s > 0 ? ' ' : null}
@@ -378,9 +382,9 @@ function TracedAnswer({
           aria-label='Replay'
           title='Replay'
           className='relative grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition-[color,background-color,transform] duration-150 ease-out before:absolute before:-inset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.96] motion-reduce:active:scale-100 [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground'>
-          <RotateCcw aria-hidden className='h-3.5 w-3.5' />
+          <RotateCcw aria-hidden strokeWidth={ICON_STROKE} className='h-3.5 w-3.5' />
         </button>
-        <span className='grid text-xs text-muted-foreground'>
+        <span className='perm-t-small grid text-muted-foreground'>
           <Swap id={pinned !== null ? 'clear' : 'trace'}>
             {pinned !== null ? 'Select it again to clear' : 'Select a sentence to trace it'}
           </Swap>
@@ -392,16 +396,31 @@ function TracedAnswer({
 
 // ---- things that arrive -------------------------------------------------------------
 
-/** Grows from zero so what's below starts where it is. Its content arrives nearly full size */
-export function Collapse({ children }: { children: ReactNode }) {
+/** How far a raised card's edge and shadow reach past its box: 10px down + 24px blur − 8px spread */
+const SHADOW_REACH = 26
+
+// Clips only the edge that's growing. overflow-hidden would also cut anything painted outside
+// the box, like a card's ring and shadow, at the sides
+const clipBelow = (bleed: number) => `inset(0px -${SHADOW_REACH}px ${-bleed}px -${SHADOW_REACH}px)`
+
+/**
+ * Grows from zero so what's below starts where it is. Its content arrives nearly full size.
+ * `raised` is for a card with a shadow: the bottom clip opens as it grows, so the shadow lands
+ * with the card instead of appearing when it's done.
+ */
+export function Collapse({ raised = false, children }: { raised?: boolean; children: ReactNode }) {
   const reduce = useReducedMotion() ?? false
+  const closed = clipBelow(0)
+  const open = clipBelow(raised ? SHADOW_REACH : 0)
   return (
     <motion.div
-      initial={reduce ? { opacity: 0 } : { height: 0 }}
-      animate={reduce ? { opacity: 1 } : { height: 'auto' }}
-      exit={reduce ? { opacity: 0 } : { height: 0, transition: CLOSE }}
+      initial={reduce ? { opacity: 0 } : { height: 0, clipPath: closed }}
+      animate={reduce ? { opacity: 1 } : { height: 'auto', clipPath: open }}
+      exit={reduce ? { opacity: 0 } : { height: 0, clipPath: closed, transition: CLOSE }}
       transition={OPEN}
-      className='overflow-hidden'>
+      // flow-root keeps the content's margins inside the height being animated
+      className='flow-root'
+      style={{ clipPath: open }}>
       <motion.div
         initial={reduce ? false : { opacity: 0, y: -6, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -486,7 +505,7 @@ function DetailView({ detail, live }: { detail: Detail; live: boolean }) {
       tabIndex={0}
       role='group'
       aria-label={label}
-      className='max-h-[180px] overflow-auto py-1 font-mono text-[11.5px] leading-[18px] [scrollbar-width:thin] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring'>
+      className='max-h-[188px] overflow-auto py-1 font-mono text-xs leading-5 [scrollbar-width:thin] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring'>
       <div className={`w-max min-w-full ${detail.kind === 'matches' ? 'flex flex-col gap-2' : ''}`}>
         {detail.kind === 'code'
           ? detail.lines.map((line, i) => (
@@ -556,6 +575,7 @@ function TraceRow({
   const canOpen = hasDetail && !running
   // The task at work is always open; anything else opens by hand
   const showDetail = hasDetail && (running || byHand)
+  const detailId = useId()
   const slash = step.target.lastIndexOf('/') + 1
   const isFile = slash > 0 && !step.target.includes(' ')
   return (
@@ -574,27 +594,25 @@ function TraceRow({
           if (e.pointerType === 'mouse' && canOpen) onHover(step.id)
         }}
         onPointerLeave={() => onHover(null)}
-        aria-expanded={canOpen ? byHand : undefined}
-        className={`flex h-10 w-full items-center gap-2 rounded-sm text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-8 [@media(hover:hover)]:enabled:hover:text-foreground ${
+        aria-expanded={hasDetail ? showDetail : undefined}
+        aria-controls={showDetail ? detailId : undefined}
+        // Bleeds past the column so the hover shape has room without moving the row's contents
+        className={`group/row -mx-2 flex h-10 w-[calc(100%+1rem)] touch-manipulation select-none items-center gap-2 rounded-lg px-2 text-left transition-[color,background-color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring enabled:active:bg-foreground/[0.07] md:h-8 [@media(hover:hover)]:enabled:hover:bg-foreground/[0.04] [@media(hover:hover)]:enabled:hover:text-foreground ${
           dim ? 'text-muted-foreground' : running || waiting || byHand ? 'text-foreground' : 'text-foreground/85'
         }`}>
-        <span
-          aria-hidden
-          className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-200 ${
-            running
-              ? 'breathe bg-foreground'
-              : waiting
-                ? 'bg-foreground'
-                : status === 'denied'
-                  ? 'bg-transparent ring-1 ring-inset ring-foreground/40'
-                  : 'bg-foreground/30'
+        <TaskIcon
+          verb={step.verb}
+          running={running}
+          denied={status === 'denied'}
+          className={`h-3.5 w-3.5 shrink-0 transition-colors duration-200 ${
+            running || waiting ? 'text-foreground' : 'text-muted-foreground'
           }`}
         />
-        <span className={`w-[72px] shrink-0 text-[13px] font-medium ${running ? 'text-shimmer' : ''}`}>
+        <span className={`perm-t-label w-[60px] shrink-0 font-medium ${running ? 'text-shimmer' : ''}`}>
           {step.verb}
         </span>
         <span
-          className={`min-w-0 flex-1 truncate font-mono text-xs ${status === 'denied' ? 'line-through decoration-foreground/40' : ''}`}
+          className={`min-w-0 flex-1 truncate font-mono text-xs leading-[18px] ${status === 'denied' ? 'line-through decoration-foreground/40' : ''}`}
           title={step.target}>
           {isFile ? (
             <>
@@ -607,26 +625,37 @@ function TraceRow({
           )}
         </span>
         {meta ? (
-          <span className='grid shrink-0 justify-items-end text-xs tabular-nums'>
+          <span className='perm-t-small grid shrink-0 justify-items-end tabular-nums'>
             <Swap id={meta}>{meta}</Swap>
           </span>
         ) : null}
         {/* Always in the layout, so a row that becomes openable doesn't shift */}
+        {/* Says what the row is doing now: pointing down whenever it's open, by hand or at work */}
         <ChevronRight
           aria-hidden
-          className={`h-3.5 w-3.5 shrink-0 transition-[opacity,transform] duration-200 motion-reduce:transition-none ${canOpen ? 'opacity-100' : 'opacity-0'} ${byHand ? 'rotate-90' : ''}`}
+          strokeWidth={ICON_STROKE}
+          className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition-[opacity,transform,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none [@media(hover:hover)]:group-enabled/row:group-hover/row:text-foreground ${
+            canOpen ? 'opacity-100' : running && hasDetail ? 'opacity-40' : 'opacity-0'
+          } ${showDetail ? 'rotate-90' : ''}`}
         />
       </button>
       <AnimatePresence>
         {showDetail && step.detail ? (
           <Collapse key='detail'>
-            <div className='mb-1.5 ml-[2.5px] border-l pl-[13px]'>
+            {/* The guide runs down from the centre of the row's icon; its contents line up with the verb */}
+            <div id={detailId} className='mb-1.5 ml-[6.5px] border-l pl-[14.5px]'>
               <DetailView detail={step.detail} live={running} />
             </div>
           </Collapse>
         ) : null}
       </AnimatePresence>
-      <AnimatePresence>{expand ? <Collapse key='ask'>{expand}</Collapse> : null}</AnimatePresence>
+      <AnimatePresence>
+        {expand ? (
+          <Collapse key='ask' raised>
+            {expand}
+          </Collapse>
+        ) : null}
+      </AnimatePresence>
     </motion.li>
   )
 }
@@ -645,6 +674,7 @@ export function Frame({
   const { phase, waiting, i } = agent
   const rows = agent.steps.slice(0, Math.max(i + 1, 0))
   const done = phase === 'done'
+  const orb = useRunOrbState({ started: agent.started, phase, verb: agent.steps[i]?.verb })
   const reduce = useReducedMotion() ?? false
   // A finished row opened by hand
   const [openId, setOpenId] = useState<string | null>(null)
@@ -738,25 +768,28 @@ export function Frame({
     <div
       ref={agent.rootRef}
       tabIndex={-1}
-      className='perm-root mx-auto flex min-h-[620px] w-full max-w-[640px] flex-col gap-5 outline-none md:min-h-[540px]'>
-      <p className='relative max-w-[85%] self-end rounded-2xl rounded-br-md border bg-background px-3.5 py-2 text-sm shadow-sm'>
+      className='perm-root mx-auto flex min-h-[620px] w-full max-w-[640px] flex-col gap-5 outline-none md:min-h-[550px]'>
+      <p className='perm-t-title relative max-w-[85%] self-end rounded-2xl rounded-br-md border bg-background px-3.5 py-2 shadow-sm'>
         {QUESTION}
       </p>
       <span className='sr-only' role='status'>
         {waiting ? `Needs your approval: ${waiting.verb} ${waiting.target}` : ''}
       </span>
       <div className='flex min-w-0 flex-col'>
-        <div className='flex h-7 items-center justify-between gap-3 text-[13px] leading-[18px]'>
+        <div className='perm-t-label flex h-[38px] items-center'>
+          <AgentOrb state={orb} {...ORB_LOCKUP} />
+          <div className='relative flex min-w-0 flex-col'>
           <Swap id={phase} className={`font-medium ${phase === 'working' || phase === 'starting' ? 'text-shimmer' : ''}`}>
             {done ? 'Finished' : phase === 'waiting' ? 'Waiting for you' : phase === 'starting' ? 'Starting' : 'Working'}
           </Swap>
-          <Swap id={phase === 'waiting' ? 'w' : done ? 'd' : 'e'} className='text-xs tabular-nums text-muted-foreground'>
+          <Swap id={phase === 'waiting' ? 'w' : done ? 'd' : 'e'} className='perm-t-small tabular-nums text-muted-foreground'>
             {done
               ? `Worked for ${Math.floor(agent.elapsed)}s`
               : phase === 'waiting'
                 ? `Paused ${Math.floor(agent.waited)}s`
                 : `${Math.floor(agent.elapsed)}s`}
           </Swap>
+          </div>
         </div>
         <ul ref={listRef} className='mt-1.5 flex scroll-mt-6 flex-col'>
           {rows.map((step, n) => {
@@ -814,11 +847,11 @@ export function Btn({
   return (
     <button
       type='button'
-      className={`relative inline-flex h-11 touch-manipulation select-none items-center gap-1.5 whitespace-nowrap rounded-[var(--perm-inner)] px-3 text-[13px] font-medium transition-[transform,background-color,color] duration-150 ease-out before:absolute before:inset-x-0 before:-inset-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.96] motion-reduce:active:scale-100 md:h-9 ${look} ${className}`}
+      className={`relative inline-flex h-11 touch-manipulation select-none items-center gap-1.5 whitespace-nowrap rounded-[var(--perm-inner)] px-3 perm-t-label font-medium transition-[transform,background-color,color] duration-150 ease-out before:absolute before:inset-x-0 before:-inset-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.96] motion-reduce:active:scale-100 md:h-9 ${look} ${className}`}
       {...props}>
       {children}
       {hint ? (
-        <kbd className='font-sans text-[11px] opacity-55 [@media(hover:none)]:hidden'>{hint}</kbd>
+        <kbd className='perm-t-hint font-sans opacity-55 [@media(hover:none)]:hidden'>{hint}</kbd>
       ) : null}
     </button>
   )
