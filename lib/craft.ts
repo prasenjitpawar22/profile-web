@@ -122,7 +122,7 @@ export const craftItems: CraftItem[] = [
     title: 'Agent run map',
     wide: true,
     description:
-      'An AI agent’s run, grown as a slime mould. Each tool it reaches for sprouts a flake, routes thicken with every call, and paths it gives up on wither away, leaving a map of how the work went. Drag a flake and the network reroutes.',
+      'An AI agent’s run, drawn as it happens. Every call runs out to its tool and back, routes thicken with use, a sub-agent calls tools of its own, and a path the agent gives up on stays as a dashed ghost. Point at a tool to see just its calls, or drag it around.',
   },
   {
     slug: 'smart-paste',
