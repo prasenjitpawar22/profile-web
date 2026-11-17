@@ -79,6 +79,13 @@ export const craftItems: CraftItem[] = [
       'Two thousand dots on a slowly spinning globe. Move through it and they spring away from the cursor, overshoot a little, and settle back home.',
   },
   {
+    slug: 'chladni-plate',
+    group: 'generative',
+    title: 'Chladni plate',
+    description:
+      'Sand on a metal plate that rings at a new note every few seconds. The grains get thrown off wherever the plate is shaking and pile up along the lines where it stays still, so each note leaves its own figure behind.',
+  },
+  {
     slug: 'reveal-calendar',
     group: 'components',
     title: 'Reveal calendar',

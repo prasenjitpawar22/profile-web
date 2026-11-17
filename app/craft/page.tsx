@@ -27,6 +27,7 @@ import { SITE_URL } from '@/lib/site'
 import { Metadata } from 'next'
 import RevealCalendar from '@/components/weekend-components/reveal-calender'
 import { ParticleOrb } from '@/components/weekend-components/particle-orb'
+import { ChladniPlate } from '@/components/weekend-components/chladni-plate'
 import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
 import { DustText } from '@/components/weekend-components/dust-text'
 import { Logogram } from '@/components/weekend-components/logogram'
@@ -47,6 +48,7 @@ const demos: Record<string, React.ReactNode> = {
   'morph-nav': <MorphNav />,
   'protein-tracker': <ProteinTracker />,
   'particle-orb': <ParticleOrb />,
+  'chladni-plate': <ChladniPlate />,
   'reveal-calendar': <RevealCalendar />,
   'branching-chat': <BranchingChat />,
   'thinking-indicator': <AiThinking />,
