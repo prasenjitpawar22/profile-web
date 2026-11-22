@@ -38,7 +38,11 @@
     --radius: 0.5rem;
   }
 
-  .dark {
+  /* The Lab is always dark: its page marks itself with data-always-dark, so
+     the root (body background, overscroll, portals) goes dark with it */
+  .dark,
+  :root:has([data-always-dark]) {
+    color-scheme: dark;
     --background: 0 0% 5.5%;
     --foreground: 0 0% 93%;
 
@@ -77,6 +81,9 @@
   }
   body {
     @apply bg-background text-[15px] leading-relaxed text-foreground antialiased;
+    /* Never fake a bold or italic that isn't loaded; a missing file should
+       look obviously wrong, not quietly smudged */
+    font-synthesis: none;
   }
   ::selection {
     @apply bg-grass/25;
@@ -141,6 +148,169 @@
     content: '';
     position: absolute;
     inset: calc(var(--hit-y, 12px) * -1) calc(var(--hit-x, 8px) * -1);
+  }
+
+  /* Theme toggle icons: the one for the other theme is shown. Swapping
+     cross-fades with a deep scale and a touch of blur instead of flipping */
+  .theme-icon {
+    /* The moon's ink sits ~0.6px left and low of its box (the sun's is
+       centred), so it's nudged to its optical centre; without this the icon
+       seems to hop on every switch */
+    --nudge: translate(0px, 0px);
+    /* Stays on its own layer, so finishing the scale doesn't snap a pixel */
+    will-change: transform, opacity, filter;
+    transition:
+      transform 300ms cubic-bezier(0.25, 0.1, 0, 1),
+      opacity 300ms cubic-bezier(0.25, 0.1, 0, 1),
+      filter 300ms cubic-bezier(0.25, 0.1, 0, 1);
+  }
+  .theme-icon[data-theme-icon='moon'] {
+    --nudge: translate(0.5px, -0.5px);
+  }
+  .theme-icon[data-theme-icon='moon'],
+  .dark .theme-icon[data-theme-icon='sun'] {
+    opacity: 1;
+    transform: var(--nudge) scale(1);
+    filter: blur(0px);
+  }
+  .theme-icon[data-theme-icon='sun'],
+  .dark .theme-icon[data-theme-icon='moon'] {
+    opacity: 0;
+    transform: var(--nudge) scale(0.3);
+    filter: blur(3px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* Keep the fade so the change still registers; drop the movement */
+    .theme-icon {
+      transition: opacity 200ms ease;
+      transform: var(--nudge) !important;
+      filter: none !important;
+    }
+  }
+
+  /* Article code blocks (components/code-block.tsx): a tinted card that
+     follows the theme, with nearly monochrome code. Only values take the
+     accent; punctuation and comments step back */
+  .code-block {
+    --code-thumb: rgba(0, 0, 0, 0.2);
+    margin: 1.75em 0;
+    overflow: hidden;
+    border: 1px solid hsl(var(--border));
+    border-radius: 10px;
+    background: hsl(var(--muted) / 0.5);
+  }
+  .dark .code-block {
+    --code-thumb: rgba(255, 255, 255, 0.2);
+  }
+  .code-block-head {
+    display: flex;
+    height: 36px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px 0 16px;
+    border-bottom: 1px solid hsl(var(--border));
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+  }
+  .code-block pre {
+    margin: 0;
+    padding: 14px 16px;
+    overflow-x: auto;
+    background: none;
+    color: hsl(var(--foreground));
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    tab-size: 2;
+  }
+  .code-block pre:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: -2px;
+  }
+  .code-block code {
+    font: inherit;
+  }
+  @supports (scrollbar-color: auto) {
+    .code-block pre {
+      scrollbar-width: thin;
+      scrollbar-color: var(--code-thumb) transparent;
+    }
+  }
+  .code-block .token.comment,
+  .code-block .token.punctuation,
+  .code-block .token.operator {
+    color: hsl(var(--muted-foreground));
+  }
+  .code-block .token.number,
+  .code-block .token.unit,
+  .code-block .token.hexcode,
+  .code-block .token.color,
+  .code-block .token.string,
+  .code-block .token.url {
+    color: hsl(var(--grass));
+  }
+
+  /* Copy button (components/copy-button.tsx): 26px to see, 44px to tap */
+  .copy-button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px; /* the block's 10px corner minus the 6px inset */
+    color: hsl(var(--muted-foreground));
+    touch-action: manipulation;
+    transition:
+      color 150ms ease-out,
+      background-color 150ms ease-out,
+      transform 150ms ease-out;
+  }
+  .copy-button::before {
+    content: '';
+    position: absolute;
+    inset: -9px;
+  }
+  .copy-button:active {
+    transform: scale(0.97);
+  }
+  .copy-button:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 0;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .copy-button:hover {
+      color: hsl(var(--foreground));
+      background: hsl(var(--foreground) / 0.06);
+    }
+  }
+  .copy-button svg {
+    grid-area: 1 / 1;
+    width: 14px;
+    height: 14px;
+    transition:
+      transform 300ms cubic-bezier(0.25, 0.1, 0, 1),
+      opacity 300ms cubic-bezier(0.25, 0.1, 0, 1),
+      filter 300ms cubic-bezier(0.25, 0.1, 0, 1);
+  }
+  .copy-button [data-icon='check'],
+  .copy-button[data-copied] [data-icon='copy'] {
+    opacity: 0;
+    transform: scale(0.3);
+    filter: blur(3px);
+  }
+  .copy-button[data-copied] [data-icon='check'] {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+    color: hsl(var(--grass));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .copy-button svg {
+      transition: opacity 150ms ease;
+      transform: none !important;
+      filter: none !important;
+    }
   }
 
   /* Demos scrolled out of view hold their CSS loops (see DemoStage) */

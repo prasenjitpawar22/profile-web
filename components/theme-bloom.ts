@@ -20,18 +20,35 @@ const WAVES = [
 const easeOut = (t: number) => 1 - (1 - t) * (1 - t)
 const rand = (min: number, max: number) => min + Math.random() * (max - min)
 
+/**
+ * Applies the theme with every colour transition switched off, so the page
+ * snaps to the new theme instead of fading link by link (inside the bloom, or
+ * across the whole page without one). The toggle's own icons are left out,
+ * so their cross-fade still plays.
+ */
+function applySnapped(apply: () => void) {
+  const style = document.createElement('style')
+  style.textContent =
+    '*:not([data-theme-icon]),*::before,*::after{transition:none!important}'
+  document.head.append(style)
+  flushSync(apply)
+  // Resolve the new colours while transitions are still off
+  void getComputedStyle(document.body).color
+  requestAnimationFrame(() => style.remove())
+}
+
 /** Applies the next theme, blooming it out from (x, y) where supported */
 export async function bloomTheme(x: number, y: number, apply: () => void) {
   if (
     typeof document.startViewTransition !== 'function' ||
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ) {
-    apply()
+    applySnapped(apply)
     return
   }
 
   const path = bloomPath(x, y)
-  const vt = document.startViewTransition(() => flushSync(apply))
+  const vt = document.startViewTransition(() => applySnapped(apply))
   try {
     await vt.ready
   } catch {

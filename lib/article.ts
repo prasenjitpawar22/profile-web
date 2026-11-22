@@ -8,12 +8,21 @@ import html from 'remark-html'
 
 const articleDir = path.join(process.cwd(), 'articles')
 
+// Only these are on the site; the other files stay in /articles, unlisted
+const published = ['native-color-math']
+// Every article, for when the rest come back:
+// const published = fs.readdirSync(articleDir).map((f) => f.replace(/\.md$/, ''))
+
+export const isPublished = (id: string) => published.includes(id)
+
 // Front matter dates are written as MM-DD-YY
 const parseDate = (date: string) => moment(date, 'MM-DD-YY')
 const formatDate = (date: string) => parseDate(date).format('MMM D, YYYY')
 
 export const getSortedArticles = async (): Promise<ArticleItem[]> => {
-  const fileNames = fs.readdirSync(articleDir)
+  const fileNames = fs
+    .readdirSync(articleDir)
+    .filter((fileName) => isPublished(fileName.replace(/\.md$/, '')))
   const allArticlesData: ArticleItem[] = fileNames.map((fileName) => {
     const id = fileName.replace(/\.md$/, '')
 

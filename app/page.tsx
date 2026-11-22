@@ -1,9 +1,6 @@
-import { Grass } from '@/components/grass'
-import { PlatformDownloads, ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
-import { projectHref, projects, type Project } from '@/lib/projects'
-import { SiteFooter } from '@/components/site-footer'
-import { getSortedArticles } from '@/lib/article'
-import { craftItems } from '@/lib/craft'
+// import { Grass } from '@/components/grass'
+import { PageTop } from '@/components/page-top'
+import { SocialLinks } from '@/components/social-links'
 import { LAB_URL } from '@/lib/site'
 import Link from 'next/link'
 
@@ -11,155 +8,46 @@ import Link from 'next/link'
 const enter =
   'animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-[400ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:animate-none'
 
-export default async function Home() {
-  const articles = await getSortedArticles()
-  const featured = craftItems.filter((item) => item.featured)
-  const featuredProjects = projects.filter((project) => project.featured)
+const sections = [
+  { name: 'Projects', href: '/projects' },
+  { name: 'Lab', href: LAB_URL },
+  { name: 'Writing', href: '/writing' },
+]
 
+export default function Home() {
   return (
-    <div className='flex flex-1 flex-col'>
+    <div className='flex flex-1 flex-col pb-20 md:pb-28'>
       <div className='page pt-20 md:pt-28'>
-        <header className={enter}>
-          <h1 className='font-medium'>Prasenjit Pawar</h1>
-          <p className='text-muted-foreground'>Software/Design Engineer</p>
-        </header>
+        <PageTop className={enter}>
+          {/* 18px leads the page without shouting; 450, not 500, because
+              Geist is variable and medium read too heavy here */}
+          <h1 className='text-lg font-[450] leading-[1.35] tracking-[-0.005em]'>Prasenjit Pawar</h1>
+          <p className='mt-0.5 text-muted-foreground'>Software/Design Engineer</p>
+        </PageTop>
 
-        <Section
-          title='Projects'
-          className={`${enter} delay-[60ms]`}
-          action={
-            <Link href='/projects' className='link hit-area text-sm'>
-              All projects
-            </Link>
-          }>
-          <ul className='-mx-3'>
-            {featuredProjects.map((project) => (
-              <li key={project.slug}>
-                {project.downloads ? (
-                  // Several downloads: links can't nest, so the item itself isn't one
-                  <div className='flex gap-3 px-3 py-2.5'>
-                    <FeaturedProject project={project} />
-                  </div>
-                ) : (
-                  <Link
-                    href={projectHref(project)}
-                    data-track='project_clicked'
-                    data-track-slug={project.slug}
-                    data-track-source='home'
-                    className='flex gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-                    <FeaturedProject project={project} />
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section
-          title='Lab'
-          className={`${enter} delay-[120ms]`}
-          action={
-            <Link href={LAB_URL} className='link hit-area text-sm'>
-              All experiments
-            </Link>
-          }>
-          <ul className='-mx-3'>
-            {featured.map((item) => (
-              <li key={item.slug}>
+        <nav className={`mt-7 ${enter} delay-[60ms]`}>
+          <ul className='flex gap-4'>
+            {sections.map((section) => (
+              <li key={section.name}>
                 <Link
-                  href={`${LAB_URL}/#${item.slug}`}
-                  data-track='component_clicked'
-                  data-track-slug={item.slug}
-                  data-track-source='home'
-                  className='block rounded-lg px-3 py-2.5 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-                  <span className='block'>{item.title}</span>
-                  <span className='block text-muted-foreground'>
-                    {item.description}
-                  </span>
+                  href={section.href}
+                  data-track='home_section_clicked'
+                  data-track-section={section.name.toLowerCase()}
+                  className='hit-area rounded-sm underline decoration-transparent decoration-[0.09em] underline-offset-4 transition-[text-decoration-color] duration-150 [--hit-x:8px] hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                  {section.name}
                 </Link>
               </li>
             ))}
           </ul>
-        </Section>
+        </nav>
 
-        <Section title='Writing' className={`${enter} delay-[180ms]`}>
-          <ul className='-mx-3'>
-            {articles.map((article) => (
-              <li key={article.id}>
-                <Link
-                  href={`/writing/${article.id}`}
-                  data-track='article_clicked'
-                  data-track-article={article.id}
-                  data-track-source='home'
-                  className='flex items-baseline justify-between gap-6 rounded-lg px-3 py-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-                  <span>{article.title}</span>
-                  <span className='shrink-0 text-sm tabular-nums text-muted-foreground'>
-                    {article.date}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Section>
+        {/* 9px + the icons' 5px padding = 14px of visible space below the links */}
+        <SocialLinks className={`mt-[9px] ${enter} delay-[120ms]`} />
       </div>
 
-      <div className='mt-auto pt-20'>
-        <SiteFooter />
+      {/* <div className='mt-auto pt-20'>
         <Grass />
-      </div>
+      </div> */}
     </div>
-  )
-}
-
-function Section({
-  title,
-  action,
-  className,
-  children,
-}: {
-  title: string
-  action?: React.ReactNode
-  className?: string
-  children: React.ReactNode
-}) {
-  return (
-    <section className={`mt-14 ${className ?? ''}`}>
-      <div className='flex items-baseline justify-between'>
-        <h2 className='text-sm text-muted-foreground'>{title}</h2>
-        {action}
-      </div>
-      <div className='mt-3'>{children}</div>
-    </section>
-  )
-}
-
-function FeaturedProject({ project }: { project: Project }) {
-  return (
-    <>
-      <ProjectIcon project={project} className='mt-0.5' />
-      <span className='min-w-0 flex-1'>
-        <span className='flex items-baseline justify-between gap-4'>
-          <span>
-            {project.downloads && project.caseStudy ? (
-              // The item isn't a link when it has downloads, so the name is
-              <Link
-                href={projectHref(project)}
-                data-track='project_clicked'
-                data-track-slug={project.slug}
-                data-track-source='home'
-                className='rounded-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-                {project.name}
-              </Link>
-            ) : (
-              project.name
-            )}
-            <span className='text-muted-foreground'> · {project.tagline}</span>
-          </span>
-          <ProjectStatusBadge status={project.status} />
-        </span>
-        <span className='block text-muted-foreground'>{project.description}</span>
-        {project.downloads ? <PlatformDownloads downloads={project.downloads} slug={project.slug} className='mt-1.5' /> : null}
-      </span>
-    </>
   )
 }

@@ -1,5 +1,5 @@
 import { BackLink } from '@/components/back-link'
-import { SiteFooter } from '@/components/site-footer'
+import { PageTop } from '@/components/page-top'
 import { getSortedArticles } from '@/lib/article'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -13,26 +13,31 @@ export default async function Page() {
   const articles = await getSortedArticles()
 
   return (
-    <div className='flex flex-1 flex-col'>
+    <div className='flex flex-1 flex-col pb-20 md:pb-28'>
       <div className='page pt-20 md:pt-28'>
-        <BackLink href='/' label='Prasenjit Pawar' />
+        <PageTop>
+          <BackLink href='/' label='Prasenjit Pawar' />
+        </PageTop>
 
-        <h1 className='mt-10 font-medium'>Writing</h1>
+        <h1 className='mt-10 font-[450]'>Writing</h1>
         <p className='text-muted-foreground'>
           Thoughts on software development and design.
         </p>
 
-        <ul className='-mx-3 mt-8'>
+        <ul className='mt-8'>
           {articles.map((article) => (
             <li key={article.id}>
+              {/* No hover fill: like the other pages, only the title underlines */}
               <Link
                 href={`/writing/${article.id}`}
                 data-track='article_clicked'
                 data-track-article={article.id}
                 data-track-source='writing'
-                className='block rounded-lg px-3 py-3 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+                className='group block rounded-sm py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
                 <span className='flex items-baseline justify-between gap-6'>
-                  <span>{article.title}</span>
+                  <span className='underline decoration-transparent decoration-[0.09em] underline-offset-4 transition-[text-decoration-color] duration-150 group-hover:decoration-foreground'>
+                    {article.title}
+                  </span>
                   <span className='shrink-0 text-sm tabular-nums text-muted-foreground'>
                     {article.date}
                   </span>
@@ -46,7 +51,6 @@ export default async function Page() {
         </ul>
       </div>
 
-      <SiteFooter className='mt-auto pt-20' />
     </div>
   )
 }

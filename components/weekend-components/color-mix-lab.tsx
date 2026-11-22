@@ -1,7 +1,7 @@
 'use client'
 
 import { MotionProps, motion, useReducedMotion } from 'motion/react'
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 
 interface ColorMixLabProps extends MotionProps {
   animate?: { '--color': string } & MotionProps['animate']
@@ -58,12 +58,17 @@ export function ColorMixLab() {
           {/* Demonstration Block showing off the CSS color-mix() output */}
           <div
             className='h-24 w-full backdrop-blur-3xl rounded-xl border border-white/5 flex items-center justify-center font-medium shadow-inner transition-colors'
-            style={{
-              backgroundColor: 'color-mix(in srgb, var(--color) 25%, #0f172a)',
-              color:
-                'contrast-color(color-mix(in srgb, var(--color) 100%, #ffffff))',
-            }}>
-            35% Mix Contrast Preview
+            // contrast-color() gets the same color as the background it sits on;
+            // passing the raw accent gave black text on this dark block for
+            // bright picks like yellow
+            style={
+              {
+                '--bg': 'color-mix(in srgb, var(--color) 25%, #0f172a)',
+                backgroundColor: 'var(--bg)',
+                color: 'contrast-color(var(--bg))',
+              } as CSSProperties
+            }>
+            25% mix, contrast text
           </div>
 
           {/* Completely hidden input triggered cleanly via the <label> above */}

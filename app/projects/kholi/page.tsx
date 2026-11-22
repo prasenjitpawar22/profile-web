@@ -1,6 +1,6 @@
 import { BackLink } from '@/components/back-link'
 import { ProjectIcon, ProjectStatusBadge } from '@/components/project-bits'
-import { SiteFooter } from '@/components/site-footer'
+import { PageTop } from '@/components/page-top'
 import { getProject } from '@/lib/projects'
 import { LAB_URL } from '@/lib/site'
 import { ArrowUpRight, Play } from 'lucide-react'
@@ -111,15 +111,17 @@ const next = [
 
 export default function Page() {
   return (
-    <div className='flex flex-1 flex-col'>
+    <div className='flex flex-1 flex-col pb-20 md:pb-28'>
       <div className='page pt-20 md:pt-28'>
-        <BackLink href='/projects' label='Projects' />
+        <PageTop>
+          <BackLink href='/projects' label='Projects' />
+        </PageTop>
 
         <header className={`mt-10 ${enter}`}>
           <div className='flex items-center gap-3'>
             <ProjectIcon project={project} className='h-11 w-11 rounded-xl' />
             <div>
-              <h1 className='font-medium'>{project.name}</h1>
+              <h1 className='font-[450]'>{project.name}</h1>
               <p className='text-muted-foreground'>{project.tagline}</p>
             </div>
           </div>
@@ -289,7 +291,6 @@ export default function Page() {
         </div>
       </div>
 
-      <SiteFooter className='mt-auto pt-20' />
     </div>
   )
 }
