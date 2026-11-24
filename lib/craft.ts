@@ -41,6 +41,14 @@ export const craftItems: CraftItem[] = [
       'An alien symbol writes itself in a ring of churning glyphs, then holds still and breathes. Rest the cursor on it mid-writing to decode the glyphs, drag through it to smear the ink, or click for a new one.',
   },
   {
+    slug: 'code-lens',
+    group: 'generative',
+    wide: true,
+    title: 'Code lens',
+    description:
+      'A page of source hidden in breathing ASCII. Move the loupe over it and the code underneath comes into focus, character by character, in colour. The page is the code that draws it.',
+  },
+  {
     slug: 'dust-text',
     group: 'generative',
     title: 'Dust text',

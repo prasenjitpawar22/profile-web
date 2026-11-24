@@ -30,6 +30,9 @@ import { Metadata } from 'next'
 // import { ProteinTracker } from '@/components/weekend-components/protein-tracker'
 // import { DustText } from '@/components/weekend-components/dust-text'
 import { Logogram } from '@/components/weekend-components/logogram'
+import { CodeLens } from '@/components/weekend-components/code-lens'
+import { readFileSync } from 'fs'
+import path from 'path'
 // import { MorphNav } from '@/components/weekend-components/morph-nav'
 // import { ChromeNav } from '@/components/weekend-components/chrome-nav'
 // import { RainyWindow } from '@/components/weekend-components/rainy-window'
@@ -39,10 +42,14 @@ export const metadata: Metadata = {
   description: 'Weekend experiments in interaction and motion.',
 }
 
+// Code lens reads the file that draws it; read at build time, since the page is static
+const codeLensSource = readFileSync(path.join(process.cwd(), 'components', 'weekend-components', 'code-lens-sim.ts'), 'utf8')
+
 // Only the best ones are on show; the rest are commented out, not deleted
 const demos: Record<string, React.ReactNode> = {
   // 'rainy-window': <RainyWindow />,
   logogram: <Logogram />,
+  'code-lens': <CodeLens source={codeLensSource} />,
   // 'dust-text': <DustText />,
   // 'chrome-nav': <ChromeNav />,
   // 'morph-nav': <MorphNav />,
