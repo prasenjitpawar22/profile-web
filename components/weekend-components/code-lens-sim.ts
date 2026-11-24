@@ -22,7 +22,7 @@ const enum C {
 
 // Tuned in /proto/code-lens
 const P = {
-  radius: 124,
+  radius: 100, // 124 in the full-width prototype, scaled for a half-width card
   mag: 1.35,
   curve: 0.1,
   peak: 18,

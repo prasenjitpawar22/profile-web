@@ -42,8 +42,11 @@ export const metadata: Metadata = {
   description: 'Weekend experiments in interaction and motion.',
 }
 
-// Code lens reads the file that draws it; read at build time, since the page is static
-const codeLensSource = readFileSync(path.join(process.cwd(), 'components', 'weekend-components', 'code-lens-sim.ts'), 'utf8')
+// Code lens reads the file that draws it (at build time, since the page is static),
+// starting at the tokenizer: the densest stretch, so every row is full and colourful
+const codeLensFile = readFileSync(path.join(process.cwd(), 'components', 'weekend-components', 'code-lens-sim.ts'), 'utf8')
+const codeLensStart = codeLensFile.indexOf('/** One class per character')
+const codeLensSource = codeLensStart >= 0 ? codeLensFile.slice(codeLensStart) : codeLensFile
 
 // Only the best ones are on show; the rest are commented out, not deleted
 const demos: Record<string, React.ReactNode> = {
