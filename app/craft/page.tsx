@@ -31,6 +31,7 @@ import { Metadata } from 'next'
 // import { DustText } from '@/components/weekend-components/dust-text'
 import { Logogram } from '@/components/weekend-components/logogram'
 import { CodeLens } from '@/components/weekend-components/code-lens'
+import { Labyrinth } from '@/components/weekend-components/labyrinth'
 import { readFileSync } from 'fs'
 import path from 'path'
 // import { MorphNav } from '@/components/weekend-components/morph-nav'
@@ -53,6 +54,7 @@ const demos: Record<string, React.ReactNode> = {
   // 'rainy-window': <RainyWindow />,
   logogram: <Logogram />,
   'code-lens': <CodeLens source={codeLensSource} />,
+  labyrinth: <Labyrinth />,
   // 'dust-text': <DustText />,
   // 'chrome-nav': <ChromeNav />,
   // 'morph-nav': <MorphNav />,

@@ -47,6 +47,13 @@ export const craftItems: CraftItem[] = [
       'A page of source hidden in breathing ASCII. Move the loupe over it and the code underneath comes into focus, character by character, in colour. The page is the code that draws it.',
   },
   {
+    slug: 'labyrinth',
+    group: 'generative',
+    title: 'Labyrinth',
+    description:
+      'A maze in the dark. Move through it and the light runs down the corridors instead of spreading in a circle, so a cell just behind a wall lights late and every dead end flashes. Click anywhere and the one way out draws itself from the exit to you while the rest of the maze drops out of focus.',
+  },
+  {
     slug: 'dust-text',
     group: 'generative',
     title: 'Dust text',
